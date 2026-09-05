@@ -720,6 +720,7 @@
 
       if(newRole.indexOf('Aprobador') !== -1) window.CURRENT_ROLE = 'Aprobador';
       else if(newRole.indexOf('Creador') !== -1) window.CURRENT_ROLE = 'Creador';
+      else window.CURRENT_ROLE = newRole;
 
       dropdown.querySelectorAll('.role-item').forEach(function(item){
         item.classList.remove('active');
@@ -736,7 +737,10 @@
       if(activeChk) activeChk.style.display = 'inline';
 
       dropdown.style.display = 'none';
+      showToast('Rol activo: <b>' + (window.CURRENT_ROLE || newRole) + '</b>', 'ok', 'Cambio de Rol');
       if(typeof window.renderLinea === 'function') window.renderLinea();
+      if(typeof window.renderTra001List === 'function') window.renderTra001List();
+      window.dispatchEvent(new CustomEvent('siit:rolechange', { detail: { role: window.CURRENT_ROLE, fullName: newRole } }));
       return;
     }
 

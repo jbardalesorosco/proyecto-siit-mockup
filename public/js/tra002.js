@@ -189,6 +189,24 @@
     ];
   }
 
+  function buildTableCell(content, opts){
+    opts = opts || {};
+    var align = opts.align || 'flex-start';
+    var isRight = align === 'right' || align === 'flex-end';
+    var justify = isRight ? 'flex-end' : (align === 'center' ? 'center' : 'flex-start');
+    var numStyle = opts.num ? ' font-variant-numeric: tabular-nums;' : '';
+    var extraStyle = opts.style || '';
+    var type = opts.type || 'Text';
+
+    return '<td class="figma-cell-td" style="padding:0;border:0;vertical-align:middle;">' +
+      '<div data-icon-1="true" data-icon-2="true" data-icon-3="true" data-icon-4="false" data-icon-l="false" data-icon-r="false" data-icon-signature="false" data-icon-validation="false" data-type="' + type + '" style="width: 100%; height: 100%; padding-left: 16px; padding-right: 16px; padding-top: 12px; padding-bottom: 12px; border-bottom: 1px var(--sys-color-divider-default, rgba(32, 32, 32, 0.12)) solid; justify-content: ' + justify + '; align-items: center; gap: 8px; display: inline-flex;' + extraStyle + '">' +
+        '<div style="flex: 1 1 0; min-height: 24px; justify-content: center; display: flex; flex-direction: column; align-items: ' + justify + '; color: var(--sys-color-text-neutral-medium, #29292A); font-size: 14px; font-family: Inter, sans-serif; font-weight: 400; letter-spacing: 0.02px; word-wrap: break-word;' + (isRight ? ' text-align: right;' : '') + numStyle + '">' +
+          content +
+        '</div>' +
+      '</div>' +
+    '</td>';
+  }
+
   function renderList(){
     var mount = document.getElementById('tra002-list-mount');
     if(!mount) return;
@@ -197,14 +215,14 @@
       var elim = r.estado === 'Eliminado';
       var a = '<div class="acts">';
       if (!elim) {
-        a += '<a title="Editar" data-d2="edit" data-d2id="' + r.id + '" style="color:#06396E;cursor:pointer;">' + PENCIL + '</a>';
+        a += '<a title="Editar" data-d2="edit" data-d2id="' + r.id + '" style="color:#504C4A;cursor:pointer;">' + PENCIL + '</a>';
         if (r.estado === 'Elaboración') {
-          a += '<a title="Validar" data-d2="validate" data-d2id="' + r.id + '" style="color:#0284C7;cursor:pointer;">' + CHECK + '</a>';
+          a += '<a title="Validar" data-d2="validate" data-d2id="' + r.id + '" style="color:#504C4A;cursor:pointer;">' + CHECK + '</a>';
         }
         if (r.estado === 'Validado') {
-          a += '<a title="Aprobar" data-d2="approve" data-d2id="' + r.id + '" style="color:#16A34A;cursor:pointer;">' + APPROVE + '</a>';
+          a += '<a title="Aprobar" data-d2="approve" data-d2id="' + r.id + '" style="color:#504C4A;cursor:pointer;">' + APPROVE + '</a>';
         }
-        a += '<a title="Eliminar" data-d2="delete" data-d2id="' + r.id + '" style="color:#D51317;cursor:pointer;">' + TRASH + '</a>';
+        a += '<a title="Eliminar" data-d2="delete" data-d2id="' + r.id + '" style="color:#504C4A;cursor:pointer;">' + TRASH + '</a>';
       } else {
         a += '<span style="font-size:11px;color:var(--ink3);">Eliminado</span>';
       }
@@ -213,13 +231,14 @@
       var reg = regOf(r.tabla, r.values);
       var k = (reg + ' ' + r.tabla + ' ' + r.origen + ' ' + r.estado).toLowerCase();
       return '<tr data-k="' + esc(k) + '" data-st="' + r.estado + '" data-tb="' + esc(r.tabla) + '"' + (elim ? ' style="opacity:.5"' : '') + '>' +
-        '<td class="lnk"><a data-d2="edit" data-d2id="' + r.id + '">' + esc(reg) + '</a></td>' +
-        '<td>' + esc(r.tabla) + '</td>' +
-        '<td>' + orgBadge(r.origen) + '</td>' +
-        '<td>' + esc(r.tipo) + '</td>' +
-        '<td class="num">' + r.fecha + '</td>' +
-        '<td>' + stBadge(r.estado) + '</td>' +
-        '<td style="text-align:right">' + a + '</td></tr>';
+        buildTableCell('<a data-d2="edit" data-d2id="' + r.id + '" style="color:#29292A;text-decoration:none;cursor:pointer;">' + esc(reg) + '</a>') +
+        buildTableCell(esc(r.tabla)) +
+        buildTableCell(orgBadge(r.origen)) +
+        buildTableCell(esc(r.tipo)) +
+        buildTableCell(r.fecha, { num: true }) +
+        buildTableCell(stBadge(r.estado)) +
+        buildTableCell(a, { align: 'right' }) +
+      '</tr>';
     }).join('');
 
     mount.innerHTML =
@@ -229,12 +248,12 @@
         '</div>' +
         '<div class="tw" style="border:1px solid rgba(32,32,32,0.12);border-radius:4px;overflow:hidden;margin-bottom:16px;">' +
           '<table style="min-width:100%;"><thead><tr>' +
-            '<th><div class="th-cell"><span class="th-title">REGISTRO</span><div class="th-icons"><svg viewBox="0 0 24 24"><path d="M7 15l5 5 5-5M7 9l5-5 5 5"></path></svg><svg viewBox="0 0 24 24"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg></div></div></th>' +
-            '<th><div class="th-cell"><span class="th-title">TABLA MAESTRA</span><div class="th-icons"><svg viewBox="0 0 24 24"><path d="M7 15l5 5 5-5M7 9l5-5 5 5"></path></svg><svg viewBox="0 0 24 24"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg></div></div></th>' +
-            '<th><div class="th-cell"><span class="th-title">ORIGEN</span><div class="th-icons"><svg viewBox="0 0 24 24"><path d="M7 15l5 5 5-5M7 9l5-5 5 5"></path></svg><svg viewBox="0 0 24 24"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg></div></div></th>' +
-            '<th><div class="th-cell"><span class="th-title">TIPO DE REGISTRO</span><div class="th-icons"><svg viewBox="0 0 24 24"><path d="M7 15l5 5 5-5M7 9l5-5 5 5"></path></svg><svg viewBox="0 0 24 24"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg></div></div></th>' +
-            '<th><div class="th-cell"><span class="th-title">FECHA DE REGISTRO</span><div class="th-icons"><svg viewBox="0 0 24 24"><path d="M7 15l5 5 5-5M7 9l5-5 5 5"></path></svg><svg viewBox="0 0 24 24"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg></div></div></th>' +
-            '<th><div class="th-cell"><span class="th-title">ESTADO</span><div class="th-icons"><svg viewBox="0 0 24 24"><path d="M7 15l5 5 5-5M7 9l5-5 5 5"></path></svg><svg viewBox="0 0 24 24"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg></div></div></th>' +
+            '<th><div class="th-cell"><span class="th-title">REGISTRO</span><div class="th-icons"><svg viewBox="0 0 24 24"><path d="m3 16 4 4 4-4"/><path d="M7 20V4"/><path d="m21 8-4-4-4 4"/><path d="M17 4v16"/></svg><svg viewBox="0 0 24 24"><polygon points="22 3 2 3 10 12.46 10 21 14 19 14 12.46 22 3"/></svg></div></div></th>' +
+            '<th><div class="th-cell"><span class="th-title">TABLA MAESTRA</span><div class="th-icons"><svg viewBox="0 0 24 24"><path d="m3 16 4 4 4-4"/><path d="M7 20V4"/><path d="m21 8-4-4-4 4"/><path d="M17 4v16"/></svg><svg viewBox="0 0 24 24"><polygon points="22 3 2 3 10 12.46 10 21 14 19 14 12.46 22 3"/></svg></div></div></th>' +
+            '<th><div class="th-cell"><span class="th-title">ORIGEN</span><div class="th-icons"><svg viewBox="0 0 24 24"><path d="m3 16 4 4 4-4"/><path d="M7 20V4"/><path d="m21 8-4-4-4 4"/><path d="M17 4v16"/></svg><svg viewBox="0 0 24 24"><polygon points="22 3 2 3 10 12.46 10 21 14 19 14 12.46 22 3"/></svg></div></div></th>' +
+            '<th><div class="th-cell"><span class="th-title">TIPO DE REGISTRO</span><div class="th-icons"><svg viewBox="0 0 24 24"><path d="m3 16 4 4 4-4"/><path d="M7 20V4"/><path d="m21 8-4-4-4 4"/><path d="M17 4v16"/></svg><svg viewBox="0 0 24 24"><polygon points="22 3 2 3 10 12.46 10 21 14 19 14 12.46 22 3"/></svg></div></div></th>' +
+            '<th><div class="th-cell"><span class="th-title">FECHA DE REGISTRO</span><div class="th-icons"><svg viewBox="0 0 24 24"><path d="m3 16 4 4 4-4"/><path d="M7 20V4"/><path d="m21 8-4-4-4 4"/><path d="M17 4v16"/></svg><svg viewBox="0 0 24 24"><polygon points="22 3 2 3 10 12.46 10 21 14 19 14 12.46 22 3"/></svg></div></div></th>' +
+            '<th><div class="th-cell"><span class="th-title">ESTADO</span><div class="th-icons"><svg viewBox="0 0 24 24"><path d="m3 16 4 4 4-4"/><path d="M7 20V4"/><path d="m21 8-4-4-4 4"/><path d="M17 4v16"/></svg><svg viewBox="0 0 24 24"><polygon points="22 3 2 3 10 12.46 10 21 14 19 14 12.46 22 3"/></svg></div></div></th>' +
             '<th style="text-align:right"><div class="th-cell" style="justify-content:flex-end"><span class="th-title">ACCIONES</span></div></th>' +
           '</tr></thead><tbody>' + rows + '</tbody></table>' +
         '</div>' +
