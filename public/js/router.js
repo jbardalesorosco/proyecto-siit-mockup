@@ -36,8 +36,27 @@
   }
   window.toggleFlyout = toggleFlyout;
 
+  function isScreen(id){
+    if(!id) return false;
+    var el = document.getElementById(id);
+    return !!(el && el.classList && el.classList.contains('screen'));
+  }
+
+  function getCurrentScreenId(){
+    var curr = document.querySelector('.screen.on');
+    return curr ? curr.id : null;
+  }
+
   function render(id){
-    if(!id || !document.getElementById(id)) id = 'login';
+    if(!isScreen(id)){
+      var currId = getCurrentScreenId();
+      if(currId){
+        // Si ya hay una pantalla activa y la solicitada no existe, no hacemos nada
+        return;
+      }
+      // En carga inicial si no existe pantalla activa, recurrimos a login
+      id = 'login';
+    }
     
     // Hide all screens & activate target
     document.querySelectorAll('.screen').forEach(function(s){ s.classList.remove('on'); });
@@ -64,7 +83,7 @@
       sidebar.querySelectorAll('.sb-icon-btn').forEach(function(btn){
         btn.classList.remove('active');
         var targetGo = btn.getAttribute('data-go');
-        if(targetGo !== 'home' && (targetGo === id || (targetGo === 'tra001-list' && (id === 'tra002-list' || id === 'tra001-form' || id === 'mod-transversales')))){
+        if(targetGo !== 'home' && (targetGo === id || (targetGo === 'tra001-list' && (id === 'tra002-list' || id === 'tra001-form' || id === 'tra001-form-v2' || id === 'mod-transversales')))){
           btn.classList.add('active');
         }
       });
@@ -91,6 +110,10 @@
   }
 
   function go(id){
+    if(!id || !isScreen(id)){
+      // Si la pantalla destino no existe en el DOM, no hacer nada ni redirigir
+      return;
+    }
     if(location.hash !== '#' + id){
       location.hash = id;
     } else {
@@ -141,7 +164,12 @@
     var t = e.target.closest('[data-go]');
     if(t){
       e.preventDefault();
-      go(t.getAttribute('data-go'));
+      var targetId = t.getAttribute('data-go');
+      // Si la pantalla no existe, no navegar ni alterar nada
+      if(!isScreen(targetId)){
+        return;
+      }
+      go(targetId);
       return;
     }
 
@@ -158,11 +186,20 @@
 
   window.addEventListener('hashchange', function(){
     var h = location.hash.slice(1);
+    if(h && !isScreen(h)){
+      // Si el hash no apunta a una pantalla real, restauramos o ignoramos
+      var currId = getCurrentScreenId();
+      if(currId && location.hash !== '#' + currId){
+        location.hash = currId;
+      }
+      return;
+    }
     render(h || 'login');
   });
 
   document.addEventListener('DOMContentLoaded', function(){
-    var initialRoute = location.hash.slice(1) || 'login';
+    var initialRoute = location.hash.slice(1);
+    if(!isScreen(initialRoute)) initialRoute = 'login';
     render(initialRoute);
   });
 })();

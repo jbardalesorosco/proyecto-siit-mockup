@@ -6,6 +6,9 @@
   var CHECK = '<svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;"><path d="M20 6L9 17l-5-5"/></svg>';
   var VALIDATE = '<svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;"><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M12 11h4"/><path d="M12 16h4"/><path d="M8 11h.01"/><path d="M8 16h.01"/></svg>';
   var APPROVE = '<svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;"><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><polyline points="9 14 11 16 15 12"/></svg>';
+  var ICON_FILE_CHECK = '<svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><polyline points="9 15 11.5 17.5 15.5 12.5"/></svg>';
+  var ICON_FILE_SEARCH = '<svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><circle cx="11.5" cy="14.5" r="2.5"/><line x1="13.3" y1="16.3" x2="16" y2="19"/></svg>';
+  var ICON_FILE_X = '<svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><line x1="9.5" y1="12.5" x2="14.5" y2="17.5"/><line x1="14.5" y1="12.5" x2="9.5" y2="17.5"/></svg>';
   var LOCK = '<svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>';
   var TYPES = ['Texto', 'Fecha', 'Numérico', 'Numérico decimal'];
 
@@ -311,7 +314,9 @@
 
   function isStep1Valid(){
     var d = S.draft;
-    return !!(d && d.name && d.name.trim().length > 0 && d.ref && d.ref.trim().length > 0 && d.sustentoFile && d.sustentoFile.trim().length > 0);
+    if(!d || !d.name || !d.name.trim().length || !d.ref || !d.ref.trim().length) return false;
+    if(d.needsApproval && (!d.sustentoFile || !d.sustentoFile.trim().length)) return false;
+    return true;
   }
   function isStep2Valid(){
     var d = S.draft;
@@ -452,7 +457,13 @@
     var m = { 'dg-name': 'name', 'dg-ref': 'ref', 'dg-alc': 'alcance', 'dg-maxerr': 'maxErr', 'dg-desc': 'desc' };
     Object.keys(m).forEach(function(id){ var el = document.getElementById(id); if(el) S.draft[m[id]] = el.value; });
     var chkApp = document.getElementById('dg-needs-approval');
-    if(chkApp) S.draft.needsApproval = chkApp.checked;
+    if(chkApp) {
+      S.draft.needsApproval = chkApp.checked;
+      var reqInd = document.getElementById('sustento-req-indicator');
+      if(reqInd){
+        reqInd.innerHTML = chkApp.checked ? '<span class="req" style="color:#D51317;">*</span>' : '<span style="font-size:11.5px;color:#64748B;font-weight:400;">(Opcional)</span>';
+      }
+    }
     updateStepButtons();
   }
 
@@ -461,8 +472,9 @@
     if(mount) mount.innerHTML = '';
   }
 
-  function renderForm(){
-    var mount = document.getElementById('tra001-form-mount'); if(!mount) return;
+  function renderForm(targetMountId){
+    var mountId = targetMountId || (document.getElementById('tra001-form-v2') && document.getElementById('tra001-form-v2').classList.contains('on') ? 'tra001-form-v2-mount' : 'tra001-form-mount');
+    var mount = document.getElementById(mountId); if(!mount) return;
     S.currentRole = getCurrentRole();
     if(!S.draft) makeDraft();
     var d = S.draft;
@@ -607,8 +619,8 @@
     var tabContent = '';
 
     if(S.tab === 1){
-      var sustentoHtml = '<div style="margin-top:20px;margin-bottom:20px;">' +
-        '<div style="font-size:12px;font-family:Inter,sans-serif;font-weight:600;color:#475569;margin-bottom:6px;display:block;">Archivo de sustento <span class="req" style="color:#D51317;">*</span></div>' +
+      var sustentoHtml = '<div style="margin-bottom:20px;">' +
+        '<div style="font-size:12px;font-family:Inter,sans-serif;font-weight:600;color:#475569;margin-bottom:6px;display:block;">Archivo de sustento <span id="sustento-req-indicator">' + (d.needsApproval ? '<span class="req" style="color:#D51317;">*</span>' : '<span style="font-size:11.5px;color:#64748B;font-weight:400;">(Opcional)</span>') + '</span></div>' +
         '<div id="t001-file-drag-zone" style="width:100%;display:flex;flex-direction:column;gap:4px;">' +
           '<div style="display:flex;align-items:center;width:100%;height:40px;">' +
             (!isReadOnly ?
@@ -656,11 +668,11 @@
           buildFigmaFieldHtml({ id: 'dg-name', label: 'Nombre de la estructura', value: d.name, placeholder: 'Ej. Actividad económica — CIIU', required: true, helperText: 'Este campo es obligatorio.', readonly: isReadOnly }) +
           buildFigmaFieldHtml({ id: 'dg-ref', label: 'Nombre de referencia', value: d.ref, placeholder: 'Nombre con el que se identifica el registro', required: true, helperText: 'Este campo es obligatorio.', readonly: isReadOnly }) +
         '</div>' +
-        '<div style="margin-bottom:0px;">' +
+        '<div style="margin-bottom:20px;">' +
           buildFigmaFieldHtml({ id: 'dg-desc', label: 'Descripción', value: d.desc, placeholder: 'Describa el propósito de la tabla maestra', required: false, isTextarea: true, readonly: isReadOnly }) +
         '</div>' +
-        sustentoHtml +
-        checkHtml;
+        checkHtml +
+        sustentoHtml;
     } else if(S.tab === 2){
       var grows = d.groups.map(function(g, i){
         var del = isReadOnly || g.locked ? '<span style="color:var(--ink3)">' + LOCK + '</span>' : '<a class="dn" title="Quitar" data-gact="delg" data-gid="' + g.id + '">' + TRASH + '</a>';
@@ -971,7 +983,7 @@
     syncForm(); var d = S.draft;
     if(!(d.name || '').trim()){ toast('El nombre de la estructura es obligatorio.', 'err'); return null; }
     if(!(d.ref || '').trim()){ toast('El nombre de referencia es obligatorio.', 'err'); return null; }
-    if(!(d.sustentoFile || '').trim()){ toast('El archivo de sustento es obligatorio.', 'err'); return null; }
+    if(d.needsApproval && !(d.sustentoFile || '').trim()){ toast('El archivo de sustento es obligatorio cuando la estructura requiere aprobación.', 'err'); return null; }
     if(!d.groups || d.groups.length === 0){ toast('Debe incluir al menos una agrupación en la estructura.', 'err'); return null; }
     if(!d.fields || d.fields.length === 0){ toast('Debe agregar al menos un campo a la estructura antes de guardar.', 'err'); return null; }
 
@@ -1081,52 +1093,43 @@
       return;
     }
 
-    var html = '<div style="display:flex;flex-direction:column;gap:16px;padding:4px 0;">' +
-      '<div style="display:flex;align-items:center;gap:12px;">' +
-        '<div style="width:40px;height:40px;padding:8px;background:#EBF3FC;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">' +
-          '<svg viewBox="0 0 24 24" style="width:22px;height:22px;stroke:#06396E;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>' +
-        '</div>' +
-        '<div>' +
-          '<div style="color:#252220;font-size:18px;font-family:Inter,sans-serif;font-weight:600;line-height:24px;">Evaluar estructura ' + esc(sVal.code) + '</div>' +
-          '<div style="color:#64748B;font-size:13px;font-family:Inter,sans-serif;">' + esc(sVal.name) + '</div>' +
-        '</div>' +
-      '</div>' +
+    var html = '<div style="display:flex;flex-direction:column;gap:18px;">' +
       '<div style="color:#252220;font-size:14px;font-family:Inter,sans-serif;font-weight:500;line-height:20px;">' +
         'Seleccione la decisión para esta estructura:' +
       '</div>' +
-      '<div style="display:flex;flex-direction:column;gap:10px;">' +
-        '<label style="display:flex;align-items:flex-start;gap:10px;padding:12px;border:1px solid #E2E8F0;border-radius:8px;cursor:pointer;background:#fff;" id="lbl-eval-apr">' +
-          '<input type="radio" name="eval-decision" value="aprobar" checked style="margin-top:3px;accent-color:#16A34A;" onchange="window.__t001EvalChange()">' +
-          '<div>' +
-            '<div style="font-size:14px;font-weight:600;color:#16A34A;display:flex;align-items:center;gap:6px;"><svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:#16A34A;fill:none;stroke-width:2.5;"><polyline points="20 6 9 17 4 12"/></svg>Aprobar</div>' +
-            '<div style="font-size:12px;color:#64748B;">Da conformidad formal a la estructura y la incorpora al catálogo oficial vigente.</div>' +
+      '<div style="display:flex;flex-direction:column;gap:16px;">' +
+        '<label style="display:flex;align-items:flex-start;gap:12px;padding:0;border:none;cursor:pointer;background:transparent;" id="lbl-eval-apr">' +
+          '<input type="radio" name="eval-decision" value="aprobar" checked style="margin-top:3px;margin-left:0;accent-color:#06396E;" onchange="window.__t001EvalChange()">' +
+          '<div style="flex:1;">' +
+            '<div style="font-size:14px;font-weight:600;color:#252220;display:flex;align-items:center;gap:8px;"><span style="color:#504C4A;display:inline-flex;">' + ICON_FILE_CHECK + '</span><span>Aprobar</span></div>' +
+            '<div style="font-size:12px;color:#64748B;margin-top:2px;">Da conformidad formal a la estructura y la incorpora al catálogo oficial vigente.</div>' +
           '</div>' +
         '</label>' +
-        '<label style="display:flex;align-items:flex-start;gap:10px;padding:12px;border:1px solid #E2E8F0;border-radius:8px;cursor:pointer;background:#fff;" id="lbl-eval-obs">' +
-          '<input type="radio" name="eval-decision" value="observar" style="margin-top:3px;accent-color:#D97706;" onchange="window.__t001EvalChange()">' +
-          '<div>' +
-            '<div style="font-size:14px;font-weight:600;color:#D97706;display:flex;align-items:center;gap:6px;"><svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:#D97706;fill:none;stroke-width:2.5;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>Observar</div>' +
-            '<div style="font-size:12px;color:#64748B;">Devuelve la estructura al Creador para que subsane las correcciones o precisiones solicitadas.</div>' +
+        '<label style="display:flex;align-items:flex-start;gap:12px;padding:0;border:none;cursor:pointer;background:transparent;" id="lbl-eval-obs">' +
+          '<input type="radio" name="eval-decision" value="observar" style="margin-top:3px;margin-left:0;accent-color:#06396E;" onchange="window.__t001EvalChange()">' +
+          '<div style="flex:1;">' +
+            '<div style="font-size:14px;font-weight:600;color:#252220;display:flex;align-items:center;gap:8px;"><span style="color:#504C4A;display:inline-flex;">' + ICON_FILE_SEARCH + '</span><span>Observar</span></div>' +
+            '<div style="font-size:12px;color:#64748B;margin-top:2px;">Devuelve la estructura al Creador para que subsane las correcciones o precisiones solicitadas.</div>' +
           '</div>' +
         '</label>' +
-        '<label style="display:flex;align-items:flex-start;gap:10px;padding:12px;border:1px solid #E2E8F0;border-radius:8px;cursor:pointer;background:#fff;" id="lbl-eval-rec">' +
-          '<input type="radio" name="eval-decision" value="rechazar" style="margin-top:3px;accent-color:#DC2626;" onchange="window.__t001EvalChange()">' +
-          '<div>' +
-            '<div style="font-size:14px;font-weight:600;color:#DC2626;display:flex;align-items:center;gap:6px;"><svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:#DC2626;fill:none;stroke-width:2.5;"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>Rechazar</div>' +
-            '<div style="font-size:12px;color:#64748B;">Cierra permanentemente la estructura. Quedará archivada en modo solo consulta.</div>' +
+        '<label style="display:flex;align-items:flex-start;gap:12px;padding:0;border:none;cursor:pointer;background:transparent;" id="lbl-eval-rec">' +
+          '<input type="radio" name="eval-decision" value="rechazar" style="margin-top:3px;margin-left:0;accent-color:#06396E;" onchange="window.__t001EvalChange()">' +
+          '<div style="flex:1;">' +
+            '<div style="font-size:14px;font-weight:600;color:#252220;display:flex;align-items:center;gap:8px;"><span style="color:#504C4A;display:inline-flex;">' + ICON_FILE_X + '</span><span>Rechazar</span></div>' +
+            '<div style="font-size:12px;color:#64748B;margin-top:2px;">Cierra permanentemente la estructura. Quedará archivada en modo solo consulta.</div>' +
           '</div>' +
         '</label>' +
       '</div>' +
-      // Box subopciones aprobar (inmediata / programada)
-      '<div id="eval-apr-subbox" style="display:flex;flex-direction:column;gap:8px;padding:10px 14px;background:#F0FDF4;border:1px solid #BBF7D0;border-radius:8px;">' +
-        '<div style="font-size:12.5px;font-weight:600;color:#166534;">Modalidad de vigencia:</div>' +
+      // Box subopciones aprobar (inmediata / programada) sin bordes y alineado
+      '<div id="eval-apr-subbox" style="display:flex;flex-direction:column;gap:8px;padding:0;background:transparent;border:none;">' +
+        '<div style="font-size:13px;font-weight:600;color:#252220;">Modalidad de vigencia:</div>' +
         '<div style="display:flex;gap:20px;">' +
-          '<label style="display:inline-flex;align-items:center;gap:6px;font-size:13px;color:#166534;cursor:pointer;"><input type="radio" name="eval-apr-mode" value="inmediata" checked onchange="document.getElementById(\'eval-apr-date-box\').style.display=\'none\';"> Vigencia Inmediata</label>' +
-          '<label style="display:inline-flex;align-items:center;gap:6px;font-size:13px;color:#166534;cursor:pointer;"><input type="radio" name="eval-apr-mode" value="programada" onchange="document.getElementById(\'eval-apr-date-box\').style.display=\'block\';"> Vigencia Programada</label>' +
+          '<label style="display:inline-flex;align-items:center;gap:6px;font-size:13px;color:#334155;cursor:pointer;"><input type="radio" name="eval-apr-mode" value="inmediata" checked style="margin-left:0;accent-color:#06396E;" onchange="document.getElementById(\'eval-apr-date-box\').style.display=\'none\';"> Vigencia Inmediata</label>' +
+          '<label style="display:inline-flex;align-items:center;gap:6px;font-size:13px;color:#334155;cursor:pointer;"><input type="radio" name="eval-apr-mode" value="programada" style="accent-color:#06396E;" onchange="document.getElementById(\'eval-apr-date-box\').style.display=\'block\';"> Vigencia Programada</label>' +
         '</div>' +
         '<div id="eval-apr-date-box" style="display:none;margin-top:6px;">' +
-          '<label style="font-size:12px;color:#166534;font-weight:500;margin-bottom:4px;display:block;">Fecha de inicio de vigencia <span style="color:#D51317;">*</span></label>' +
-          '<input type="date" id="eval-apr-date" value="' + today().split('/').reverse().join('-') + '" style="padding:6px 10px;border-radius:6px;border:1px solid #86EFAC;font-size:13px;outline:none;background:white;">' +
+          '<label style="font-size:12px;color:#475569;font-weight:500;margin-bottom:4px;display:block;">Fecha de inicio de vigencia <span style="color:#D51317;">*</span></label>' +
+          '<input type="date" id="eval-apr-date" value="' + today().split('/').reverse().join('-') + '" style="padding:6px 10px;border-radius:6px;border:1px solid #CBD5E1;font-size:13px;outline:none;background:white;">' +
         '</div>' +
       '</div>' +
       // Box para Motivo de Observación o Rechazo
@@ -1138,92 +1141,96 @@
     '</div>';
 
     window.__t001EvalChange = function(){
-      var dec = document.querySelector('input[name="eval-decision"]:checked').value;
+      var decRadio = document.querySelector('input[name="eval-decision"]:checked');
+      if(!decRadio) return;
+      var dec = decRadio.value;
       var aprBox = document.getElementById('eval-apr-subbox');
       var motBox = document.getElementById('eval-motivo-box');
       var motLbl = document.getElementById('eval-motivo-label');
-      var saveBtn = document.getElementById('t001-modal').querySelector('[data-mbtn="save"]');
+      var saveBtn = document.getElementById('t001-drawer-save');
+      var saveText = document.getElementById('t001-drawer-savetext');
+
+      if(saveBtn) saveBtn.style.background = '#06396E';
 
       if(dec === 'aprobar'){
-        aprBox.style.display = 'flex';
-        motBox.style.display = 'none';
-        if(saveBtn){
-          saveBtn.textContent = 'Aprobar estructura';
-          saveBtn.style.background = '#16A34A';
-        }
+        if(aprBox) aprBox.style.display = 'flex';
+        if(motBox) motBox.style.display = 'none';
+        if(saveText) saveText.textContent = 'Aprobar estructura';
       } else if(dec === 'observar'){
-        aprBox.style.display = 'none';
-        motBox.style.display = 'flex';
-        motLbl.innerHTML = 'Motivo de la observación <span style="color:#D51317;">*</span>';
-        if(saveBtn){
-          saveBtn.textContent = 'Observar estructura';
-          saveBtn.style.background = '#D97706';
-        }
+        if(aprBox) aprBox.style.display = 'none';
+        if(motBox) motBox.style.display = 'flex';
+        if(motLbl) motLbl.innerHTML = 'Motivo de la observación <span style="color:#D51317;">*</span>';
+        if(saveText) saveText.textContent = 'Observar estructura';
       } else if(dec === 'rechazar'){
-        aprBox.style.display = 'none';
-        motBox.style.display = 'flex';
-        motLbl.innerHTML = 'Motivo del rechazo <span style="color:#D51317;">*</span>';
-        if(saveBtn){
-          saveBtn.textContent = 'Rechazar estructura';
-          saveBtn.style.background = '#DC2626';
-        }
+        if(aprBox) aprBox.style.display = 'none';
+        if(motBox) motBox.style.display = 'flex';
+        if(motLbl) motLbl.innerHTML = 'Motivo del rechazo <span style="color:#D51317;">*</span>';
+        if(saveText) saveText.textContent = 'Rechazar estructura';
       }
     };
 
-    modal(html, function(){
-      var dec = document.querySelector('input[name="eval-decision"]:checked').value;
-      if(dec === 'aprobar'){
-        var isProg = document.querySelector('input[name="eval-apr-mode"]:checked').value === 'programada';
-        if(isProg){
-          var dt = val('eval-apr-date');
-          if(!dt){ toast('Indique la fecha de vigencia para la aprobación programada.', 'err'); return false; }
-          sVal.state = 'Aprobado';
-          sVal.vigenciaDate = dt;
-          if(S.draft && S.draft.id === sVal.id){ S.draft.state = 'Aprobado'; S.draft.vigenciaDate = dt; }
-          renderList();
-          toast('Estructura <b>' + sVal.code + '</b> aprobada (vigente desde ' + dt + ').', 'ok');
-        } else {
-          sVal.state = 'Aprobado';
-          if(S.draft && S.draft.id === sVal.id){ S.draft.state = 'Aprobado'; }
-          renderList();
-          toast('Estructura <b>' + sVal.code + '</b> aprobada formalmente e incorporada al catálogo oficial.', 'ok');
+    openDrawer({
+      title: 'Evaluar estructura ' + esc(sVal.code),
+      subtitle: esc(sVal.name),
+      bodyHtml: html,
+      saveText: 'Aprobar estructura',
+      onSave: function(){
+        var decRadio = document.querySelector('input[name="eval-decision"]:checked');
+        if(!decRadio) return false;
+        var dec = decRadio.value;
+        if(dec === 'aprobar'){
+          var isProg = document.querySelector('input[name="eval-apr-mode"]:checked').value === 'programada';
+          if(isProg){
+            var dt = val('eval-apr-date');
+            if(!dt){ toast('Indique la fecha de vigencia para la aprobación programada.', 'err'); return false; }
+            sVal.state = 'Aprobado';
+            sVal.vigenciaDate = dt;
+            if(S.draft && S.draft.id === sVal.id){ S.draft.state = 'Aprobado'; S.draft.vigenciaDate = dt; }
+            renderList();
+            toast('Estructura <b>' + sVal.code + '</b> aprobada (vigente desde ' + dt + ').', 'ok');
+          } else {
+            sVal.state = 'Aprobado';
+            if(S.draft && S.draft.id === sVal.id){ S.draft.state = 'Aprobado'; }
+            renderList();
+            toast('Estructura <b>' + sVal.code + '</b> aprobada formalmente e incorporada al catálogo oficial.', 'ok');
+          }
+          if (window.go) window.go('tra001-list');
+          return true;
         }
-        if (window.go) window.go('tra001-list');
-        return true;
-      }
 
-      var motivo = val('eval-motivo-text').trim();
-      if(!motivo){
-        var errEl = document.getElementById('eval-motivo-error');
-        if(errEl) errEl.style.display = 'block';
-        return false;
-      }
+        var motivo = val('eval-motivo-text').trim();
+        if(!motivo){
+          var errEl = document.getElementById('eval-motivo-error');
+          if(errEl) errEl.style.display = 'block';
+          return false;
+        }
 
-      if(dec === 'observar'){
-        sVal.state = 'Observado';
-        sVal.obsMotivo = motivo;
-        sVal.obsDate = today();
-        if(S.draft && S.draft.id === sVal.id){ S.draft.state = 'Observado'; S.draft.obsMotivo = motivo; S.draft.obsDate = today(); }
-        renderList();
-        toast('Estructura <b>' + sVal.code + '</b> marcada como Observada. El Creador podrá modificarla.', 'warn');
-        if (window.go) window.go('tra001-list');
-        return true;
-      }
+        if(dec === 'observar'){
+          sVal.state = 'Observado';
+          sVal.obsMotivo = motivo;
+          sVal.obsDate = today();
+          if(S.draft && S.draft.id === sVal.id){ S.draft.state = 'Observado'; S.draft.obsMotivo = motivo; S.draft.obsDate = today(); }
+          renderList();
+          toast('Estructura <b>' + sVal.code + '</b> marcada como Observada. El Creador podrá modificarla.', 'warn');
+          if (window.go) window.go('tra001-list');
+          return true;
+        }
 
-      if(dec === 'rechazar'){
-        sVal.state = 'Rechazado';
-        sVal.rechazoMotivo = motivo;
-        sVal.rechazoDate = today();
-        if(S.draft && S.draft.id === sVal.id){ S.draft.state = 'Rechazado'; S.draft.rechazoMotivo = motivo; S.draft.rechazoDate = today(); }
-        renderList();
-        toast('Estructura <b>' + sVal.code + '</b> rechazada definitivamente.', 'err');
-        if (window.go) window.go('tra001-list');
-        return true;
+        if(dec === 'rechazar'){
+          sVal.state = 'Rechazado';
+          sVal.rechazoMotivo = motivo;
+          sVal.rechazoDate = today();
+          if(S.draft && S.draft.id === sVal.id){ S.draft.state = 'Rechazado'; S.draft.rechazoMotivo = motivo; S.draft.rechazoDate = today(); }
+          renderList();
+          toast('Estructura <b>' + sVal.code + '</b> rechazada definitivamente.', 'err');
+          if (window.go) window.go('tra001-list');
+          return true;
+        }
       }
-    }, 'Aprobar estructura');
+    });
 
-    var sBtn = document.getElementById('t001-modal').querySelector('[data-mbtn="save"]');
-    if(sBtn) sBtn.style.background = '#16A34A';
+    var sBtn = document.getElementById('t001-drawer-save');
+    if(sBtn) sBtn.style.background = '#06396E';
   }
 
   function openApproveModal(id){
@@ -1368,7 +1375,7 @@
       e.preventDefault();
       syncForm();
       if (!isStep1Valid()) {
-        toast('Completa los campos obligatorios de Datos generales (Nombre, Referencia y Archivo de sustento).', 'warn');
+        toast('Completa los campos obligatorios de Datos generales' + (S.draft && S.draft.needsApproval ? ' (Nombre, Referencia y Archivo de sustento).' : ' (Nombre y Referencia).'), 'warn');
         S.tab = 1; S.step = 1; renderForm();
         return;
       }
@@ -1409,8 +1416,8 @@
       return;
     }
 
-    // Top Bar Evaluate / Resolver Button (Rol Aprobador)
-    var evalBtn = e.target.closest('#btn-evaluate-tra001, [data-fbtn="evaluate"]');
+    // Top Bar Evaluate / Resolver Button (Rol Aprobador & v2)
+    var evalBtn = e.target.closest('#btn-evaluate-tra001, #btn-evaluate-tra001-v2, [data-fbtn="evaluate"]');
     if (evalBtn) {
       e.preventDefault();
       if (S.draft && S.draft.id) {
@@ -1529,9 +1536,42 @@
     }
   });
 
+  function renderFormV2(){
+    // Carga de ejemplo de estructura en estado "Validado" para evaluar/resolver
+    var target = null;
+    for(var i = 0; i < S.structures.length; i++){
+      if(S.structures[i].state === 'Validado'){
+        target = S.structures[i];
+        break;
+      }
+    }
+    if(!target && S.structures.length > 0){
+      target = S.structures[0];
+      target.state = 'Validado';
+    }
+    if(target){
+      S.draft = clone(target);
+      S.draft.state = 'Validado';
+      S.origId = target.id;
+    } else {
+      makeDraft();
+      S.draft.code = 'TM-0005';
+      S.draft.name = 'Provincia';
+      S.draft.ref = 'PROV';
+      S.draft.state = 'Validado';
+      S.draft.date = today();
+      S.draft.sustentoFile = 'INFORME_PROV_2026.pdf';
+    }
+    S.mode = 'view';
+    if(!S.tab) S.tab = 1;
+    S.step = S.tab;
+    renderForm('tra001-form-v2-mount');
+  }
+
   window.__onShow = window.__onShow || {};
   window.__onShow['tra001-list'] = function(){ renderList(); };
-  window.__onShow['tra001-form'] = function(){ renderForm(); };
+  window.__onShow['tra001-form'] = function(){ renderForm('tra001-form-mount'); };
+  window.__onShow['tra001-form-v2'] = function(){ renderFormV2(); };
 
   window.renderTra001List = function(){
     S.currentRole = getCurrentRole();
@@ -1544,7 +1584,10 @@
       renderList();
     }
     if(document.getElementById('tra001-form-mount') && S.draft){
-      renderForm();
+      renderForm('tra001-form-mount');
+    }
+    if(document.getElementById('tra001-form-v2-mount') && S.draft){
+      renderForm('tra001-form-v2-mount');
     }
   });
 
