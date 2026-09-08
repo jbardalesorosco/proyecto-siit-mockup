@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/styles.css?v=20260907_9">
+<link rel="stylesheet" href="css/styles.css?v=20260908_2">
 </head>
 <body>
 
@@ -1459,10 +1459,16 @@
           </div>
           <div style="height: 72px; padding: 16px 24px; display: flex; justify-content: space-between; align-items: center;">
             <div style="font-size: 20px; font-weight: 700; color: #252220;">Bandeja de Expedientes</div>
-            <button class="btn gho" data-go="expediente" style="height:40px;padding:0 16px;border:1px solid rgba(32,32,32,0.18);border-radius:8px;display:inline-flex;align-items:center;gap:8px;cursor:pointer;background:white;color:#504C4A;font-weight:600;font-size:14px;">
-              <svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2;"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-              <span>Cancelar</span>
-            </button>
+            <div style="display:flex;align-items:center;gap:12px;">
+              <button id="exp-btn-archivar" type="button" style="height:40px;padding:0 16px;border:1px solid #CBD5E1;border-radius:8px;display:inline-flex;align-items:center;gap:8px;cursor:pointer;background:#F8FAFC;color:#334155;font-weight:600;font-size:14px;transition:all .15s ease;">
+                <svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:#475569;fill:none;stroke-width:2;"><polyline points="21 8 21 21 3 21 3 8"/><rect x="1" y="3" width="22" height="5"/><line x1="10" y1="12" x2="14" y2="12"/></svg>
+                <span id="exp-btn-archivar-text">Archivar expediente</span>
+              </button>
+              <button class="btn gho" data-go="expediente" style="height:40px;padding:0 16px;border:1px solid rgba(32,32,32,0.18);border-radius:8px;display:inline-flex;align-items:center;gap:8px;cursor:pointer;background:white;color:#504C4A;font-weight:600;font-size:14px;">
+                <svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2;"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                <span>Cancelar</span>
+              </button>
+            </div>
           </div>
         </div>
         <div id="exp-detail-mount" style="padding: 0 24px 40px;"></div>
@@ -1586,7 +1592,7 @@
 <script src="js/lineagrafica.js?v=20260822_46"></script>
 <script src="js/identity.js?v=20260822_8"></script>
 <script src="js/workflow.js?v=20260821_2"></script>
-<script src="js/expediente.js?v=20260907_12"></script>
+<script src="js/expediente.js?v=20260908_4"></script>
 <script src="js/calendario.js?v=20260821"></script>
 </body>
 </html>

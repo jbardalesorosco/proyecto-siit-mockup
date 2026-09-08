@@ -845,7 +845,21 @@ th:has(> [data-type]) {
 td.figma-cell-td,
 td:has(> [data-type]) {
   padding: 0 !important;
+  border-bottom: 1px solid var(--sys-color-divider-default, rgba(32, 32, 32, 0.12)) !important;
+  vertical-align: middle !important;
+}
+td.figma-cell-td > div,
+td:has(> [data-type]) > div {
+  display: flex !important;
+  align-items: center !important;
+  min-height: 48px;
+  height: 100%;
+  box-sizing: border-box !important;
   border-bottom: 0 !important;
+}
+td.figma-cell-td .badge,
+td:has(> [data-type]) .badge {
+  align-self: center !important;
 }
 .tbl-name-link {
   color: var(--sys-color-text-neutral-medium, #29292A);
@@ -874,7 +888,7 @@ td .sub { display: none !important; }
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
-  align-self: flex-start !important;
+  align-self: center !important;
   width: auto !important;
   width: -webkit-fit-content !important;
   width: -moz-fit-content !important;
