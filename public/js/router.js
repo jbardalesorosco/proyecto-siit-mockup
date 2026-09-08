@@ -83,7 +83,7 @@
       sidebar.querySelectorAll('.sb-icon-btn').forEach(function(btn){
         btn.classList.remove('active');
         var targetGo = btn.getAttribute('data-go');
-        if(targetGo !== 'home' && (targetGo === id || (targetGo === 'tra001-list' && (id === 'tra002-list' || id === 'tra001-form' || id === 'tra001-form-v2' || id === 'mod-transversales')))){
+        if(targetGo !== 'home' && (targetGo === id || (targetGo === 'expediente' && (id === 'expediente' || id === 'exp-list' || id === 'exp-detail')) || (targetGo === 'tra001-list' && (id === 'tra002-list' || id === 'tra001-form' || id === 'tra001-form-v2' || id === 'mod-transversales')))){
           btn.classList.add('active');
         }
       });

@@ -860,7 +860,8 @@ td:has(> [data-type]) {
   text-decoration: underline !important;
 }
 tbody tr:last-child td,
-tbody tr:last-child td > [data-type] {
+tbody tr:last-child td > [data-type],
+tbody tr:last-child td > div {
   border-bottom: 0 !important;
 }
 tbody tr:hover { background: #F8FAFC; }
