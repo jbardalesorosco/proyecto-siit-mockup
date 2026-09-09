@@ -12,6 +12,7 @@
 
   function uid(){ return 'd' + Math.random().toString(36).slice(2,9); }
   function today(){ var d = new Date(); function p(x){ return String(x).padStart(2,'0'); } return p(d.getDate()) + '/' + p(d.getMonth()+1) + '/' + d.getFullYear(); }
+  function nowTime(){ var d = new Date(); function p(x){ return String(x).padStart(2,'0'); } return p(d.getHours()) + ':' + p(d.getMinutes()); }
   function esc(s){ return (s == null ? '' : String(s)).replace(/[&<>"]/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
   function opt(arr, sel){ return arr.map(function(v){ var l = v === '' ? '—' : v; return '<option value="' + esc(v) + '"' + (v === sel ? ' selected' : '') + '>' + esc(l) + '</option>'; }).join(''); }
 
@@ -158,34 +159,84 @@
   }
 
   var CONFIGS = {
-    'Ubigeo — Distritos': { max: 10, fields: [{ name: 'ubigeo', req: true, max: 6, ej: '150101' }, { name: 'departamento', req: true, max: 50, ej: 'Lima' }, { name: 'provincia', req: true, max: 50, ej: 'Lima' }, { name: 'distrito', req: true, max: 50, ej: 'San Juan de Miraflores' }] },
-    'Tipo de Documento de Identidad': { max: 10, fields: [{ name: 'codigo', req: true, max: 10, ej: 'DNI' }, { name: 'descripcion', req: true, max: 100, ej: 'Documento Nacional de Identidad' }] },
-    'Actividad económica — CIIU': { max: 20, fields: [{ name: 'codigo', req: true, max: 10, ej: '4711' }, { name: 'descripcion', req: true, max: 150, ej: 'Venta al por menor en comercios no especializados' }] },
-    'Tipos de vía': { max: 10, fields: [{ name: 'codigo', req: true, max: 10, ej: 'AV' }, { name: 'descripcion', req: true, max: 100, ej: 'Avenida' }] },
-    'Moneda': { max: 10, fields: [{ name: 'codigo', req: true, max: 10, ej: 'PEN' }, { name: 'descripcion', req: true, max: 100, ej: 'Sol Peruano' }, { name: 'simbolo', req: false, max: 10, ej: 'S/' }] },
-    'Estado Civil': { max: 10, fields: [{ name: 'codigo', req: true, max: 10, ej: 'SOL' }, { name: 'descripcion', req: true, max: 100, ej: 'Soltero(a)' }] }
+    'Ubigeo — Distritos': { max: 10, fields: [{ name: 'ubigeo', label: 'Ubigeo', req: true, max: 6, ej: '150101' }, { name: 'departamento', label: 'Departamento', req: true, max: 50, ej: 'Lima' }, { name: 'provincia', label: 'Provincia', req: true, max: 50, ej: 'Lima' }, { name: 'distrito', label: 'Distrito', req: true, max: 50, ej: 'San Juan de Miraflores' }] },
+    'Tipo de Documento de Identidad': { max: 10, fields: [{ name: 'codigo', label: 'Código', req: true, max: 10, ej: 'DNI' }, { name: 'descripcion', label: 'Descripción', req: true, max: 100, ej: 'Documento Nacional de Identidad' }] },
+    'Actividad económica — CIIU': { max: 20, fields: [{ name: 'codigo', label: 'Código', req: true, max: 10, ej: '4711' }, { name: 'descripcion', label: 'Descripción', req: true, max: 150, ej: 'Venta al por menor en comercios no especializados' }] },
+    'Tipos de vía': { max: 10, fields: [{ name: 'codigo', label: 'Código', req: true, max: 10, ej: 'AV' }, { name: 'descripcion', label: 'Descripción', req: true, max: 100, ej: 'Avenida' }] },
+    'Moneda': { max: 10, fields: [{ name: 'codigo', label: 'Código', req: true, max: 10, ej: 'PEN' }, { name: 'descripcion', label: 'Descripción', req: true, max: 100, ej: 'Sol Peruano' }, { name: 'simbolo', label: 'Símbolo', req: false, max: 10, ej: 'S/' }] },
+    'Estado Civil': { max: 10, fields: [{ name: 'codigo', label: 'Código', req: true, max: 10, ej: 'SOL' }, { name: 'descripcion', label: 'Descripción', req: true, max: 100, ej: 'Soltero(a)' }] }
   };
 
-  function getTNAMES(){ return Object.keys(CONFIGS); }
-  function getTableConfig(t){ return CONFIGS[t] || { max: 10, fields: [{ name: 'codigo', req: true, max: 10 }, { name: 'descripcion', req: true, max: 100 }] }; }
+  function normalizeKey(str){
+    return (str || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]/g, '_').replace(/^_+|_+$/g, '') || 'campo';
+  }
+
+  function getTNAMES(){
+    var names = [];
+    if(window.TRA001 && typeof window.TRA001.getStructures === 'function'){
+      var structs = window.TRA001.getStructures();
+      structs.forEach(function(s){
+        if(s && s.name && s.state !== 'Eliminado' && names.indexOf(s.name) === -1){
+          names.push(s.name);
+        }
+      });
+    }
+    Object.keys(CONFIGS).forEach(function(k){
+      if(names.indexOf(k) === -1) names.push(k);
+    });
+    return names;
+  }
+
+  function getTableConfig(t){
+    if(window.TRA001 && typeof window.TRA001.getStructureByName === 'function'){
+      var st = window.TRA001.getStructureByName(t);
+      if(st && st.fields && st.fields.length > 0){
+        var mappedFields = st.fields.map(function(f){
+          var rawName = f.name || 'Campo';
+          var key = normalizeKey(rawName);
+          var maxLen = parseInt(f.max, 10);
+          if(isNaN(maxLen) || maxLen <= 0) maxLen = 150;
+          return {
+            name: key,
+            label: rawName,
+            req: f.required !== false,
+            max: maxLen,
+            type: f.type || 'Texto'
+          };
+        });
+        return {
+          max: st.maxErr || 10,
+          fields: mappedFields
+        };
+      }
+    }
+    return CONFIGS[t] || {
+      max: 10,
+      fields: [
+        { name: 'codigo', label: 'Código', req: true, max: 10 },
+        { name: 'descripcion', label: 'Descripción', req: true, max: 100 }
+      ]
+    };
+  }
+
   function find(id){ for(var i = 0; i < D.data.length; i++) if(D.data[i].id === id) return D.data[i]; return null; }
 
   function regOf(tabla, values){
     values = values || {};
     var config = getTableConfig(tabla);
-    var fs = config.fields.map(function(f){ return values[f.name] || ''; });
+    var fs = config.fields.map(function(f){ return values[f.name] || values[f.label] || ''; });
     return fs[0] + (fs.length > 1 ? ' — ' + fs.slice(1).filter(Boolean).join(' / ') : '');
   }
 
   function seed(){
     D.data = [
-      { id: uid(), tabla: 'Ubigeo — Distritos', origen: 'Masivo', tipo: 'Creación', estado: 'Aprobado', fecha: '20/07/2026', values: { ubigeo: '150132', departamento: 'Lima', provincia: 'Lima', distrito: 'San Juan de Miraflores' } },
-      { id: uid(), tabla: 'Ubigeo — Distritos', origen: 'Masivo', tipo: 'Creación', estado: 'Aprobado', fecha: '20/07/2026', values: { ubigeo: '150137', departamento: 'Lima', provincia: 'Lima', distrito: 'Villa El Salvador' } },
-      { id: uid(), tabla: 'Tipo de Documento de Identidad', origen: 'Individual', tipo: 'Creación', estado: 'Aprobado', fecha: '18/07/2026', values: { codigo: 'DNI', descripcion: 'Documento Nacional de Identidad' } },
-      { id: uid(), tabla: 'Actividad económica — CIIU', origen: 'Masivo', tipo: 'Modificación', estado: 'Validado', fecha: '22/07/2026', values: { codigo: '4711', descripcion: 'Venta al por menor en comercios no especializados' } },
-      { id: uid(), tabla: 'Tipos de vía', origen: 'Individual', tipo: 'Creación', estado: 'Elaboración', fecha: '23/07/2026', values: { codigo: 'AV', descripcion: 'Avenida' } },
-      { id: uid(), tabla: 'Moneda', origen: 'Individual', tipo: 'Creación', estado: 'Aprobado', fecha: '24/07/2026', values: { codigo: 'PEN', descripcion: 'Sol Peruano', simbolo: 'S/' } },
-      { id: uid(), tabla: 'Estado Civil', origen: 'Individual', tipo: 'Creación', estado: 'Aprobado', fecha: '25/07/2026', values: { codigo: 'SOL', descripcion: 'Soltero(a)' } }
+      { id: uid(), tabla: 'Ubigeo — Distritos', origen: 'Masivo', tipo: 'Creación', estado: 'Aprobado', fecha: '20/07/2026', hora: '10:15', values: { ubigeo: '150132', departamento: 'Lima', provincia: 'Lima', distrito: 'San Juan de Miraflores' } },
+      { id: uid(), tabla: 'Ubigeo — Distritos', origen: 'Masivo', tipo: 'Creación', estado: 'Aprobado', fecha: '20/07/2026', hora: '11:20', values: { ubigeo: '150137', departamento: 'Lima', provincia: 'Lima', distrito: 'Villa El Salvador' } },
+      { id: uid(), tabla: 'Tipo de Documento de Identidad', origen: 'Individual', tipo: 'Creación', estado: 'Aprobado', fecha: '18/07/2026', hora: '08:45', values: { codigo: 'DNI', descripcion: 'Documento Nacional de Identidad' } },
+      { id: uid(), tabla: 'Actividad económica — CIIU', origen: 'Masivo', tipo: 'Modificación', estado: 'Validado', fecha: '22/07/2026', hora: '14:30', values: { codigo: '4711', descripcion: 'Venta al por menor en comercios no especializados' } },
+      { id: uid(), tabla: 'Tipos de vía', origen: 'Individual', tipo: 'Creación', estado: 'Elaboración', fecha: '23/07/2026', hora: '16:05', values: { codigo: 'AV', descripcion: 'Avenida' } },
+      { id: uid(), tabla: 'Moneda', origen: 'Individual', tipo: 'Creación', estado: 'Aprobado', fecha: '24/07/2026', hora: '09:12', values: { codigo: 'PEN', descripcion: 'Sol Peruano', simbolo: 'S/' } },
+      { id: uid(), tabla: 'Estado Civil', origen: 'Individual', tipo: 'Creación', estado: 'Aprobado', fecha: '25/07/2026', hora: '12:40', values: { codigo: 'SOL', descripcion: 'Soltero(a)' } }
     ];
   }
 
@@ -323,14 +374,14 @@
   function makeDraft(){
     var tnames = getTNAMES();
     D.mode = 'create'; D.origId = null;
-    D.draft = { id: uid(), tabla: tnames[0], values: {}, origen: 'Individual', tipo: 'Creación', estado: 'Elaboración', fecha: today() };
+    D.draft = { id: uid(), tabla: tnames[0], values: {}, origen: 'Individual', tipo: 'Creación', estado: 'Elaboración', fecha: today(), hora: nowTime() };
   }
   function openNew(){ makeDraft(); window.go('tra002-form'); }
   function openEdit(id){
     var r = find(id); if(!r) return;
     if(r.estado === 'Eliminado'){ toast('RN-DT-007 · Un registro Eliminado es irreversible: no puede editarse.', 'err'); return; }
     D.mode = 'edit'; D.origId = id;
-    D.draft = { id: r.id, tabla: r.tabla, values: JSON.parse(JSON.stringify(r.values || {})), origen: r.origen, tipo: r.tipo, estado: r.estado, fecha: r.fecha };
+    D.draft = { id: r.id, tabla: r.tabla, values: JSON.parse(JSON.stringify(r.values || {})), origen: r.origen, tipo: r.tipo, estado: r.estado, fecha: r.fecha, hora: r.hora || '09:30' };
     window.go('tra002-form');
   }
 
@@ -354,36 +405,105 @@
     });
 
     var fInputs = fields.map(function(f){
+      var displayLabel = f.label || (f.name.charAt(0).toUpperCase() + f.name.slice(1));
       return buildFigmaFieldHtml({
         id: 'd2f-' + f.name,
-        label: f.name.charAt(0).toUpperCase() + f.name.slice(1),
-        value: d.values[f.name] || '',
+        label: displayLabel,
+        value: d.values[f.name] || d.values[displayLabel] || '',
         placeholder: 'Máx. ' + f.max + ' caracteres',
         required: f.req,
         maxlength: f.max,
-        helperText: f.name + ' es obligatorio.'
+        helperText: displayLabel + ' es obligatorio.'
       });
     }).join('');
 
-    mount.innerHTML =
-      '<div class="card" style="margin-bottom:20px;">' +
-        '<div class="chead" style="margin-bottom:10px;">' +
-          '<h2 style="font-size:13px;font-weight:700;color:#06396E;text-transform:uppercase;letter-spacing:0.5px;margin:0;">' + (D.mode === 'edit' ? 'EDITAR REGISTRO' : 'REGISTRAR SOLICITUD') + '</h2>' +
+    // 1. Header 2-Cards Readonly Layout (Patrón estándar Figma SIIT)
+    var headerCard = '<div data-info-solicitud="true" class="tra001-two-cards-wrap" style="width:100%;border-radius:8px;justify-content:flex-start;align-items:stretch;gap:12px;display:flex;margin-bottom:20px;">' +
+      // Card 1: Izquierda (Intendencia & Fecha)
+      '<div style="flex:1 1 0;min-width:0;align-self:stretch;padding:8px 16px;background:white;border:1px solid rgba(32,32,32,0.12);border-radius:8px;flex-direction:column;justify-content:center;align-items:flex-start;display:inline-flex;">' +
+        // Row 1: INTENDENCIA
+        '<div data-content="Text" data-layout="Inline" style="align-self:stretch;flex-direction:column;justify-content:flex-start;align-items:flex-start;display:flex;">' +
+          '<div style="align-self:stretch;min-height:36px;padding:6px 0;border-radius:8px;justify-content:flex-start;align-items:center;gap:8px;display:inline-flex;">' +
+            '<div style="width:140px;max-width:180px;min-width:80px;min-height:24px;flex-direction:column;justify-content:center;align-items:flex-start;display:inline-flex;">' +
+              '<div style="min-height:16px;padding:0 4px;border-radius:8px;justify-content:center;align-items:center;display:inline-flex;">' +
+                '<div style="color:#6F6F71;font-size:12px;font-family:Inter,sans-serif;font-weight:500;letter-spacing:0.5px;">INTENDENCIA</div>' +
+              '</div>' +
+            '</div>' +
+            '<div style="flex:1 1 0;overflow:hidden;justify-content:flex-start;align-items:center;display:flex;">' +
+              '<div style="color:#353537;font-size:14px;font-family:Inter,sans-serif;font-weight:700;text-transform:uppercase;line-height:20px;letter-spacing:0.5px;">ILM LIMA METROPOLITANA</div>' +
+            '</div>' +
+          '</div>' +
         '</div>' +
-        '<div style="font-size:13px;color:#504C4A;">' +
-          'Estado: ' + stBadge(d.estado) + ' · Origen: ' + orgBadge(d.origen) +
+        // Row 2: FECHA
+        '<div data-content="Text" data-layout="Inline" style="align-self:stretch;flex-direction:column;justify-content:flex-start;align-items:flex-start;display:flex;">' +
+          '<div style="align-self:stretch;min-height:36px;padding:6px 0;border-radius:8px;justify-content:flex-start;align-items:center;gap:8px;display:inline-flex;">' +
+            '<div style="width:140px;max-width:180px;min-width:80px;min-height:24px;flex-direction:column;justify-content:center;align-items:flex-start;display:inline-flex;">' +
+              '<div style="min-height:16px;padding:0 4px;border-radius:8px;justify-content:center;align-items:center;display:inline-flex;">' +
+                '<div style="color:#6F6F71;font-size:12px;font-family:Inter,sans-serif;font-weight:500;letter-spacing:0.5px;">FECHA</div>' +
+              '</div>' +
+            '</div>' +
+            '<div style="flex:1 1 0;overflow:hidden;justify-content:flex-start;align-items:center;display:flex;">' +
+              '<div style="color:#353537;font-size:14px;font-family:Inter,sans-serif;font-weight:700;line-height:20px;">' + esc(d.fecha) + ' &nbsp; ' + esc(d.hora || '09:30') + '</div>' +
+            '</div>' +
+          '</div>' +
         '</div>' +
       '</div>' +
 
-      '<div class="card" style="margin-bottom:20px;">' +
-        '<h3 class="sec-t" style="font-size:13px;font-weight:700;color:#06396E;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:18px;">TABLA MAESTRA</h3>' +
-        '<div class="fgrid g1" style="max-width:540px;">' + tablaField + '</div>' +
+      // Card 2: Derecha (Origen & Estado)
+      '<div style="width:384px;flex-shrink:0;align-self:stretch;padding:8px 16px;background:white;border:1px solid rgba(32,32,32,0.12);border-radius:8px;flex-direction:column;justify-content:center;align-items:flex-start;display:inline-flex;">' +
+        // Row 1: ORIGEN
+        '<div data-content="Text" data-layout="Inline" style="align-self:stretch;flex-direction:column;justify-content:flex-start;align-items:flex-start;display:flex;">' +
+          '<div style="align-self:stretch;min-height:36px;padding:6px 0;border-radius:8px;justify-content:flex-start;align-items:center;gap:8px;display:inline-flex;">' +
+            '<div style="max-width:140px;min-width:75px;min-height:24px;flex-direction:column;justify-content:center;align-items:flex-start;display:inline-flex;">' +
+              '<div style="min-height:16px;padding:0 4px;border-radius:8px;justify-content:center;align-items:center;display:inline-flex;">' +
+                '<div style="color:#6F6F71;font-size:12px;font-family:Inter,sans-serif;font-weight:500;letter-spacing:0.5px;">ORIGEN</div>' +
+              '</div>' +
+            '</div>' +
+            '<div style="flex:1 1 0;overflow:hidden;justify-content:flex-start;align-items:center;display:flex;">' +
+              orgBadge(d.origen) +
+            '</div>' +
+          '</div>' +
+        '</div>' +
+        // Row 2: ESTADO
+        '<div data-content="Tags" data-layout="Inline" style="align-self:stretch;flex-direction:column;justify-content:center;align-items:flex-start;display:flex;">' +
+          '<div style="align-self:stretch;min-height:36px;padding:6px 0;border-radius:8px;justify-content:flex-start;align-items:center;gap:8px;display:inline-flex;">' +
+            '<div style="max-width:140px;min-width:75px;min-height:24px;flex-direction:column;justify-content:center;align-items:flex-start;display:inline-flex;">' +
+              '<div style="min-height:16px;padding:0 4px;border-radius:8px;justify-content:center;align-items:center;display:inline-flex;">' +
+                '<div style="color:#6F6F71;font-size:12px;font-family:Inter,sans-serif;font-weight:500;letter-spacing:0.5px;">ESTADO</div>' +
+              '</div>' +
+            '</div>' +
+            '<div style="flex:1 1 0;overflow:hidden;justify-content:flex-start;align-items:center;display:flex;">' +
+              stBadge(d.estado) +
+            '</div>' +
+          '</div>' +
+        '</div>' +
       '</div>' +
+    '</div>';
 
-      '<div class="card" style="margin-bottom:20px;">' +
-        '<h3 class="sec-t" style="font-size:13px;font-weight:700;color:#06396E;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:16px;">VALORES DE LOS CAMPOS</h3>' +
-        '<div class="fgrid g2" style="gap:16px 20px;">' + fInputs + '</div>' +
-      '</div>';
+    // 2. Card Principal del Formulario (Abajo)
+    var formCard = '<div class="card" style="padding:0;overflow:hidden;margin-bottom:20px;background:white;border:1px solid rgba(32,32,32,0.12);border-radius:8px;">' +
+      // Header de Sección
+      '<div style="width:100%;min-height:52px;padding:16px 24px 12px;border-bottom:1px solid rgba(32,32,32,0.12);display:flex;justify-content:flex-start;align-items:center;box-sizing:border-box;">' +
+        '<div style="color:var(--sys-color-text-neutral-high, #252220);font-size:16px;font-family:Inter,sans-serif;font-weight:600;line-height:24px;">' +
+          (D.mode === 'edit' ? 'Datos del registro a editar' : 'Datos del registro') +
+        '</div>' +
+      '</div>' +
+      // Contenido del Formulario
+      '<div style="padding:24px;display:flex;flex-direction:column;gap:24px;">' +
+        // Sección Tabla Maestra
+        '<div>' +
+          '<div style="font-size:13px;font-weight:700;color:#06396E;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:14px;font-family:Inter,sans-serif;">TABLA MAESTRA</div>' +
+          '<div class="fgrid g1" style="max-width:540px;">' + tablaField + '</div>' +
+        '</div>' +
+        // Sección Valores de los Campos
+        '<div>' +
+          '<div style="font-size:13px;font-weight:700;color:#06396E;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:14px;font-family:Inter,sans-serif;">VALORES DE LOS CAMPOS</div>' +
+          '<div class="fgrid g2" style="gap:16px 20px;">' + fInputs + '</div>' +
+        '</div>' +
+      '</div>' +
+    '</div>';
+
+    mount.innerHTML = headerCard + formCard;
   }
 
   function syncForm(){
@@ -409,11 +529,11 @@
     if(D.mode === 'edit'){
       var o = find(D.origId);
       if(o && o.estado !== 'Elaboración'){
-        D.data.unshift({ id: uid(), tabla: d.tabla, origen: 'Individual', tipo: 'Modificación', estado: 'Elaboración', fecha: today(), values: d.values });
+        D.data.unshift({ id: uid(), tabla: d.tabla, origen: 'Individual', tipo: 'Modificación', estado: 'Elaboración', fecha: today(), hora: nowTime(), values: d.values });
         toast('RN-DT-005 · Se registró una <b>Modificación</b> en Elaboración; el registro original se conserva como histórico.', 'ok');
-      } else if(o){ o.values = d.values; o.fecha = today(); toast('Cambios guardados en el registro (Elaboración).', 'ok'); }
+      } else if(o){ o.values = d.values; o.fecha = today(); o.hora = nowTime(); toast('Cambios guardados en el registro (Elaboración).', 'ok'); }
     } else {
-      D.data.unshift({ id: uid(), tabla: d.tabla, origen: 'Individual', tipo: 'Creación', estado: 'Elaboración', fecha: today(), values: d.values });
+      D.data.unshift({ id: uid(), tabla: d.tabla, origen: 'Individual', tipo: 'Creación', estado: 'Elaboración', fecha: today(), hora: nowTime(), values: d.values });
       toast('RN-DT-001 · Registro creado (origen <b>Individual</b>) en estado Elaboración.', 'ok');
     }
     renderList(); window.go('tra002-list');

@@ -38,15 +38,83 @@
 
   function seed(){
     S.structures = [
-      { id: uid(), code: 'TM-0009', name: 'Tipos de vía', ref: 'TIPOS_VIA', alcance: 'Nacional', maxErr: 10, desc: 'Catálogo de tipos de vía para direcciones del SIIT.', type: 'Creación', state: 'Elaboración', date: '10/08/2026', needsApproval: true, sustentoFile: 'INFORME_TECNICO_TIPOS_VIA.pdf', obsMotivo: '', rechazoMotivo: '', groups: [newGroup({ name: 'Grupo General', locked: true })], fields: [] },
-      { id: uid(), code: 'TM-0008', name: 'Actividad económica — CIIU', ref: 'CIIU', alcance: 'Nacional', maxErr: 20, desc: 'Clasificación Industrial Internacional Uniforme.', type: 'Creación', state: 'Observado', date: '08/08/2026', needsApproval: true, sustentoFile: 'SUSTENTO_CIIU_REV4.pdf', obsMotivo: 'Se requiere precisar la descripción del grupo de atributos y corroborar que los códigos numéricos mantengan 4 dígitos estándar.', obsDate: '08/08/2026', rechazoMotivo: '', groups: [newGroup({ name: 'Grupo General', locked: true })], fields: [] },
-      { id: uid(), code: 'TM-0007', name: 'Ubigeo — Distritos', ref: 'UBIGEO_DIST', alcance: 'Nacional', maxErr: 10, desc: 'Distritos y su código de ubicación geográfica.', type: 'Creación', state: 'Rechazado', date: '07/08/2026', needsApproval: true, sustentoFile: 'EXP_UBIGEO_2026.pdf', obsMotivo: '', rechazoMotivo: 'La estructura propuesta colisiona con el catálogo oficial de RENIEC/INEI vigente en la plataforma interoperable del Estado.', rechazoDate: '07/08/2026', groups: [newGroup({ name: 'Grupo General', locked: true })], fields: [] },
-      { id: uid(), code: 'TM-0006', name: 'Departamento', ref: 'DEPTO', alcance: 'Nacional', maxErr: 10, desc: 'Catálogo recién creado, todavía sin campos definidos.', type: 'Creación', state: 'Elaboración', date: '06/08/2026', needsApproval: true, sustentoFile: 'SUSTENTO_DEPTO_V1.pdf', obsMotivo: '', rechazoMotivo: '', groups: [newGroup({ name: 'Grupo General', locked: true })], fields: [] },
-      { id: uid(), code: 'TM-0005', name: 'Provincia', ref: 'PROV', alcance: 'Nacional', maxErr: 10, desc: 'Provincias por departamento.', type: 'Creación', state: 'Validado', date: '05/08/2026', needsApproval: true, sustentoFile: 'INFORME_PROV_2026.pdf', obsMotivo: '', rechazoMotivo: '', groups: [newGroup({ name: 'Grupo General', locked: true })], fields: [] },
-      { id: uid(), code: 'TM-0004', name: 'Países y Nacionalidades', ref: 'PAIS', alcance: 'Nacional', maxErr: 10, desc: 'Catálogo de países según ISO 3166.', type: 'Creación', state: 'Aprobado', date: '04/08/2026', needsApproval: true, sustentoFile: 'ISO_3166_PAISES.pdf', obsMotivo: '', rechazoMotivo: '', groups: [newGroup({ name: 'Grupo General', locked: true })], fields: [] },
-      { id: uid(), code: 'TM-0003', name: 'Moneda', ref: 'MONEDA', alcance: 'Nacional', maxErr: 10, desc: 'Monedas admitidas por el sistema con su símbolo.', type: 'Creación', state: 'Aprobado', date: '03/08/2026', needsApproval: false, sustentoFile: 'INFORME_BASE.pdf', obsMotivo: '', rechazoMotivo: '', groups: [newGroup({ name: 'Grupo General', locked: true })], fields: [] },
-      { id: uid(), code: 'TM-0002', name: 'Tipo de Documento de Identidad', ref: 'TIPO_DOC', alcance: 'Nacional', maxErr: 10, desc: 'DNI, CE, PTP, Pasaporte, RUC.', type: 'Creación', state: 'Aprobado', date: '02/08/2026', needsApproval: false, sustentoFile: 'INFORME_BASE.pdf', obsMotivo: '', rechazoMotivo: '', groups: [newGroup({ name: 'Grupo General', locked: true })], fields: [] },
-      { id: uid(), code: 'TM-0001', name: 'Estado Civil', ref: 'ESTADO_CIVIL', alcance: 'Nacional', maxErr: 10, desc: 'Soltero, Casado, Viudo, Divorciado.', type: 'Creación', state: 'Aprobado', date: '01/08/2026', needsApproval: false, sustentoFile: 'INFORME_BASE.pdf', obsMotivo: '', rechazoMotivo: '', groups: [newGroup({ name: 'Grupo General', locked: true })], fields: [] }
+      {
+        id: uid(), code: 'TM-0009', name: 'Tipos de vía', ref: 'TIPOS_VIA', alcance: 'Nacional', maxErr: 10, desc: 'Catálogo de tipos de vía para direcciones del SIIT.', type: 'Creación', state: 'Elaboración', date: '10/08/2026', needsApproval: true, sustentoFile: 'INFORME_TECNICO_TIPOS_VIA.pdf', obsMotivo: '', rechazoMotivo: '',
+        groups: [newGroup({ name: 'Grupo General', locked: true })],
+        fields: [
+          newField({ name: 'Código', type: 'Texto', min: 1, max: 10, required: true, group: 'Grupo General' }),
+          newField({ name: 'Descripción', type: 'Texto', min: 1, max: 100, required: true, group: 'Grupo General' })
+        ]
+      },
+      {
+        id: uid(), code: 'TM-0008', name: 'Actividad económica — CIIU', ref: 'CIIU', alcance: 'Nacional', maxErr: 20, desc: 'Clasificación Industrial Internacional Uniforme.', type: 'Creación', state: 'Observado', date: '08/08/2026', needsApproval: true, sustentoFile: 'SUSTENTO_CIIU_REV4.pdf', obsMotivo: 'Se requiere precisar la descripción del grupo de atributos y corroborar que los códigos numéricos mantengan 4 dígitos estándar.', obsDate: '08/08/2026', rechazoMotivo: '',
+        groups: [newGroup({ name: 'Grupo General', locked: true })],
+        fields: [
+          newField({ name: 'Código', type: 'Texto', min: 4, max: 10, required: true, group: 'Grupo General' }),
+          newField({ name: 'Descripción', type: 'Texto', min: 3, max: 150, required: true, group: 'Grupo General' })
+        ]
+      },
+      {
+        id: uid(), code: 'TM-0007', name: 'Ubigeo — Distritos', ref: 'UBIGEO_DIST', alcance: 'Nacional', maxErr: 10, desc: 'Distritos y su código de ubicación geográfica.', type: 'Creación', state: 'Rechazado', date: '07/08/2026', needsApproval: true, sustentoFile: 'EXP_UBIGEO_2026.pdf', obsMotivo: '', rechazoMotivo: 'La estructura propuesta colisiona con el catálogo oficial de RENIEC/INEI vigente en la plataforma interoperable del Estado.', rechazoDate: '07/08/2026',
+        groups: [newGroup({ name: 'Grupo General', locked: true })],
+        fields: [
+          newField({ name: 'Ubigeo', type: 'Texto', min: 6, max: 6, required: true, group: 'Grupo General' }),
+          newField({ name: 'Departamento', type: 'Texto', min: 1, max: 50, required: true, group: 'Grupo General' }),
+          newField({ name: 'Provincia', type: 'Texto', min: 1, max: 50, required: true, group: 'Grupo General' }),
+          newField({ name: 'Distrito', type: 'Texto', min: 1, max: 50, required: true, group: 'Grupo General' })
+        ]
+      },
+      {
+        id: uid(), code: 'TM-0006', name: 'Departamento', ref: 'DEPTO', alcance: 'Nacional', maxErr: 10, desc: 'Catálogo de departamentos del Perú.', type: 'Creación', state: 'Elaboración', date: '06/08/2026', needsApproval: true, sustentoFile: 'SUSTENTO_DEPTO_V1.pdf', obsMotivo: '', rechazoMotivo: '',
+        groups: [newGroup({ name: 'Grupo General', locked: true })],
+        fields: [
+          newField({ name: 'Código', type: 'Texto', min: 2, max: 6, required: true, group: 'Grupo General' }),
+          newField({ name: 'Nombre', type: 'Texto', min: 1, max: 60, required: true, group: 'Grupo General' })
+        ]
+      },
+      {
+        id: uid(), code: 'TM-0005', name: 'Provincia', ref: 'PROV', alcance: 'Nacional', maxErr: 10, desc: 'Provincias por departamento.', type: 'Creación', state: 'Validado', date: '05/08/2026', needsApproval: true, sustentoFile: 'INFORME_PROV_2026.pdf', obsMotivo: '', rechazoMotivo: '',
+        groups: [newGroup({ name: 'Grupo General', locked: true })],
+        fields: [
+          newField({ name: 'Código', type: 'Texto', min: 4, max: 6, required: true, group: 'Grupo General' }),
+          newField({ name: 'Nombre', type: 'Texto', min: 1, max: 60, required: true, group: 'Grupo General' }),
+          newField({ name: 'Departamento', type: 'Texto', min: 1, max: 60, required: true, group: 'Grupo General' })
+        ]
+      },
+      {
+        id: uid(), code: 'TM-0004', name: 'Países y Nacionalidades', ref: 'PAIS', alcance: 'Nacional', maxErr: 10, desc: 'Catálogo de países según ISO 3166.', type: 'Creación', state: 'Aprobado', date: '04/08/2026', needsApproval: true, sustentoFile: 'ISO_3166_PAISES.pdf', obsMotivo: '', rechazoMotivo: '',
+        groups: [newGroup({ name: 'Grupo General', locked: true })],
+        fields: [
+          newField({ name: 'Código ISO', type: 'Texto', min: 2, max: 3, required: true, group: 'Grupo General' }),
+          newField({ name: 'País', type: 'Texto', min: 1, max: 80, required: true, group: 'Grupo General' }),
+          newField({ name: 'Nacionalidad', type: 'Texto', min: 1, max: 80, required: false, group: 'Grupo General' })
+        ]
+      },
+      {
+        id: uid(), code: 'TM-0003', name: 'Moneda', ref: 'MONEDA', alcance: 'Nacional', maxErr: 10, desc: 'Monedas admitidas por el sistema con su símbolo.', type: 'Creación', state: 'Aprobado', date: '03/08/2026', needsApproval: false, sustentoFile: 'INFORME_BASE.pdf', obsMotivo: '', rechazoMotivo: '',
+        groups: [newGroup({ name: 'Grupo General', locked: true })],
+        fields: [
+          newField({ name: 'Código', type: 'Texto', min: 3, max: 10, required: true, group: 'Grupo General' }),
+          newField({ name: 'Descripción', type: 'Texto', min: 1, max: 100, required: true, group: 'Grupo General' }),
+          newField({ name: 'Símbolo', type: 'Texto', min: 1, max: 10, required: false, group: 'Grupo General' })
+        ]
+      },
+      {
+        id: uid(), code: 'TM-0002', name: 'Tipo de Documento de Identidad', ref: 'TIPO_DOC', alcance: 'Nacional', maxErr: 10, desc: 'DNI, CE, PTP, Pasaporte, RUC.', type: 'Creación', state: 'Aprobado', date: '02/08/2026', needsApproval: false, sustentoFile: 'INFORME_BASE.pdf', obsMotivo: '', rechazoMotivo: '',
+        groups: [newGroup({ name: 'Grupo General', locked: true })],
+        fields: [
+          newField({ name: 'Código', type: 'Texto', min: 2, max: 10, required: true, group: 'Grupo General' }),
+          newField({ name: 'Descripción', type: 'Texto', min: 1, max: 100, required: true, group: 'Grupo General' })
+        ]
+      },
+      {
+        id: uid(), code: 'TM-0001', name: 'Estado Civil', ref: 'ESTADO_CIVIL', alcance: 'Nacional', maxErr: 10, desc: 'Soltero, Casado, Viudo, Divorciado.', type: 'Creación', state: 'Aprobado', date: '01/08/2026', needsApproval: false, sustentoFile: 'INFORME_BASE.pdf', obsMotivo: '', rechazoMotivo: '',
+        groups: [newGroup({ name: 'Grupo General', locked: true })],
+        fields: [
+          newField({ name: 'Código', type: 'Texto', min: 2, max: 10, required: true, group: 'Grupo General' }),
+          newField({ name: 'Descripción', type: 'Texto', min: 1, max: 100, required: true, group: 'Grupo General' })
+        ]
+      }
     ];
     S.seq = 9;
   }
@@ -440,17 +508,15 @@
       }
     }
 
-    var evalBtn = document.getElementById('btn-evaluate-tra001');
-    if(evalBtn){
-      if(S.currentRole === 'Aprobador' && d.state === 'Validado'){
-        evalBtn.style.display = 'inline-flex';
-        evalBtn.disabled = false;
-        evalBtn.style.opacity = '1';
-        evalBtn.style.cursor = 'pointer';
-      } else {
-        evalBtn.style.display = 'none';
-      }
-    }
+    var canCreatorApprove = S.currentRole === 'Creador' && d.state === 'Validado' && !d.needsApproval;
+    var showApproverActions = S.currentRole === 'Aprobador' && d.state === 'Validado';
+    var aprBtns = document.querySelectorAll('#btn-approve-tra001, #btn-approve-tra001-v2, [data-fbtn="approve"]');
+    var obsBtns = document.querySelectorAll('#btn-observe-tra001, #btn-observe-tra001-v2, [data-fbtn="observe"]');
+    var rejBtns = document.querySelectorAll('#btn-reject-tra001, #btn-reject-tra001-v2, [data-fbtn="reject"]');
+
+    Array.prototype.forEach.call(aprBtns, function(b){ b.style.display = (showApproverActions || canCreatorApprove) ? 'inline-flex' : 'none'; });
+    Array.prototype.forEach.call(obsBtns, function(b){ b.style.display = showApproverActions ? 'inline-flex' : 'none'; });
+    Array.prototype.forEach.call(rejBtns, function(b){ b.style.display = showApproverActions ? 'inline-flex' : 'none'; });
   }
 
   function syncForm(){
@@ -822,6 +888,9 @@
     var bodyEl = document.getElementById('t001-drawer-body');
     var saveText = document.getElementById('t001-drawer-savetext');
 
+    if(panel) {
+      panel.style.width = opts.width || '520px';
+    }
     if(titleEl) titleEl.textContent = opts.title || '';
     if(subEl) subEl.textContent = opts.subtitle || '';
     if(bodyEl) bodyEl.innerHTML = opts.bodyHtml || '';
@@ -853,6 +922,7 @@
     '</div>';
 
     openDrawer({
+      width: '400px',
       title: g ? 'Editar agrupación' : 'Agregar agrupación',
       subtitle: 'Secciones lógicas que organizan los campos de la estructura.',
       bodyHtml: html,
@@ -918,6 +988,7 @@
     '</div>';
 
     openDrawer({
+      width: '560px',
       title: f ? 'Editar campo' : 'Agregar campo',
       subtitle: 'Define las características, tipo de dato y restricciones del campo.',
       bodyHtml: html,
@@ -1059,7 +1130,7 @@
     var sendsToApprover = sVal.needsApproval;
     var msg = sendsToApprover
       ? 'Al validar la estructura <b>' + esc(sVal.name) + '</b>, su estado cambiará a <b>Validado</b> y quedará en espera de evaluación y resolución por parte del <b>Aprobador</b>.'
-      : 'Al validar la estructura <b>' + esc(sVal.name) + '</b>, su estado cambiará a <b>Validado</b>.';
+      : 'Al validar la estructura <b>' + esc(sVal.name) + '</b>, su estado cambiará a <b>Validado</b> y podrá proceder de inmediato con su aprobación formal.';
 
     var html = '<div style="display:flex;flex-direction:column;gap:16px;padding:4px 0;">' +
       '<div style="display:flex;align-items:center;gap:12px;">' +
@@ -1079,13 +1150,34 @@
         S.draft.state = 'Validado';
       }
       renderList();
-      toast('Estructura <b>' + sVal.code + '</b> validada correctamente' + (sendsToApprover ? ' y enviada al Aprobador.' : '.'), 'ok');
-      if (window.go) window.go('tra001-list');
+      var currScreen = document.querySelector('.screen.on');
+      var isInForm = currScreen && (currScreen.id === 'tra001-form' || currScreen.id === 'tra001-form-v2');
+
+      if (!sendsToApprover && isInForm) {
+        renderForm();
+        updateStepButtons();
+        toast('Estructura <b>' + sVal.code + '</b> validada correctamente. Ahora puede proceder a <b>Aprobar</b>.', 'ok');
+      } else {
+        toast('Estructura <b>' + sVal.code + '</b> validada correctamente' + (sendsToApprover ? ' y enviada al Aprobador.' : '.'), 'ok');
+        if (window.go) window.go('tra001-list');
+      }
       return true;
     }, 'Validar');
   }
 
-  function openEvaluateModal(id){
+  function buildFigmaInfoMessage(title, text){
+    return '<div data-borde="false" data-show-actions="false" data-type="Info" style="width: 100%; padding: 14px 16px; border-radius: 8px; background: var(--sys-color-bg-feedback-light-info, #DDF0FF); justify-content: flex-start; align-items: flex-start; gap: 12px; display: flex; box-sizing: border-box; margin-top: 14px;">' +
+      '<div style="width: 20px; height: 20px; flex-shrink: 0; margin-top: 1px; display: flex; align-items: center; justify-content: center;">' +
+        '<svg viewBox="0 0 24 24" style="width: 20px; height: 20px; stroke: var(--sys-color-icon-feedback-light-info, #002D48); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>' +
+      '</div>' +
+      '<div style="flex: 1 1 0; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 4px; display: flex;">' +
+        '<div style="align-self: stretch; color: var(--sys-color-text-feedback-info, #002D48); font-size: 14px; font-family: Inter, sans-serif; font-weight: 600; line-height: 20px; word-wrap: break-word;">' + esc(title) + '</div>' +
+        '<div style="align-self: stretch; color: var(--sys-color-text-feedback-info, #002D48); font-size: 14px; font-family: Inter, sans-serif; font-weight: 400; line-height: 20px; word-wrap: break-word;">' + text + '</div>' +
+      '</div>' +
+    '</div>';
+  }
+
+  function openDirectApproveModal(id){
     var sVal = find(id);
     if(!sVal) return;
     if(sVal.state !== 'Validado'){
@@ -1093,144 +1185,158 @@
       return;
     }
 
-    var html = '<div style="display:flex;flex-direction:column;gap:18px;">' +
-      '<div style="color:#252220;font-size:14px;font-family:Inter,sans-serif;font-weight:500;line-height:20px;">' +
-        'Seleccione la decisión para esta estructura:' +
-      '</div>' +
-      '<div style="display:flex;flex-direction:column;gap:16px;">' +
-        '<label style="display:flex;align-items:flex-start;gap:12px;padding:0;border:none;cursor:pointer;background:transparent;" id="lbl-eval-apr">' +
-          '<input type="radio" name="eval-decision" value="aprobar" checked style="margin-top:3px;margin-left:0;accent-color:#06396E;" onchange="window.__t001EvalChange()">' +
-          '<div style="flex:1;">' +
-            '<div style="font-size:14px;font-weight:600;color:#252220;display:flex;align-items:center;gap:8px;"><span style="color:#504C4A;display:inline-flex;">' + ICON_FILE_CHECK + '</span><span>Aprobar</span></div>' +
-            '<div style="font-size:12px;color:#64748B;margin-top:2px;">Da conformidad formal a la estructura y la incorpora al catálogo oficial vigente.</div>' +
-          '</div>' +
-        '</label>' +
-        '<label style="display:flex;align-items:flex-start;gap:12px;padding:0;border:none;cursor:pointer;background:transparent;" id="lbl-eval-obs">' +
-          '<input type="radio" name="eval-decision" value="observar" style="margin-top:3px;margin-left:0;accent-color:#06396E;" onchange="window.__t001EvalChange()">' +
-          '<div style="flex:1;">' +
-            '<div style="font-size:14px;font-weight:600;color:#252220;display:flex;align-items:center;gap:8px;"><span style="color:#504C4A;display:inline-flex;">' + ICON_FILE_SEARCH + '</span><span>Observar</span></div>' +
-            '<div style="font-size:12px;color:#64748B;margin-top:2px;">Devuelve la estructura al Creador para que subsane las correcciones o precisiones solicitadas.</div>' +
-          '</div>' +
-        '</label>' +
-        '<label style="display:flex;align-items:flex-start;gap:12px;padding:0;border:none;cursor:pointer;background:transparent;" id="lbl-eval-rec">' +
-          '<input type="radio" name="eval-decision" value="rechazar" style="margin-top:3px;margin-left:0;accent-color:#06396E;" onchange="window.__t001EvalChange()">' +
-          '<div style="flex:1;">' +
-            '<div style="font-size:14px;font-weight:600;color:#252220;display:flex;align-items:center;gap:8px;"><span style="color:#504C4A;display:inline-flex;">' + ICON_FILE_X + '</span><span>Rechazar</span></div>' +
-            '<div style="font-size:12px;color:#64748B;margin-top:2px;">Cierra permanentemente la estructura. Quedará archivada en modo solo consulta.</div>' +
-          '</div>' +
-        '</label>' +
-      '</div>' +
-      // Box subopciones aprobar (inmediata / programada) sin bordes y alineado
-      '<div id="eval-apr-subbox" style="display:flex;flex-direction:column;gap:8px;padding:0;background:transparent;border:none;">' +
-        '<div style="font-size:13px;font-weight:600;color:#252220;">Modalidad de vigencia:</div>' +
+    var html = '<div style="display:flex;flex-direction:column;gap:14px;">' +
+      '<div style="display:flex;flex-direction:column;gap:10px;">' +
+        '<div style="font-size:14px;font-weight:600;color:#252220;font-family:Inter,sans-serif;">Modalidad de vigencia:</div>' +
         '<div style="display:flex;gap:20px;">' +
-          '<label style="display:inline-flex;align-items:center;gap:6px;font-size:13px;color:#334155;cursor:pointer;"><input type="radio" name="eval-apr-mode" value="inmediata" checked style="margin-left:0;accent-color:#06396E;" onchange="document.getElementById(\'eval-apr-date-box\').style.display=\'none\';"> Vigencia Inmediata</label>' +
-          '<label style="display:inline-flex;align-items:center;gap:6px;font-size:13px;color:#334155;cursor:pointer;"><input type="radio" name="eval-apr-mode" value="programada" style="accent-color:#06396E;" onchange="document.getElementById(\'eval-apr-date-box\').style.display=\'block\';"> Vigencia Programada</label>' +
+          '<label style="display:inline-flex;align-items:center;gap:8px;font-size:14px;font-family:Inter,sans-serif;color:#334155;cursor:pointer;">' +
+            '<input type="radio" name="eval-apr-mode" value="inmediata" checked style="margin-left:0;accent-color:#06396E;" onchange="document.getElementById(\'eval-apr-date-box\').style.display=\'none\';">' +
+            '<span>Vigencia Inmediata</span>' +
+          '</label>' +
+          '<label style="display:inline-flex;align-items:center;gap:8px;font-size:14px;font-family:Inter,sans-serif;color:#334155;cursor:pointer;">' +
+            '<input type="radio" name="eval-apr-mode" value="programada" style="accent-color:#06396E;" onchange="document.getElementById(\'eval-apr-date-box\').style.display=\'block\';">' +
+            '<span>Vigencia Programada</span>' +
+          '</label>' +
         '</div>' +
         '<div id="eval-apr-date-box" style="display:none;margin-top:6px;">' +
-          '<label style="font-size:12px;color:#475569;font-weight:500;margin-bottom:4px;display:block;">Fecha de inicio de vigencia <span style="color:#D51317;">*</span></label>' +
-          '<input type="date" id="eval-apr-date" value="' + today().split('/').reverse().join('-') + '" style="padding:6px 10px;border-radius:6px;border:1px solid #CBD5E1;font-size:13px;outline:none;background:white;">' +
+          '<label style="font-size:13px;color:#475569;font-weight:500;font-family:Inter,sans-serif;margin-bottom:4px;display:block;">Fecha de inicio de vigencia <span style="color:#D51317;">*</span></label>' +
+          '<input type="date" id="eval-apr-date" value="' + today().split('/').reverse().join('-') + '" style="width:100%;padding:8px 12px;border-radius:6px;border:1px solid #CBD5E1;font-size:13.5px;font-family:Inter,sans-serif;outline:none;background:white;box-sizing:border-box;">' +
         '</div>' +
       '</div>' +
-      // Box para Motivo de Observación o Rechazo
-      '<div id="eval-motivo-box" style="display:none;flex-direction:column;gap:6px;">' +
-        '<label id="eval-motivo-label" style="font-size:13px;font-weight:600;color:#1E293B;">Motivo <span style="color:#D51317;">*</span></label>' +
-        '<textarea id="eval-motivo-text" rows="3" placeholder="Ingrese el detalle o justificación..." style="width:100%;padding:10px 12px;border-radius:8px;border:1px solid #CBD5E1;font-size:13.5px;font-family:Inter,sans-serif;outline:none;resize:vertical;box-sizing:border-box;"></textarea>' +
-        '<div id="eval-motivo-error" style="display:none;font-size:12px;color:#DC2626;">Debe ingresar el motivo para continuar.</div>' +
-      '</div>' +
+      buildFigmaInfoMessage('¿Qué implica aprobar la estructura?', 'Permite dar conformidad formal a la estructura e incorporarla al catálogo oficial vigente de Tablas Maestras del SIIT.') +
     '</div>';
 
-    window.__t001EvalChange = function(){
-      var decRadio = document.querySelector('input[name="eval-decision"]:checked');
-      if(!decRadio) return;
-      var dec = decRadio.value;
-      var aprBox = document.getElementById('eval-apr-subbox');
-      var motBox = document.getElementById('eval-motivo-box');
-      var motLbl = document.getElementById('eval-motivo-label');
-      var saveBtn = document.getElementById('t001-drawer-save');
-      var saveText = document.getElementById('t001-drawer-savetext');
-
-      if(saveBtn) saveBtn.style.background = '#06396E';
-
-      if(dec === 'aprobar'){
-        if(aprBox) aprBox.style.display = 'flex';
-        if(motBox) motBox.style.display = 'none';
-        if(saveText) saveText.textContent = 'Aprobar estructura';
-      } else if(dec === 'observar'){
-        if(aprBox) aprBox.style.display = 'none';
-        if(motBox) motBox.style.display = 'flex';
-        if(motLbl) motLbl.innerHTML = 'Motivo de la observación <span style="color:#D51317;">*</span>';
-        if(saveText) saveText.textContent = 'Observar estructura';
-      } else if(dec === 'rechazar'){
-        if(aprBox) aprBox.style.display = 'none';
-        if(motBox) motBox.style.display = 'flex';
-        if(motLbl) motLbl.innerHTML = 'Motivo del rechazo <span style="color:#D51317;">*</span>';
-        if(saveText) saveText.textContent = 'Rechazar estructura';
-      }
-    };
-
     openDrawer({
-      title: 'Evaluar estructura ' + esc(sVal.code),
+      width: '400px',
+      title: 'Aprobar estructura ' + esc(sVal.code),
       subtitle: esc(sVal.name),
       bodyHtml: html,
       saveText: 'Aprobar estructura',
       onSave: function(){
-        var decRadio = document.querySelector('input[name="eval-decision"]:checked');
-        if(!decRadio) return false;
-        var dec = decRadio.value;
-        if(dec === 'aprobar'){
-          var isProg = document.querySelector('input[name="eval-apr-mode"]:checked').value === 'programada';
-          if(isProg){
-            var dt = val('eval-apr-date');
-            if(!dt){ toast('Indique la fecha de vigencia para la aprobación programada.', 'err'); return false; }
-            sVal.state = 'Aprobado';
-            sVal.vigenciaDate = dt;
-            if(S.draft && S.draft.id === sVal.id){ S.draft.state = 'Aprobado'; S.draft.vigenciaDate = dt; }
-            renderList();
-            toast('Estructura <b>' + sVal.code + '</b> aprobada (vigente desde ' + dt + ').', 'ok');
-          } else {
-            sVal.state = 'Aprobado';
-            if(S.draft && S.draft.id === sVal.id){ S.draft.state = 'Aprobado'; }
-            renderList();
-            toast('Estructura <b>' + sVal.code + '</b> aprobada formalmente e incorporada al catálogo oficial.', 'ok');
-          }
-          if (window.go) window.go('tra001-list');
-          return true;
-        }
-
-        var motivo = val('eval-motivo-text').trim();
-        if(!motivo){
-          var errEl = document.getElementById('eval-motivo-error');
-          if(errEl) errEl.style.display = 'block';
-          return false;
-        }
-
-        if(dec === 'observar'){
-          sVal.state = 'Observado';
-          sVal.obsMotivo = motivo;
-          sVal.obsDate = today();
-          if(S.draft && S.draft.id === sVal.id){ S.draft.state = 'Observado'; S.draft.obsMotivo = motivo; S.draft.obsDate = today(); }
+        var isProg = document.querySelector('input[name="eval-apr-mode"]:checked').value === 'programada';
+        if(isProg){
+          var dt = val('eval-apr-date');
+          if(!dt){ toast('Indique la fecha de vigencia para la aprobación programada.', 'err'); return false; }
+          sVal.state = 'Aprobado';
+          sVal.vigenciaDate = dt;
+          if(S.draft && S.draft.id === sVal.id){ S.draft.state = 'Aprobado'; S.draft.vigenciaDate = dt; }
           renderList();
-          toast('Estructura <b>' + sVal.code + '</b> marcada como Observada. El Creador podrá modificarla.', 'warn');
-          if (window.go) window.go('tra001-list');
-          return true;
-        }
-
-        if(dec === 'rechazar'){
-          sVal.state = 'Rechazado';
-          sVal.rechazoMotivo = motivo;
-          sVal.rechazoDate = today();
-          if(S.draft && S.draft.id === sVal.id){ S.draft.state = 'Rechazado'; S.draft.rechazoMotivo = motivo; S.draft.rechazoDate = today(); }
+          toast('Estructura <b>' + sVal.code + '</b> aprobada (vigente desde ' + dt + ').', 'ok');
+        } else {
+          sVal.state = 'Aprobado';
+          if(S.draft && S.draft.id === sVal.id){ S.draft.state = 'Aprobado'; }
           renderList();
-          toast('Estructura <b>' + sVal.code + '</b> rechazada definitivamente.', 'err');
-          if (window.go) window.go('tra001-list');
-          return true;
+          toast('Estructura <b>' + sVal.code + '</b> aprobada formalmente e incorporada al catálogo oficial.', 'ok');
         }
+        var currScreen = document.querySelector('.screen.on');
+        var isInForm = currScreen && (currScreen.id === 'tra001-form' || currScreen.id === 'tra001-form-v2');
+
+        if(isInForm && S.draft && S.draft.id === sVal.id){
+          renderForm();
+          updateStepButtons();
+        } else {
+          if (window.go) window.go('tra001-list');
+        }
+        return true;
       }
     });
 
     var sBtn = document.getElementById('t001-drawer-save');
     if(sBtn) sBtn.style.background = '#06396E';
+  }
+
+  function openDirectObserveModal(id){
+    var sVal = find(id);
+    if(!sVal) return;
+    if(sVal.state !== 'Validado'){
+      toast('Solo pueden evaluarse estructuras en estado Validado.', 'err');
+      return;
+    }
+
+    var html = '<div style="display:flex;flex-direction:column;gap:14px;">' +
+      '<div style="display:flex;flex-direction:column;gap:6px;">' +
+        '<label style="font-size:14px;font-weight:600;color:#1E293B;font-family:Inter,sans-serif;">Motivo de la observación <span style="color:#D51317;">*</span></label>' +
+        '<textarea id="eval-obs-motivo" rows="4" placeholder="Detalle las observaciones, precisiones o ajustes requeridos..." style="width:100%;padding:10px 12px;border-radius:8px;border:1px solid #CBD5E1;font-size:13.5px;font-family:Inter,sans-serif;outline:none;resize:vertical;box-sizing:border-box;"></textarea>' +
+        '<div id="eval-obs-error" style="display:none;font-size:12px;color:#DC2626;font-weight:500;">Debe ingresar el motivo de la observación para continuar.</div>' +
+      '</div>' +
+      buildFigmaInfoMessage('¿Qué implica observar la estructura?', 'Permite devolver la estructura al rol Creador en estado Observado para subsanar las precisiones o correcciones solicitadas.') +
+    '</div>';
+
+    openDrawer({
+      width: '400px',
+      title: 'Observar estructura ' + esc(sVal.code),
+      subtitle: esc(sVal.name),
+      bodyHtml: html,
+      saveText: 'Observar estructura',
+      onSave: function(){
+        var motivo = val('eval-obs-motivo').trim();
+        if(!motivo){
+          var errEl = document.getElementById('eval-obs-error');
+          if(errEl) errEl.style.display = 'block';
+          return false;
+        }
+        sVal.state = 'Observado';
+        sVal.obsMotivo = motivo;
+        sVal.obsDate = today();
+        if(S.draft && S.draft.id === sVal.id){ S.draft.state = 'Observado'; S.draft.obsMotivo = motivo; S.draft.obsDate = today(); }
+        renderList();
+        toast('Estructura <b>' + sVal.code + '</b> marcada como Observada. El Creador podrá modificarla.', 'warn');
+        if (window.go) window.go('tra001-list');
+        return true;
+      }
+    });
+
+    var sBtn = document.getElementById('t001-drawer-save');
+    if(sBtn) sBtn.style.background = '#06396E';
+  }
+
+  function openDirectRejectModal(id){
+    var sVal = find(id);
+    if(!sVal) return;
+    if(sVal.state !== 'Validado'){
+      toast('Solo pueden evaluarse estructuras en estado Validado.', 'err');
+      return;
+    }
+
+    var html = '<div style="display:flex;flex-direction:column;gap:14px;">' +
+      '<div style="display:flex;flex-direction:column;gap:6px;">' +
+        '<label style="font-size:14px;font-weight:600;color:#1E293B;font-family:Inter,sans-serif;">Motivo del rechazo <span style="color:#D51317;">*</span></label>' +
+        '<textarea id="eval-rej-motivo" rows="4" placeholder="Detalle el sustento técnico o normativo del rechazo definitivo..." style="width:100%;padding:10px 12px;border-radius:8px;border:1px solid #CBD5E1;font-size:13.5px;font-family:Inter,sans-serif;outline:none;resize:vertical;box-sizing:border-box;"></textarea>' +
+        '<div id="eval-rej-error" style="display:none;font-size:12px;color:#DC2626;font-weight:500;">Debe ingresar el motivo del rechazo para continuar.</div>' +
+      '</div>' +
+      buildFigmaInfoMessage('¿Qué implica rechazar la estructura?', 'Permite rechazar de manera definitiva la estructura propuesta. El registro quedará archivado únicamente en modo de consulta.') +
+    '</div>';
+
+    openDrawer({
+      width: '400px',
+      title: 'Rechazar estructura ' + esc(sVal.code),
+      subtitle: esc(sVal.name),
+      bodyHtml: html,
+      saveText: 'Rechazar estructura',
+      onSave: function(){
+        var motivo = val('eval-rej-motivo').trim();
+        if(!motivo){
+          var errEl = document.getElementById('eval-rej-error');
+          if(errEl) errEl.style.display = 'block';
+          return false;
+        }
+        sVal.state = 'Rechazado';
+        sVal.rechazoMotivo = motivo;
+        sVal.rechazoDate = today();
+        if(S.draft && S.draft.id === sVal.id){ S.draft.state = 'Rechazado'; S.draft.rechazoMotivo = motivo; S.draft.rechazoDate = today(); }
+        renderList();
+        toast('Estructura <b>' + sVal.code + '</b> rechazada definitivamente.', 'err');
+        if (window.go) window.go('tra001-list');
+        return true;
+      }
+    });
+
+    var sBtn = document.getElementById('t001-drawer-save');
+    if(sBtn) sBtn.style.background = '#06396E';
+  }
+
+  function openEvaluateModal(id){
+    openDirectApproveModal(id);
   }
 
   function openApproveModal(id){
@@ -1416,12 +1522,39 @@
       return;
     }
 
-    // Top Bar Evaluate / Resolver Button (Rol Aprobador & v2)
+    // Top Bar Aprobador Action Buttons (Aprobar, Observar, Rechazar)
+    var aprBtn = e.target.closest('#btn-approve-tra001, #btn-approve-tra001-v2, [data-fbtn="approve"]');
+    if (aprBtn) {
+      e.preventDefault();
+      if (S.draft && S.draft.id) {
+        openDirectApproveModal(S.draft.id);
+      }
+      return;
+    }
+
+    var obsBtn = e.target.closest('#btn-observe-tra001, #btn-observe-tra001-v2, [data-fbtn="observe"]');
+    if (obsBtn) {
+      e.preventDefault();
+      if (S.draft && S.draft.id) {
+        openDirectObserveModal(S.draft.id);
+      }
+      return;
+    }
+
+    var rejBtn = e.target.closest('#btn-reject-tra001, #btn-reject-tra001-v2, [data-fbtn="reject"]');
+    if (rejBtn) {
+      e.preventDefault();
+      if (S.draft && S.draft.id) {
+        openDirectRejectModal(S.draft.id);
+      }
+      return;
+    }
+
     var evalBtn = e.target.closest('#btn-evaluate-tra001, #btn-evaluate-tra001-v2, [data-fbtn="evaluate"]');
     if (evalBtn) {
       e.preventDefault();
       if (S.draft && S.draft.id) {
-        openEvaluateModal(S.draft.id);
+        openDirectApproveModal(S.draft.id);
       }
       return;
     }
@@ -1592,4 +1725,18 @@
   });
 
   seed();
+
+  window.TRA001 = {
+    getStructures: function(){
+      return S.structures.slice();
+    },
+    getStructureByName: function(name){
+      if(!name) return null;
+      var clean = String(name).trim().toLowerCase();
+      for(var i = 0; i < S.structures.length; i++){
+        if(S.structures[i].name.toLowerCase() === clean) return S.structures[i];
+      }
+      return null;
+    }
+  };
 })();
