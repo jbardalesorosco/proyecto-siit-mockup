@@ -1403,6 +1403,9 @@
     // Custom Select Dropdown Toggle & Selection
     var trig = e.target.closest('.figma-select-trigger');
     if (trig) {
+      if (trig.closest('#tra002-form, #tra002-carga') || (trig.closest('.figma-select-wrapper') && trig.closest('.figma-select-wrapper').querySelector('input[id^="d2"]'))) {
+        return; // Handled by tra002.js
+      }
       if (e._figmaSelectHandled) return;
       e._figmaSelectHandled = true;
 
@@ -1425,6 +1428,9 @@
 
     var item = e.target.closest('.figma-select-item');
     if (item) {
+      if (item.closest('#tra002-form, #tra002-carga') || (item.closest('.figma-select-wrapper') && item.closest('.figma-select-wrapper').querySelector('input[id^="d2"]'))) {
+        return; // Handled by tra002.js
+      }
       if (e._figmaSelectItemHandled) return;
       e._figmaSelectItemHandled = true;
 
@@ -1732,11 +1738,26 @@
     },
     getStructureByName: function(name){
       if(!name) return null;
-      var clean = String(name).trim().toLowerCase();
-      for(var i = 0; i < S.structures.length; i++){
-        if(S.structures[i].name.toLowerCase() === clean) return S.structures[i];
+      function norm(str){
+        return String(str || '').trim().toLowerCase()
+          .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+          .replace(/[\s\u00A0\u2000-\u200B]+/g, ' ')
+          .replace(/[—–-]/g, '-');
       }
-      return null;
+      var clean = norm(name);
+      var foundApproved = null;
+      var foundAny = null;
+      for(var i = 0; i < S.structures.length; i++){
+        var st = S.structures[i];
+        if(st && st.name){
+          var stClean = norm(st.name);
+          if(stClean === clean){
+            if(st.state === 'Aprobado') return st;
+            if(!foundAny && st.state !== 'Eliminado') foundAny = st;
+          }
+        }
+      }
+      return foundApproved || foundAny;
     }
   };
 })();

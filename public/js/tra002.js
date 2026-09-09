@@ -5,10 +5,33 @@
 (function(){
   var PENCIL = '<svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/><path d="M12 20h9"/></svg>';
   var TRASH = '<svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>';
+  var EYE = '<svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;"><path d="M3 7V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v2"/><path d="M3 17v2a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-2"/><path d="M6 12c1.5-3.5 3.8-5 6-5s4.5 1.5 6 5c-1.5 3.5-3.8 5-6 5s-4.5-1.5-6-5Z"/><circle cx="12" cy="12" r="2" fill="currentColor" stroke="none"/></svg>';
   var CHECK = '<svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;"><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M12 11h4"/><path d="M12 16h4"/><path d="M8 11h.01"/><path d="M8 16h.01"/></svg>';
   var APPROVE = '<svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;"><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><polyline points="9 14 11 16 15 12"/></svg>';
+  var ICON_FILE_CHECK = '<svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><polyline points="9 15 11.5 17.5 15.5 12.5"/></svg>';
+  var ICON_FILE_SEARCH = '<svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><circle cx="11.5" cy="14.5" r="2.5"/><line x1="13.3" y1="16.3" x2="16" y2="19"/></svg>';
+  var ICON_FILE_X = '<svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><line x1="9.5" y1="12.5" x2="14.5" y2="17.5"/><line x1="14.5" y1="12.5" x2="9.5" y2="17.5"/></svg>';
 
-  var D = { data: [], draft: null, mode: 'create', origId: null, carga: null };
+  function getCurrentRole(){
+    if(window.CURRENT_ROLE) return window.CURRENT_ROLE;
+    var el = document.getElementById('tb-current-role');
+    if(el && el.textContent.indexOf('Aprobador') !== -1) return 'Aprobador';
+    return 'Creador';
+  }
+
+  function buildFigmaInfoMessage(title, text){
+    return '<div data-borde="false" data-show-actions="false" data-type="Info" style="width: 100%; padding: 14px 16px; border-radius: 8px; background: var(--sys-color-bg-feedback-light-info, #DDF0FF); justify-content: flex-start; align-items: flex-start; gap: 12px; display: flex; box-sizing: border-box; margin-top: 14px;">' +
+      '<div style="width: 20px; height: 20px; flex-shrink: 0; margin-top: 1px; display: flex; align-items: center; justify-content: center;">' +
+        '<svg viewBox="0 0 24 24" style="width: 20px; height: 20px; stroke: var(--sys-color-icon-feedback-light-info, #002D48); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>' +
+      '</div>' +
+      '<div style="flex: 1 1 0; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 4px; display: flex;">' +
+        '<div style="align-self: stretch; color: var(--sys-color-text-feedback-info, #002D48); font-size: 14px; font-family: Inter, sans-serif; font-weight: 600; line-height: 20px; word-wrap: break-word;">' + esc(title) + '</div>' +
+        '<div style="align-self: stretch; color: var(--sys-color-text-feedback-info, #002D48); font-size: 14px; font-family: Inter, sans-serif; font-weight: 400; line-height: 20px; word-wrap: break-word;">' + text + '</div>' +
+      '</div>' +
+    '</div>';
+  }
+
+  var D = { data: [], draft: null, mode: 'create', origId: null, carga: null, currentRole: 'Creador', draftSaved: false };
 
   function uid(){ return 'd' + Math.random().toString(36).slice(2,9); }
   function today(){ var d = new Date(); function p(x){ return String(x).padStart(2,'0'); } return p(d.getDate()) + '/' + p(d.getMonth()+1) + '/' + d.getFullYear(); }
@@ -69,19 +92,23 @@
       '</div>';
     }).join('');
 
+    var roTriggerStyle = opts.readonly ? ' pointer-events:none; cursor:default; background:transparent;' : '';
+    var arrowHtml = opts.readonly ? '' : '<svg class="figma-select-arrow" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>';
+
     var customHtml = '<div class="figma-select-wrapper" id="selwrap-' + opts.id + '">' +
       '<input type="hidden" id="' + opts.id + '" value="' + esc(selVal) + '">' +
-      '<div class="figma-select-trigger" id="trigger-' + opts.id + '">' +
-        '<span class="figma-select-val' + (isPl ? ' is-placeholder' : '') + '" id="val-' + opts.id + '">' + esc(displayText) + '</span>' +
-        '<svg class="figma-select-arrow" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>' +
+      '<div class="figma-select-trigger" id="trigger-' + opts.id + '" style="' + roTriggerStyle + '">' +
+        '<span class="figma-select-val' + (isPl ? ' is-placeholder' : '') + '" id="val-' + opts.id + '" style="' + (opts.readonly ? 'color:#29292A;' : '') + '">' + esc(displayText) + '</span>' +
+        arrowHtml +
       '</div>' +
-      '<div class="figma-select-menu" id="menu-' + opts.id + '">' + itemsHtml + '</div>' +
+      (opts.readonly ? '' : '<div class="figma-select-menu" id="menu-' + opts.id + '">' + itemsHtml + '</div>') +
     '</div>';
 
     return buildFigmaFieldHtml({
       id: opts.id,
       label: opts.label,
       required: opts.required,
+      readonly: opts.readonly,
       helperText: opts.helperText,
       selectedValue: selVal,
       customHtml: customHtml
@@ -150,12 +177,86 @@
   }
 
   function stBadge(st){
-    var m = { 'Elaboración': 'b-off', 'Validado': 'b-info', 'Aprobado': 'b-ok', 'Eliminado': 'b-off' };
+    var m = {
+      'Elaboración': 'b-off',
+      'Observado': 'b-warn',
+      'Validado': 'b-info',
+      'Aprobado': 'b-ok',
+      'Rechazado': 'b-err',
+      'Eliminado': 'b-off'
+    };
     return '<span class="badge ' + (m[st] || 'b-off') + '">' + st + '</span>';
   }
   function orgBadge(org){
     if(org === 'Masivo') return '<span class="badge b-info" style="background:#EFF6FF;color:#1E40AF;border:1px solid #BFDBFE">Masivo</span>';
     return '<span class="badge b-off">Individual</span>';
+  }
+
+  function getTableNeedsApproval(t){
+    if(!t) return false;
+    function norm(str){
+      return String(str || '').trim().toLowerCase()
+        .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+        .replace(/[\s\u00A0\u2000-\u200B]+/g, ' ')
+        .replace(/[—–-]/g, '-');
+    }
+    var normTarget = norm(t);
+    if(window.TRA001 && typeof window.TRA001.getStructureByName === 'function'){
+      var st = window.TRA001.getStructureByName(t);
+      if(st && typeof st.needsApproval === 'boolean'){
+        return st.needsApproval;
+      }
+      if(typeof window.TRA001.getStructures === 'function'){
+        var all = window.TRA001.getStructures();
+        for(var i = 0; i < all.length; i++){
+          var item = all[i];
+          var normItem = norm(item.nombre || item.name || '');
+          if(normItem === normTarget && typeof item.needsApproval === 'boolean'){
+            return item.needsApproval;
+          }
+        }
+      }
+    }
+    // Tablas base del sistema conocidas sin aprobador
+    var noApprovalDefaults = ['moneda', 'tipo de documento de identidad', 'estado civil'];
+    if(noApprovalDefaults.indexOf(normTarget) !== -1){
+      return false;
+    }
+    return true;
+  }
+
+  function openDrawer(opts){
+    var ov = document.getElementById('t001-drawer');
+    var panel = document.getElementById('t001-drawer-panel');
+    var titleEl = document.getElementById('t001-drawer-title');
+    var subEl = document.getElementById('t001-drawer-sub');
+    var bodyEl = document.getElementById('t001-drawer-body');
+    var saveText = document.getElementById('t001-drawer-savetext');
+
+    if(panel) {
+      panel.style.width = opts.width || '400px';
+    }
+    if(titleEl) titleEl.textContent = opts.title || '';
+    if(subEl) subEl.textContent = opts.subtitle || '';
+    if(bodyEl) bodyEl.innerHTML = opts.bodyHtml || '';
+    if(saveText) saveText.textContent = opts.saveText || 'Guardar';
+
+    ov._onSave = opts.onSave;
+    ov.style.display = 'flex';
+    requestAnimationFrame(function(){
+      if(panel) panel.style.transform = 'translateX(0)';
+    });
+  }
+
+  function closeDrawer(){
+    var ov = document.getElementById('t001-drawer');
+    var panel = document.getElementById('t001-drawer-panel');
+    if(!ov) return;
+    if(panel) panel.style.transform = 'translateX(100%)';
+    setTimeout(function(){
+      ov.style.display = 'none';
+      ov._onSave = null;
+    }, 250);
   }
 
   var CONFIGS = {
@@ -164,7 +265,8 @@
     'Actividad económica — CIIU': { max: 20, fields: [{ name: 'codigo', label: 'Código', req: true, max: 10, ej: '4711' }, { name: 'descripcion', label: 'Descripción', req: true, max: 150, ej: 'Venta al por menor en comercios no especializados' }] },
     'Tipos de vía': { max: 10, fields: [{ name: 'codigo', label: 'Código', req: true, max: 10, ej: 'AV' }, { name: 'descripcion', label: 'Descripción', req: true, max: 100, ej: 'Avenida' }] },
     'Moneda': { max: 10, fields: [{ name: 'codigo', label: 'Código', req: true, max: 10, ej: 'PEN' }, { name: 'descripcion', label: 'Descripción', req: true, max: 100, ej: 'Sol Peruano' }, { name: 'simbolo', label: 'Símbolo', req: false, max: 10, ej: 'S/' }] },
-    'Estado Civil': { max: 10, fields: [{ name: 'codigo', label: 'Código', req: true, max: 10, ej: 'SOL' }, { name: 'descripcion', label: 'Descripción', req: true, max: 100, ej: 'Soltero(a)' }] }
+    'Estado Civil': { max: 10, fields: [{ name: 'codigo', label: 'Código', req: true, max: 10, ej: 'SOL' }, { name: 'descripcion', label: 'Descripción', req: true, max: 100, ej: 'Soltero(a)' }] },
+    'Países y Nacionalidades': { max: 10, fields: [{ name: 'codigo_iso', label: 'Código ISO', req: true, max: 3, ej: 'PER' }, { name: 'pais', label: 'País', req: true, max: 80, ej: 'Perú' }, { name: 'nacionalidad', label: 'Nacionalidad', req: false, max: 80, ej: 'Peruana' }] }
   };
 
   function normalizeKey(str){
@@ -176,14 +278,18 @@
     if(window.TRA001 && typeof window.TRA001.getStructures === 'function'){
       var structs = window.TRA001.getStructures();
       structs.forEach(function(s){
-        if(s && s.name && s.state !== 'Eliminado' && names.indexOf(s.name) === -1){
+        if(s && s.name && s.state === 'Aprobado' && names.indexOf(s.name) === -1){
           names.push(s.name);
         }
       });
     }
-    Object.keys(CONFIGS).forEach(function(k){
-      if(names.indexOf(k) === -1) names.push(k);
-    });
+    // Fallback de tablas maestras base aprobadas si no se encuentran cargadas desde TRA001
+    if(names.length === 0){
+      var defaultApproved = ['Países y Nacionalidades', 'Moneda', 'Tipo de Documento de Identidad', 'Estado Civil'];
+      defaultApproved.forEach(function(k){
+        if(names.indexOf(k) === -1) names.push(k);
+      });
+    }
     return names;
   }
 
@@ -230,13 +336,126 @@
 
   function seed(){
     D.data = [
-      { id: uid(), tabla: 'Ubigeo — Distritos', origen: 'Masivo', tipo: 'Creación', estado: 'Aprobado', fecha: '20/07/2026', hora: '10:15', values: { ubigeo: '150132', departamento: 'Lima', provincia: 'Lima', distrito: 'San Juan de Miraflores' } },
-      { id: uid(), tabla: 'Ubigeo — Distritos', origen: 'Masivo', tipo: 'Creación', estado: 'Aprobado', fecha: '20/07/2026', hora: '11:20', values: { ubigeo: '150137', departamento: 'Lima', provincia: 'Lima', distrito: 'Villa El Salvador' } },
-      { id: uid(), tabla: 'Tipo de Documento de Identidad', origen: 'Individual', tipo: 'Creación', estado: 'Aprobado', fecha: '18/07/2026', hora: '08:45', values: { codigo: 'DNI', descripcion: 'Documento Nacional de Identidad' } },
-      { id: uid(), tabla: 'Actividad económica — CIIU', origen: 'Masivo', tipo: 'Modificación', estado: 'Validado', fecha: '22/07/2026', hora: '14:30', values: { codigo: '4711', descripcion: 'Venta al por menor en comercios no especializados' } },
-      { id: uid(), tabla: 'Tipos de vía', origen: 'Individual', tipo: 'Creación', estado: 'Elaboración', fecha: '23/07/2026', hora: '16:05', values: { codigo: 'AV', descripcion: 'Avenida' } },
-      { id: uid(), tabla: 'Moneda', origen: 'Individual', tipo: 'Creación', estado: 'Aprobado', fecha: '24/07/2026', hora: '09:12', values: { codigo: 'PEN', descripcion: 'Sol Peruano', simbolo: 'S/' } },
-      { id: uid(), tabla: 'Estado Civil', origen: 'Individual', tipo: 'Creación', estado: 'Aprobado', fecha: '25/07/2026', hora: '12:40', values: { codigo: 'SOL', descripcion: 'Soltero(a)' } }
+      {
+        id: uid(),
+        tabla: 'Moneda',
+        origen: 'Individual',
+        tipo: 'Creación',
+        estado: 'Elaboración',
+        fecha: today(),
+        hora: '10:30',
+        needsApproval: false,
+        obsMotivo: '',
+        obsDate: '',
+        rechazoMotivo: '',
+        rechazoDate: '',
+        values: { codigo: 'EUR', descripcion: 'Euro', simbolo: '€' }
+      },
+      {
+        id: uid(),
+        tabla: 'Tipos de vía',
+        origen: 'Individual',
+        tipo: 'Creación',
+        estado: 'Observado',
+        fecha: '08/08/2026',
+        hora: '14:20',
+        needsApproval: true,
+        obsMotivo: 'Se requiere precisar la abreviatura oficial según directiva de estandarización catastral.',
+        obsDate: '08/08/2026',
+        rechazoMotivo: '',
+        rechazoDate: '',
+        values: { codigo: 'JR', descripcion: 'Jirón' }
+      },
+      {
+        id: uid(),
+        tabla: 'Actividad económica — CIIU',
+        origen: 'Masivo',
+        tipo: 'Modificación',
+        estado: 'Validado',
+        fecha: '09/08/2026',
+        hora: '11:15',
+        needsApproval: true,
+        obsMotivo: '',
+        obsDate: '',
+        rechazoMotivo: '',
+        rechazoDate: '',
+        values: { codigo: '4711', descripcion: 'Venta al por menor en comercios no especializados' }
+      },
+      {
+        id: uid(),
+        tabla: 'Moneda',
+        origen: 'Individual',
+        tipo: 'Creación',
+        estado: 'Validado',
+        fecha: '09/08/2026',
+        hora: '09:40',
+        needsApproval: false,
+        obsMotivo: '',
+        obsDate: '',
+        rechazoMotivo: '',
+        rechazoDate: '',
+        values: { codigo: 'USD', descripcion: 'Dólar Estadounidense', simbolo: '$' }
+      },
+      {
+        id: uid(),
+        tabla: 'Ubigeo — Distritos',
+        origen: 'Masivo',
+        tipo: 'Creación',
+        estado: 'Rechazado',
+        fecha: '07/08/2026',
+        hora: '16:00',
+        needsApproval: true,
+        obsMotivo: '',
+        obsDate: '',
+        rechazoMotivo: 'El código de ubigeo propuesto colisiona con el catálogo oficial de RENIEC/INEI vigente.',
+        rechazoDate: '07/08/2026',
+        values: { ubigeo: '150199', departamento: 'Lima', provincia: 'Lima', distrito: 'Distrito No Homologado' }
+      },
+      {
+        id: uid(),
+        tabla: 'Ubigeo — Distritos',
+        origen: 'Masivo',
+        tipo: 'Creación',
+        estado: 'Aprobado',
+        fecha: '20/07/2026',
+        hora: '10:15',
+        needsApproval: true,
+        obsMotivo: '',
+        obsDate: '',
+        rechazoMotivo: '',
+        rechazoDate: '',
+        values: { ubigeo: '150132', departamento: 'Lima', provincia: 'Lima', distrito: 'San Juan de Miraflores' }
+      },
+      {
+        id: uid(),
+        tabla: 'Tipo de Documento de Identidad',
+        origen: 'Individual',
+        tipo: 'Creación',
+        estado: 'Aprobado',
+        fecha: '18/07/2026',
+        hora: '08:45',
+        needsApproval: true,
+        obsMotivo: '',
+        obsDate: '',
+        rechazoMotivo: '',
+        rechazoDate: '',
+        values: { codigo: 'DNI', descripcion: 'Documento Nacional de Identidad' }
+      },
+      {
+        id: uid(),
+        tabla: 'Moneda',
+        origen: 'Individual',
+        tipo: 'Creación',
+        estado: 'Aprobado',
+        fecha: '24/07/2026',
+        hora: '09:12',
+        needsApproval: false,
+        obsMotivo: '',
+        obsDate: '',
+        rechazoMotivo: '',
+        rechazoDate: '',
+        values: { codigo: 'PEN', descripcion: 'Sol Peruano', simbolo: 'S/' }
+      }
     ];
   }
 
@@ -259,6 +478,7 @@
   }
 
   function renderList(){
+    D.currentRole = getCurrentRole();
     var mount = document.getElementById('tra002-list-mount');
     if(!mount) return;
     var tnames = getTNAMES();
@@ -266,14 +486,17 @@
       var elim = r.estado === 'Eliminado';
       var a = '<div class="acts">';
       if (!elim) {
-        a += '<a title="Editar" data-d2="edit" data-d2id="' + r.id + '" style="color:#504C4A;cursor:pointer;">' + PENCIL + '</a>';
-        if (r.estado === 'Elaboración') {
-          a += '<a title="Validar" data-d2="validate" data-d2id="' + r.id + '" style="color:#504C4A;cursor:pointer;">' + CHECK + '</a>';
+        if (D.currentRole === 'Creador') {
+          if (r.estado === 'Elaboración' || r.estado === 'Observado') {
+            a += '<a title="' + (r.estado === 'Observado' ? 'Editar observaciones' : 'Editar') + '" data-d2="edit" data-d2id="' + r.id + '" style="color:#504C4A;cursor:pointer;">' + PENCIL + '</a>';
+            a += '<a title="Eliminar" data-d2="delete" data-d2id="' + r.id + '" style="color:#504C4A;cursor:pointer;">' + TRASH + '</a>';
+          } else {
+            a += '<a title="Ver detalle" data-d2="view" data-d2id="' + r.id + '" style="color:#504C4A;cursor:pointer;">' + EYE + '</a>';
+          }
+        } else {
+          // Rol Aprobador: En la tabla principal siempre se usa "Ver detalle"
+          a += '<a title="Ver detalle" data-d2="view" data-d2id="' + r.id + '" style="color:#504C4A;cursor:pointer;">' + EYE + '</a>';
         }
-        if (r.estado === 'Validado') {
-          a += '<a title="Aprobar" data-d2="approve" data-d2id="' + r.id + '" style="color:#504C4A;cursor:pointer;">' + APPROVE + '</a>';
-        }
-        a += '<a title="Eliminar" data-d2="delete" data-d2id="' + r.id + '" style="color:#504C4A;cursor:pointer;">' + TRASH + '</a>';
       } else {
         a += '<span style="font-size:11px;color:var(--ink3);">Eliminado</span>';
       }
@@ -281,8 +504,10 @@
 
       var reg = regOf(r.tabla, r.values);
       var k = (reg + ' ' + r.tabla + ' ' + r.origen + ' ' + r.estado).toLowerCase();
+      var clickAct = (D.currentRole === 'Creador' && (r.estado === 'Elaboración' || r.estado === 'Observado')) ? 'edit' : 'view';
+
       return '<tr data-k="' + esc(k) + '" data-st="' + r.estado + '" data-tb="' + esc(r.tabla) + '"' + (elim ? ' style="opacity:.5"' : '') + '>' +
-        buildTableCell('<a data-d2="edit" data-d2id="' + r.id + '" style="color:#29292A;text-decoration:none;cursor:pointer;">' + esc(reg) + '</a>') +
+        buildTableCell('<a data-d2="' + clickAct + '" data-d2id="' + r.id + '" style="color:#29292A;text-decoration:none;cursor:pointer;font-weight:400;">' + esc(reg) + '</a>') +
         buildTableCell(esc(r.tabla)) +
         buildTableCell(orgBadge(r.origen)) +
         buildTableCell(esc(r.tipo)) +
@@ -372,16 +597,67 @@
   }
 
   function makeDraft(){
-    var tnames = getTNAMES();
-    D.mode = 'create'; D.origId = null;
-    D.draft = { id: uid(), tabla: tnames[0], values: {}, origen: 'Individual', tipo: 'Creación', estado: 'Elaboración', fecha: today(), hora: nowTime() };
+    D.mode = 'create';
+    D.origId = null;
+    D.draftSaved = false;
+    D.draft = {
+      id: uid(),
+      tabla: '',
+      values: {},
+      origen: 'Individual',
+      tipo: 'Creación',
+      estado: 'Elaboración',
+      fecha: today(),
+      hora: nowTime(),
+      needsApproval: false,
+      obsMotivo: '',
+      obsDate: '',
+      rechazoMotivo: '',
+      rechazoDate: ''
+    };
   }
-  function openNew(){ makeDraft(); window.go('tra002-form'); }
+  function openNew(){
+    D.currentRole = getCurrentRole();
+    if(D.currentRole === 'Aprobador'){
+      toast('El rol Aprobador solo evalúa registros existentes. Cambie a Rol Creador en el menú de usuario para registrar.', 'warn');
+      return;
+    }
+    makeDraft();
+    window.go('tra002-form');
+  }
   function openEdit(id){
+    D.currentRole = getCurrentRole();
     var r = find(id); if(!r) return;
-    if(r.estado === 'Eliminado'){ toast('RN-DT-007 · Un registro Eliminado es irreversible: no puede editarse.', 'err'); return; }
-    D.mode = 'edit'; D.origId = id;
-    D.draft = { id: r.id, tabla: r.tabla, values: JSON.parse(JSON.stringify(r.values || {})), origen: r.origen, tipo: r.tipo, estado: r.estado, fecha: r.fecha, hora: r.hora || '09:30' };
+    if(r.estado === 'Eliminado'){
+      toast('Un registro Eliminado es irreversible: no puede editarse.', 'err');
+      return;
+    }
+    if(D.currentRole === 'Aprobador'){
+      openView(id);
+      return;
+    }
+    if(r.estado !== 'Elaboración' && r.estado !== 'Observado'){
+      openView(id);
+      return;
+    }
+    D.mode = 'edit';
+    D.origId = id;
+    D.draft = JSON.parse(JSON.stringify(r));
+    if(typeof D.draft.needsApproval !== 'boolean'){
+      D.draft.needsApproval = getTableNeedsApproval(D.draft.tabla);
+    }
+    D.draftSaved = true;
+    window.go('tra002-form');
+  }
+  function openView(id){
+    D.currentRole = getCurrentRole();
+    var r = find(id); if(!r) return;
+    D.mode = 'view';
+    D.origId = id;
+    D.draft = JSON.parse(JSON.stringify(r));
+    if(typeof D.draft.needsApproval !== 'boolean'){
+      D.draft.needsApproval = getTableNeedsApproval(D.draft.tabla);
+    }
     window.go('tra002-form');
   }
 
@@ -389,33 +665,74 @@
     var mount = document.getElementById('tra002-form-mount'); if(!mount) return;
     if(!D.draft) makeDraft();
     var d = D.draft;
+    D.currentRole = getCurrentRole();
+    if(D.mode === 'create' || typeof d.needsApproval !== 'boolean'){
+      d.needsApproval = getTableNeedsApproval(d.tabla);
+    }
     var orig = D.mode === 'edit' ? find(D.origId) : null;
-    var willMod = !!(orig && orig.estado !== 'Elaboración');
     var tnames = getTNAMES();
-    var config = getTableConfig(d.tabla);
+    var selectOptions = tnames.slice();
+    if(d.tabla && selectOptions.indexOf(d.tabla) === -1){
+      if(D.mode === 'view'){
+        selectOptions.unshift(d.tabla);
+      } else {
+        d.tabla = '';
+        d.needsApproval = false;
+      }
+    }
+    var config = d.tabla ? getTableConfig(d.tabla) : { max: 10, fields: [] };
     var fields = config.fields;
+
+    var isRoleAprobador = D.currentRole.toLowerCase() === 'aprobador';
+    var isReadOnly = D.mode === 'view' || d.estado === 'Rechazado' || (d.estado === 'Validado' && !isRoleAprobador) || d.estado === 'Aprobado';
 
     var tablaField = buildCustomSelectHtml({
       id: 'd2f-tabla',
       label: 'Tabla maestra',
-      options: tnames,
+      options: selectOptions,
       selectedValue: d.tabla,
+      placeholder: 'Seleccionar tabla maestra',
       required: true,
+      readonly: isReadOnly || D.mode === 'edit',
       helperText: 'La tabla maestra es obligatoria.'
     });
 
-    var fInputs = fields.map(function(f){
-      var displayLabel = f.label || (f.name.charAt(0).toUpperCase() + f.name.slice(1));
-      return buildFigmaFieldHtml({
-        id: 'd2f-' + f.name,
-        label: displayLabel,
-        value: d.values[f.name] || d.values[displayLabel] || '',
-        placeholder: 'Máx. ' + f.max + ' caracteres',
-        required: f.req,
-        maxlength: f.max,
-        helperText: displayLabel + ' es obligatorio.'
-      });
-    }).join('');
+    var fInputs = '';
+    if(!d.tabla){
+      fInputs = '<div style="grid-column:1/-1;padding:28px 20px;border:1px dashed #CBD5E1;border-radius:8px;background:#F8FAFC;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;text-align:center;">' +
+        '<svg viewBox="0 0 24 24" style="width:28px;height:28px;stroke:#94A3B8;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6 6h10M6 10h10"/></svg>' +
+        '<div style="font-size:14px;font-weight:600;color:#475569;font-family:Inter,sans-serif;">Ninguna tabla maestra seleccionada</div>' +
+        '<div style="font-size:12.5px;color:#64748B;font-family:Inter,sans-serif;max-width:420px;line-height:18px;">Selecciona una tabla maestra en el campo superior para cargar automáticamente los campos requeridos para el registro de datos.</div>' +
+      '</div>';
+    } else {
+      fInputs = fields.map(function(f){
+        var displayLabel = f.label || (f.name.charAt(0).toUpperCase() + f.name.slice(1));
+        return buildFigmaFieldHtml({
+          id: 'd2f-' + f.name,
+          label: displayLabel,
+          value: d.values[f.name] || d.values[displayLabel] || '',
+          placeholder: 'Máx. ' + f.max + ' caracteres',
+          required: f.req,
+          readonly: isReadOnly,
+          maxlength: f.max,
+          helperText: displayLabel + ' es obligatorio.'
+        });
+      }).join('');
+    }
+
+    // Banners para Observado y Rechazado
+    var bannerHtml = '';
+    if(d.estado === 'Observado' && (d.obsMotivo || d.motivoObservacion)){
+      bannerHtml = '<div style="margin-bottom:16px;padding:12px 16px;background:#FEF3C7;border-left:4px solid #D97706;border-radius:6px;color:#92400E;font-size:13.5px;line-height:20px;display:flex;align-items:flex-start;gap:10px;">' +
+        '<svg viewBox="0 0 24 24" style="width:20px;height:20px;stroke:#D97706;fill:none;stroke-width:2;flex-shrink:0;margin-top:1px;"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>' +
+        '<div><strong>Observación:</strong> ' + esc(d.obsMotivo || d.motivoObservacion) + '</div>' +
+      '</div>';
+    } else if(d.estado === 'Rechazado' && (d.rechazoMotivo || d.motivoRechazo)){
+      bannerHtml = '<div style="margin-bottom:16px;padding:12px 16px;background:#FEE2E2;border-left:4px solid #DC2626;border-radius:6px;color:#991B1B;font-size:13.5px;line-height:20px;display:flex;align-items:flex-start;gap:10px;">' +
+        '<svg viewBox="0 0 24 24" style="width:20px;height:20px;stroke:#DC2626;fill:none;stroke-width:2;flex-shrink:0;margin-top:1px;"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>' +
+        '<div><strong>Motivo del rechazo:</strong> ' + esc(d.rechazoMotivo || d.motivoRechazo) + '</div>' +
+      '</div>';
+    }
 
     // 1. Header 2-Cards Readonly Layout (Patrón estándar Figma SIIT)
     var headerCard = '<div data-info-solicitud="true" class="tra001-two-cards-wrap" style="width:100%;border-radius:8px;justify-content:flex-start;align-items:stretch;gap:12px;display:flex;margin-bottom:20px;">' +
@@ -454,7 +771,7 @@
         // Row 1: ORIGEN
         '<div data-content="Text" data-layout="Inline" style="align-self:stretch;flex-direction:column;justify-content:flex-start;align-items:flex-start;display:flex;">' +
           '<div style="align-self:stretch;min-height:36px;padding:6px 0;border-radius:8px;justify-content:flex-start;align-items:center;gap:8px;display:inline-flex;">' +
-            '<div style="max-width:140px;min-width:75px;min-height:24px;flex-direction:column;justify-content:center;align-items:flex-start;display:inline-flex;">' +
+            '<div style="width:100px;min-height:24px;flex-direction:column;justify-content:center;align-items:flex-start;display:inline-flex;">' +
               '<div style="min-height:16px;padding:0 4px;border-radius:8px;justify-content:center;align-items:center;display:inline-flex;">' +
                 '<div style="color:#6F6F71;font-size:12px;font-family:Inter,sans-serif;font-weight:500;letter-spacing:0.5px;">ORIGEN</div>' +
               '</div>' +
@@ -465,9 +782,9 @@
           '</div>' +
         '</div>' +
         // Row 2: ESTADO
-        '<div data-content="Tags" data-layout="Inline" style="align-self:stretch;flex-direction:column;justify-content:center;align-items:flex-start;display:flex;">' +
+        '<div data-content="Text" data-layout="Inline" style="align-self:stretch;flex-direction:column;justify-content:flex-start;align-items:flex-start;display:flex;">' +
           '<div style="align-self:stretch;min-height:36px;padding:6px 0;border-radius:8px;justify-content:flex-start;align-items:center;gap:8px;display:inline-flex;">' +
-            '<div style="max-width:140px;min-width:75px;min-height:24px;flex-direction:column;justify-content:center;align-items:flex-start;display:inline-flex;">' +
+            '<div style="width:100px;min-height:24px;flex-direction:column;justify-content:center;align-items:flex-start;display:inline-flex;">' +
               '<div style="min-height:16px;padding:0 4px;border-radius:8px;justify-content:center;align-items:center;display:inline-flex;">' +
                 '<div style="color:#6F6F71;font-size:12px;font-family:Inter,sans-serif;font-weight:500;letter-spacing:0.5px;">ESTADO</div>' +
               '</div>' +
@@ -481,11 +798,11 @@
     '</div>';
 
     // 2. Card Principal del Formulario (Abajo)
-    var formCard = '<div class="card" style="padding:0;overflow:hidden;margin-bottom:20px;background:white;border:1px solid rgba(32,32,32,0.12);border-radius:8px;">' +
+    var formCard = '<div class="card" style="padding:0;margin-bottom:20px;background:white;border:1px solid rgba(32,32,32,0.12);border-radius:8px;">' +
       // Header de Sección
       '<div style="width:100%;min-height:52px;padding:16px 24px 12px;border-bottom:1px solid rgba(32,32,32,0.12);display:flex;justify-content:flex-start;align-items:center;box-sizing:border-box;">' +
         '<div style="color:var(--sys-color-text-neutral-high, #252220);font-size:16px;font-family:Inter,sans-serif;font-weight:600;line-height:24px;">' +
-          (D.mode === 'edit' ? 'Datos del registro a editar' : 'Datos del registro') +
+          (D.mode === 'view' ? 'Detalle del registro de datos' : (D.mode === 'edit' ? 'Datos del registro a editar' : 'Datos del registro')) +
         '</div>' +
       '</div>' +
       // Contenido del Formulario
@@ -493,7 +810,15 @@
         // Sección Tabla Maestra
         '<div>' +
           '<div style="font-size:13px;font-weight:700;color:#06396E;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:14px;font-family:Inter,sans-serif;">TABLA MAESTRA</div>' +
-          '<div class="fgrid g1" style="max-width:540px;">' + tablaField + '</div>' +
+          '<div class="fgrid g1" style="max-width:540px;">' +
+            tablaField +
+            '<div style="margin-top:10px;display:flex;align-items:center;gap:8px;">' +
+              '<input type="checkbox" id="d2f-needs-approval" ' + (d.needsApproval ? 'checked' : '') + ' disabled style="width:16px;height:16px;accent-color:#06396E;cursor:not-allowed;">' +
+              '<label for="d2f-needs-approval" style="font-size:13px;color:#475569;cursor:not-allowed;">' +
+                'Esta estructura necesita la aprobación de un aprobador <span style="font-size:11.5px;color:#64748B;font-style:italic;">(Heredado de la estructura)</span>' +
+              '</label>' +
+            '</div>' +
+          '</div>' +
         '</div>' +
         // Sección Valores de los Campos
         '<div>' +
@@ -503,17 +828,81 @@
       '</div>' +
     '</div>';
 
-    mount.innerHTML = headerCard + formCard;
+    mount.innerHTML = bannerHtml + headerCard + formCard;
+
+    var chkNeedsApp = document.getElementById('d2f-needs-approval');
+    if(chkNeedsApp){
+      chkNeedsApp.checked = !!d.needsApproval;
+    }
+
+    updateStepButtons();
+  }
+
+  function updateStepButtons(){
+    if(!D.draft) return;
+    D.currentRole = getCurrentRole();
+    var d = D.draft;
+    var isRoleAprobador = D.currentRole.toLowerCase() === 'aprobador';
+    var isRoleCreador = D.currentRole.toLowerCase() === 'creador';
+    var isReadOnly = D.mode === 'view' || d.estado === 'Rechazado' || (d.estado === 'Validado' && !isRoleAprobador) || d.estado === 'Aprobado';
+
+    var btnSave = document.getElementById('btn-save-tra002');
+    if(btnSave){
+      btnSave.style.display = isReadOnly ? 'none' : 'inline-flex';
+      btnSave.disabled = isReadOnly;
+      btnSave.style.opacity = isReadOnly ? '0.5' : '1';
+      btnSave.style.cursor = isReadOnly ? 'not-allowed' : 'pointer';
+    }
+
+    var btnVal = document.getElementById('btn-validate-tra002');
+    if(btnVal){
+      if(isReadOnly || !isRoleCreador){
+        btnVal.style.display = 'none';
+      } else {
+        btnVal.style.display = 'inline-flex';
+        var canValidate = !!(D.draftSaved && D.draft && (D.draft.estado === 'Elaboración' || D.draft.estado === 'Observado'));
+        btnVal.disabled = !canValidate;
+        btnVal.style.opacity = canValidate ? '1' : '0.4';
+        btnVal.style.cursor = canValidate ? 'pointer' : 'not-allowed';
+        btnVal.title = canValidate ? 'Validar registro' : 'Debe guardar el registro antes de validar.';
+      }
+    }
+
+    var canCreatorApprove = isRoleCreador && d.estado === 'Validado' && !d.needsApproval;
+    var showApproverActions = isRoleAprobador && d.estado === 'Validado';
+
+    var btnApp = document.getElementById('btn-approve-tra002');
+    var btnObs = document.getElementById('btn-observe-tra002');
+    var btnRej = document.getElementById('btn-reject-tra002');
+
+    if(btnApp) btnApp.style.display = (showApproverActions || canCreatorApprove) ? 'inline-flex' : 'none';
+    if(btnObs) btnObs.style.display = showApproverActions ? 'inline-flex' : 'none';
+    if(btnRej) btnRej.style.display = showApproverActions ? 'inline-flex' : 'none';
   }
 
   function syncForm(){
-    var d = D.draft, config = getTableConfig(d.tabla);
-    config.fields.forEach(function(f){ var el = document.getElementById('d2f-' + f.name); if(el) d.values[f.name] = el.value; });
+    if(!D.draft) return;
+    var d = D.draft;
+    d.values = d.values || {};
+    var config = getTableConfig(d.tabla);
+    if(config && config.fields){
+      config.fields.forEach(function(f){
+        var el = document.getElementById('d2f-' + f.name);
+        if(el) d.values[f.name] = el.value;
+      });
+    }
   }
 
   function saveManual(){
     syncForm();
-    var d = D.draft, config = getTableConfig(d.tabla), fields = config.fields, hasErr = false;
+    var d = D.draft;
+    if(!d.tabla){
+      var wrapT = document.getElementById('wrap-d2f-tabla');
+      if(wrapT) wrapT.classList.add('is-error');
+      toast('Debe seleccionar una tabla maestra obligatoriamente.', 'err');
+      return;
+    }
+    var config = getTableConfig(d.tabla), fields = config.fields, hasErr = false;
     fields.forEach(function(f){
       var v = (d.values[f.name] || '').trim();
       var wrap = document.getElementById('wrap-d2f-' + f.name);
@@ -525,115 +914,280 @@
       }
     });
     if(hasErr){ toast('Complete los campos obligatorios del formulario.', 'err'); return; }
-    
+
+    d.needsApproval = getTableNeedsApproval(d.tabla);
+
     if(D.mode === 'edit'){
       var o = find(D.origId);
-      if(o && o.estado !== 'Elaboración'){
-        D.data.unshift({ id: uid(), tabla: d.tabla, origen: 'Individual', tipo: 'Modificación', estado: 'Elaboración', fecha: today(), hora: nowTime(), values: d.values });
+      if(o && o.estado !== 'Elaboración' && o.estado !== 'Observado'){
+        var newId = uid();
+        var newRec = {
+          id: newId,
+          tabla: d.tabla,
+          origen: 'Individual',
+          tipo: 'Modificación',
+          estado: 'Elaboración',
+          fecha: today(),
+          hora: nowTime(),
+          needsApproval: d.needsApproval,
+          values: JSON.parse(JSON.stringify(d.values))
+        };
+        D.data.unshift(newRec);
+        D.origId = newId;
+        d.id = newId;
+        d.tipo = 'Modificación';
+        d.estado = 'Elaboración';
         toast('RN-DT-005 · Se registró una <b>Modificación</b> en Elaboración; el registro original se conserva como histórico.', 'ok');
-      } else if(o){ o.values = d.values; o.fecha = today(); o.hora = nowTime(); toast('Cambios guardados en el registro (Elaboración).', 'ok'); }
+      } else if(o){
+        o.values = JSON.parse(JSON.stringify(d.values));
+        o.fecha = today();
+        o.hora = nowTime();
+        o.needsApproval = d.needsApproval;
+        toast('Cambios guardados en el registro (' + o.estado + ').', 'ok');
+      }
     } else {
-      D.data.unshift({ id: uid(), tabla: d.tabla, origen: 'Individual', tipo: 'Creación', estado: 'Elaboración', fecha: today(), hora: nowTime(), values: d.values });
-      toast('RN-DT-001 · Registro creado (origen <b>Individual</b>) en estado Elaboración.', 'ok');
+      var newRecId = uid();
+      var createdRec = {
+        id: newRecId,
+        tabla: d.tabla,
+        origen: 'Individual',
+        tipo: 'Creación',
+        estado: 'Elaboración',
+        fecha: today(),
+        hora: nowTime(),
+        needsApproval: d.needsApproval,
+        values: JSON.parse(JSON.stringify(d.values))
+      };
+      D.data.unshift(createdRec);
+      d.id = newRecId;
+      D.origId = newRecId;
+      D.mode = 'edit';
+      toast('RN-DT-001 · Registro creado en estado Elaboración. Ya puedes Validar.', 'ok');
     }
-    renderList(); window.go('tra002-list');
+
+    D.draftSaved = true;
+    renderList();
+    renderForm();
+    updateStepButtons();
   }
 
-  function doValidate(id){
-    var r = find(id); if(!r) return;
-    if(r.estado !== 'Elaboración'){ toast('RN-DT-009 · La validación solo se ejecuta sobre registros en Elaboración.', 'err'); return; }
-    r.estado = 'Validado'; r.fecha = today(); renderList(); toast('RN-DT-009 · Registro <b>Validado</b>.', 'ok');
-  }
+  function openValidateModal(id){
+    var r = find(id);
+    if(!r) return;
+    if(r.estado !== 'Elaboración' && r.estado !== 'Observado'){
+      toast('RN-DT-009 · La validación solo se ejecuta sobre registros en Elaboración u Observados.', 'err');
+      return;
+    }
 
-  function doApprove(id){
-    var r = find(id); if(!r) return;
-    if(r.estado !== 'Validado'){ toast('RN-DT-010 · Solo pueden aprobarse registros en estado Validado.', 'err'); return; }
-
-    var todayStr = new Date().toISOString().split('T')[0];
-
-    var html =
-      '<div style="display:flex;flex-direction:column;gap:16px;padding:4px 0;">' +
-        '<div style="display:flex;align-items:center;gap:12px;">' +
-          '<div style="width:40px;height:40px;padding:8px;background:#D7F5E8;border-radius:4px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">' +
-            '<svg viewBox="0 0 24 24" style="width:20px;height:20px;stroke:#004C37;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;"><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><polyline points="9 14 11 16 15 12"/></svg>' +
-          '</div>' +
-          '<div style="color:#252220;font-size:18px;font-family:Inter,sans-serif;font-weight:600;line-height:24px;">¿Aprobar el registro de ' + esc(r.tabla) + '?</div>' +
+    var sendsToApprover = !!r.needsApproval;
+    var html = '<div style="display:flex;flex-direction:column;gap:14px;padding:4px 0;">' +
+      '<div style="display:flex;align-items:center;gap:12px;">' +
+        '<div style="width:40px;height:40px;padding:8px;background:#D7F5E8;border-radius:4px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">' +
+          CHECK +
         '</div>' +
-        '<div style="color:#252220;font-size:15px;font-family:Inter,sans-serif;font-weight:400;line-height:22px;padding-left:4px;padding-right:4px;">' +
-          'Selecciona la modalidad de aprobación para la incorporación de los datos al SIIT.' +
-        '</div>' +
-        '<div style="display:flex;flex-direction:column;gap:12px;">' +
-          '<label style="display:flex;align-items:flex-start;gap:12px;padding:12px 14px;border:1.5px solid #06396E;border-radius:10px;cursor:pointer;background:#FAFCFF" id="opt-inm-lbl">' +
-            '<input type="radio" name="appr-type" value="inmediata" checked style="margin-top:3px;accent-color:#06396E">' +
-            '<div>' +
-              '<div style="font-weight:600;font-size:14px;color:#06396E">Aprobación Inmediata</div>' +
-              '<div style="font-size:12.5px;color:#64748B;margin-top:2px">Incorpora los datos de inmediato a los vigentes.</div>' +
-            '</div>' +
-          '</label>' +
-          '<label style="display:flex;align-items:flex-start;gap:12px;padding:12px 14px;border:1.5px solid #CBD5E1;border-radius:10px;cursor:pointer;background:#fff" id="opt-prog-lbl">' +
-            '<input type="radio" name="appr-type" value="programada" style="margin-top:3px;accent-color:#06396E">' +
-            '<div style="flex:1">' +
-              '<div style="font-weight:600;font-size:14px;color:#06396E">Aprobación Programada</div>' +
-              '<div style="font-size:12.5px;color:#64748B;margin-top:2px">Permite indicar una fecha a partir de la cual los datos quedan vigentes.</div>' +
-              '<div id="appr-date-box" style="display:none;margin-top:12px;padding-top:10px;border-top:1px dashed #CBD5E1">' +
-                '<label style="display:block;font-size:12px;font-weight:600;color:#334155;margin-bottom:4px">Fecha de inicio de vigencia</label>' +
-                '<input type="date" id="appr-date" value="' + todayStr + '" min="' + todayStr + '" style="width:100%;max-width:220px;padding:8px 10px;border:1px solid #CBD5E1;border-radius:6px;font-size:13px;outline:none">' +
-              '</div>' +
-            '</div>' +
-          '</label>' +
-        '</div>' +
-      '</div>';
+        '<div style="color:#252220;font-size:18px;font-family:Inter,sans-serif;font-weight:600;line-height:24px;">¿Validar el registro de ' + esc(r.tabla) + '?</div>' +
+      '</div>' +
+      '<div style="color:#252220;font-size:14px;font-family:Inter,sans-serif;font-weight:400;line-height:20px;">' +
+        (sendsToApprover
+          ? 'El registro pasará a estado <b>Validado</b> y se remitirá a la bandeja del <b>Aprobador</b> para su evaluación.'
+          : 'El registro pasará a estado <b>Validado</b>. Al no requerir aprobador externo, podrás proceder inmediatamente con su <b>Aprobación</b>.') +
+      '</div>' +
+      buildFigmaInfoMessage('¿Qué implica validar el registro?', 'Permite certificar que los datos ingresados cumplen con los requerimientos técnicos para su posterior aprobación.') +
+    '</div>';
 
     modal(html, function(){
-      var rProg = document.querySelector('input[name="appr-type"][value="programada"]');
-      var isProg = rProg && rProg.checked;
-      if(isProg){
-        var dtInp = document.getElementById('appr-date');
-        var dtVal = dtInp ? dtInp.value : '';
-        if(!dtVal){ toast('Selecciona una fecha de vigencia válida.', 'err'); return false; }
-        var parts = dtVal.split('-');
-        var fmtDate = parts.length === 3 ? parts[2] + '/' + parts[1] + '/' + parts[0] : dtVal;
-        r.estado = 'Aprobado';
-        r.fechaVigencia = fmtDate;
-        r.fecha = today();
-        renderList();
-        toast('Registro de <b>' + esc(r.tabla) + '</b> aprobado (vigencia programada a partir del ' + fmtDate + ').', 'ok');
+      r.estado = 'Validado';
+      r.fecha = today();
+      r.hora = nowTime();
+      if(D.draft && D.draft.id === r.id){
+        D.draft.estado = 'Validado';
+        D.draft.fecha = r.fecha;
+        D.draft.hora = r.hora;
+      }
+      renderList();
+      if(sendsToApprover){
+        toast('RN-DT-009 · Registro de <b>' + esc(r.tabla) + '</b> validado y remitido al Aprobador.', 'ok');
+        window.go('tra002-list');
       } else {
-        r.estado = 'Aprobado';
-        r.fecha = today();
-        renderList();
-        toast('Registro de <b>' + esc(r.tabla) + '</b> aprobado de inmediato.', 'ok');
+        toast('RN-DT-009 · Registro <b>Validado</b>. Ahora puedes proceder a <b>Aprobarlo</b>.', 'ok');
+        renderForm();
+        updateStepButtons();
       }
       return true;
-    }, 'Aprobar');
+    }, 'Validar');
+  }
 
-    setTimeout(function(){
-      var rInm = document.querySelector('input[name="appr-type"][value="inmediata"]');
-      var rProg = document.querySelector('input[name="appr-type"][value="programada"]');
-      var dateBox = document.getElementById('appr-date-box');
-      var lblInm = document.getElementById('opt-inm-lbl');
-      var lblProg = document.getElementById('opt-prog-lbl');
+  function openDirectApproveModal(id){
+    var r = find(id);
+    if(!r) return;
+    if(r.estado !== 'Validado'){
+      toast('Solo pueden evaluarse registros en estado Validado.', 'err');
+      return;
+    }
 
-      function updateOpt(){
-        if(rProg && rProg.checked){
-          if(dateBox) dateBox.style.display = 'block';
-          if(lblProg) { lblProg.style.borderColor = '#06396E'; lblProg.style.background = '#FAFCFF'; }
-          if(lblInm) { lblInm.style.borderColor = '#CBD5E1'; lblInm.style.background = '#fff'; }
+    var html = '<div style="display:flex;flex-direction:column;gap:14px;">' +
+      '<div style="display:flex;flex-direction:column;gap:10px;">' +
+        '<div style="font-size:14px;font-weight:600;color:#252220;font-family:Inter,sans-serif;">Modalidad de vigencia:</div>' +
+        '<div style="display:flex;gap:20px;">' +
+          '<label style="display:inline-flex;align-items:center;gap:8px;font-size:14px;font-family:Inter,sans-serif;color:#334155;cursor:pointer;">' +
+            '<input type="radio" name="eval-apr-mode" value="inmediata" checked style="margin-left:0;accent-color:#06396E;" onchange="document.getElementById(\'eval-apr-date-box\').style.display=\'none\';">' +
+            '<span>Vigencia Inmediata</span>' +
+          '</label>' +
+          '<label style="display:inline-flex;align-items:center;gap:8px;font-size:14px;font-family:Inter,sans-serif;color:#334155;cursor:pointer;">' +
+            '<input type="radio" name="eval-apr-mode" value="programada" style="accent-color:#06396E;" onchange="document.getElementById(\'eval-apr-date-box\').style.display=\'block\';">' +
+            '<span>Vigencia Programada</span>' +
+          '</label>' +
+        '</div>' +
+        '<div id="eval-apr-date-box" style="display:none;margin-top:6px;">' +
+          '<label style="font-size:13px;color:#475569;font-weight:500;font-family:Inter,sans-serif;margin-bottom:4px;display:block;">Fecha de inicio de vigencia <span style="color:#D51317;">*</span></label>' +
+          '<input type="date" id="eval-apr-date" value="' + today().split('/').reverse().join('-') + '" style="width:100%;padding:8px 12px;border-radius:6px;border:1px solid #CBD5E1;font-size:13.5px;font-family:Inter,sans-serif;outline:none;background:white;box-sizing:border-box;">' +
+        '</div>' +
+      '</div>' +
+      buildFigmaInfoMessage('¿Qué implica aprobar el registro?', 'Permite dar conformidad formal al registro de datos e incorporarlo al catálogo oficial vigente de Tablas Maestras del SIIT.') +
+    '</div>';
+
+    openDrawer({
+      width: '400px',
+      title: 'Aprobar registro de ' + esc(r.tabla),
+      subtitle: esc(regOf(r.tabla, r.values)),
+      bodyHtml: html,
+      saveText: 'Aprobar registro',
+      onSave: function(){
+        var rProg = document.querySelector('input[name="eval-apr-mode"]:checked');
+        var isProg = rProg && rProg.value === 'programada';
+        if(isProg){
+          var dtEl = document.getElementById('eval-apr-date');
+          var dt = dtEl ? dtEl.value : '';
+          if(!dt){ toast('Indique la fecha de vigencia para la aprobación programada.', 'err'); return false; }
+          var parts = dt.split('-');
+          var fmtDate = parts.length === 3 ? parts[2] + '/' + parts[1] + '/' + parts[0] : dt;
+          r.estado = 'Aprobado';
+          r.fechaVigencia = fmtDate;
+          r.fecha = today();
+          if(D.draft && D.draft.id === r.id){ D.draft.estado = 'Aprobado'; D.draft.fechaVigencia = fmtDate; }
+          renderList();
+          toast('Registro de <b>' + esc(r.tabla) + '</b> aprobado (vigente desde ' + fmtDate + ').', 'ok');
         } else {
-          if(dateBox) dateBox.style.display = 'none';
-          if(lblInm) { lblInm.style.borderColor = '#06396E'; lblInm.style.background = '#FAFCFF'; }
-          if(lblProg) { lblProg.style.borderColor = '#CBD5E1'; lblProg.style.background = '#fff'; }
+          r.estado = 'Aprobado';
+          r.fecha = today();
+          if(D.draft && D.draft.id === r.id){ D.draft.estado = 'Aprobado'; }
+          renderList();
+          toast('Registro de <b>' + esc(r.tabla) + '</b> aprobado de inmediato e incorporado formalmente.', 'ok');
         }
+        var currScreen = document.querySelector('.screen.on');
+        var isInForm = currScreen && currScreen.id === 'tra002-form';
+        if(isInForm && D.draft && D.draft.id === r.id){
+          renderForm();
+          updateStepButtons();
+        } else {
+          if (window.go) window.go('tra002-list');
+        }
+        return true;
       }
+    });
 
-      if(rInm) rInm.addEventListener('change', updateOpt);
-      if(rProg) rProg.addEventListener('change', updateOpt);
-    }, 20);
+    var sBtn = document.getElementById('t001-drawer-save');
+    if(sBtn) sBtn.style.background = '#06396E';
+  }
+
+  function openDirectObserveModal(id){
+    var r = find(id);
+    if(!r) return;
+    if(r.estado !== 'Validado'){
+      toast('Solo pueden evaluarse registros en estado Validado.', 'err');
+      return;
+    }
+
+    var html = '<div style="display:flex;flex-direction:column;gap:14px;">' +
+      '<div style="display:flex;flex-direction:column;gap:6px;">' +
+        '<label style="font-size:14px;font-weight:600;color:#1E293B;font-family:Inter,sans-serif;">Motivo de la observación <span style="color:#D51317;">*</span></label>' +
+        '<textarea id="eval-obs-motivo" rows="4" placeholder="Detalle las observaciones, precisiones o ajustes requeridos..." style="width:100%;padding:10px 12px;border-radius:8px;border:1px solid #CBD5E1;font-size:13.5px;font-family:Inter,sans-serif;outline:none;resize:vertical;box-sizing:border-box;"></textarea>' +
+        '<div id="eval-obs-error" style="display:none;font-size:12px;color:#DC2626;font-weight:500;">Debe ingresar el motivo de la observación para continuar.</div>' +
+      '</div>' +
+      buildFigmaInfoMessage('¿Qué implica observar el registro?', 'Permite devolver el registro al rol Creador en estado Observado para subsanar los datos solicitados.') +
+    '</div>';
+
+    openDrawer({
+      width: '400px',
+      title: 'Observar registro de ' + esc(r.tabla),
+      subtitle: esc(regOf(r.tabla, r.values)),
+      bodyHtml: html,
+      saveText: 'Observar registro',
+      onSave: function(){
+        var elMotivo = document.getElementById('eval-obs-motivo');
+        var motivo = elMotivo ? elMotivo.value.trim() : '';
+        if(!motivo){
+          var errEl = document.getElementById('eval-obs-error');
+          if(errEl) errEl.style.display = 'block';
+          return false;
+        }
+        r.estado = 'Observado';
+        r.obsMotivo = motivo;
+        r.obsDate = today();
+        if(D.draft && D.draft.id === r.id){ D.draft.estado = 'Observado'; D.draft.obsMotivo = motivo; D.draft.obsDate = today(); }
+        renderList();
+        toast('Registro de <b>' + esc(r.tabla) + '</b> marcado como Observado. El Creador podrá corregirlo.', 'warn');
+        if (window.go) window.go('tra002-list');
+        return true;
+      }
+    });
+
+    var sBtn = document.getElementById('t001-drawer-save');
+    if(sBtn) sBtn.style.background = '#06396E';
+  }
+
+  function openDirectRejectModal(id){
+    var r = find(id);
+    if(!r) return;
+    if(r.estado !== 'Validado'){
+      toast('Solo pueden evaluarse registros en estado Validado.', 'err');
+      return;
+    }
+
+    var html = '<div style="display:flex;flex-direction:column;gap:14px;">' +
+      '<div style="display:flex;flex-direction:column;gap:6px;">' +
+        '<label style="font-size:14px;font-weight:600;color:#1E293B;font-family:Inter,sans-serif;">Motivo del rechazo <span style="color:#D51317;">*</span></label>' +
+        '<textarea id="eval-rej-motivo" rows="4" placeholder="Detalle el sustento técnico o normativo del rechazo definitivo..." style="width:100%;padding:10px 12px;border-radius:8px;border:1px solid #CBD5E1;font-size:13.5px;font-family:Inter,sans-serif;outline:none;resize:vertical;box-sizing:border-box;"></textarea>' +
+        '<div id="eval-rej-error" style="display:none;font-size:12px;color:#DC2626;font-weight:500;">Debe ingresar el motivo del rechazo para continuar.</div>' +
+      '</div>' +
+      buildFigmaInfoMessage('¿Qué implica rechazar el registro?', 'Permite rechazar de manera definitiva el registro propuesto. El registro quedará archivado únicamente con fines de auditoría e histórico.') +
+    '</div>';
+
+    openDrawer({
+      width: '400px',
+      title: 'Rechazar registro de ' + esc(r.tabla),
+      subtitle: esc(regOf(r.tabla, r.values)),
+      bodyHtml: html,
+      saveText: 'Rechazar registro',
+      onSave: function(){
+        var elMotivo = document.getElementById('eval-rej-motivo');
+        var motivo = elMotivo ? elMotivo.value.trim() : '';
+        if(!motivo){
+          var errEl = document.getElementById('eval-rej-error');
+          if(errEl) errEl.style.display = 'block';
+          return false;
+        }
+        r.estado = 'Rechazado';
+        r.rechazoMotivo = motivo;
+        r.rechazoDate = today();
+        if(D.draft && D.draft.id === r.id){ D.draft.estado = 'Rechazado'; D.draft.rechazoMotivo = motivo; D.draft.rechazoDate = today(); }
+        renderList();
+        toast('Registro de <b>' + esc(r.tabla) + '</b> rechazado definitivamente.', 'err');
+        if (window.go) window.go('tra002-list');
+        return true;
+      }
+    });
+
+    var sBtn = document.getElementById('t001-drawer-save');
+    if(sBtn) sBtn.style.background = '#06396E';
   }
 
   function doDelete(id){
     var r = find(id); if(!r) return;
-    if(r.estado !== 'Elaboración'){ toast('Solo pueden eliminarse registros en estado Elaboración.', 'err'); return; }
+    if(r.estado !== 'Elaboración' && r.estado !== 'Observado'){
+      toast('Solo pueden eliminarse registros en estado Elaboración u Observado.', 'err');
+      return;
+    }
     
     var html = '<div style="display:flex;flex-direction:column;gap:16px;padding:4px 0;">' +
       '<div style="display:flex;align-items:center;gap:12px;">' +
@@ -660,20 +1214,34 @@
   function openCarga(){
     var tnames = getTNAMES();
     var checkedInp = document.querySelectorAll('#tra002-list-mount tbody .chk:checked');
-    var selectedTable = tnames[0];
+    var selectedTable = '';
     if(checkedInp.length){
       var tr = checkedInp[0].closest('tr');
-      if(tr && tr.getAttribute('data-tb')) selectedTable = tr.getAttribute('data-tb');
+      if(tr && tr.getAttribute('data-tb')){
+        var cand = tr.getAttribute('data-tb');
+        if(tnames.indexOf(cand) !== -1) selectedTable = cand;
+      }
     }
-    D.carga = { tabla: selectedTable, file: '', rows: null, report: null };
+    D.carga = {
+      tabla: selectedTable,
+      file: '',
+      rows: null,
+      report: null,
+      needsApproval: getTableNeedsApproval(selectedTable)
+    };
     window.go('tra002-carga');
   }
 
   function renderCarga(){
     var mount = document.getElementById('tra002-carga-mount'); if(!mount) return;
     var tnames = getTNAMES();
-    if(!D.carga) D.carga = { tabla: tnames[0], file: '', rows: null, report: null };
-    var c = D.carga, tb = getTableConfig(c.tabla), rep = c.report;
+    if(!D.carga) D.carga = { tabla: '', file: '', rows: null, report: null, needsApproval: false };
+    var c = D.carga;
+    if(c.tabla && tnames.indexOf(c.tabla) === -1){
+      c.tabla = '';
+    }
+    c.needsApproval = getTableNeedsApproval(c.tabla);
+    var tb = c.tabla ? getTableConfig(c.tabla) : { max: 10, fields: [] }, rep = c.report;
     var repHtml = '';
 
     var isClean = !!(rep && rep.errors && rep.errors.length === 0 && rep.valid && rep.valid.length > 0);
@@ -722,6 +1290,7 @@
       label: 'Tabla maestra',
       options: tnames,
       selectedValue: c.tabla,
+      placeholder: 'Seleccionar tabla maestra',
       required: true,
       helperText: 'La tabla maestra es obligatoria.'
     });
@@ -734,7 +1303,13 @@
         '<div class="fgrid g2" style="gap:16px 20px;margin-bottom:18px;align-items:flex-start;">' +
           '<div>' +
             tablaField +
-            '<button class="btn gho" data-d2c="tpl" style="display:inline-flex;align-items:center;gap:8px;padding:8px 14px;font-size:13px;margin-top:10px;"><svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5M12 15V3"/></svg> Descargar plantilla</button>' +
+            '<div style="margin-top:10px;display:flex;align-items:center;gap:8px;">' +
+              '<input type="checkbox" id="d2c-needs-approval" ' + (c.needsApproval ? 'checked' : '') + ' disabled style="width:16px;height:16px;accent-color:#06396E;cursor:not-allowed;">' +
+              '<label for="d2c-needs-approval" style="font-size:13px;color:#475569;cursor:not-allowed;">' +
+                'Esta estructura necesita la aprobación de un aprobador <span style="font-size:11.5px;color:#64748B;font-style:italic;">(Heredado de la estructura)</span>' +
+              '</label>' +
+            '</div>' +
+            '<button class="btn gho" data-d2c="tpl" style="display:inline-flex;align-items:center;gap:8px;padding:8px 14px;font-size:13px;margin-top:14px;"><svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5M12 15V3"/></svg> Descargar plantilla</button>' +
           '</div>' +
           '<div>' +
             '<div style="margin-top: -17px;width:100%;">' +
@@ -759,6 +1334,11 @@
         '</div>' +
         repHtml +
       '</div>';
+
+    var chkCarga = document.getElementById('d2c-needs-approval');
+    if(chkCarga){
+      chkCarga.checked = !!c.needsApproval;
+    }
   }
 
   function downloadTemplate(){
@@ -858,16 +1438,57 @@
     var errRows = rep.errors.reduce(function(s, e){ if(s.indexOf(e.fila) < 0) s.push(e.fila); return s; }, []).length;
     if(errRows > tb.max){ toast('RN-DT-003 · El archivo excede el máximo de errores permitidos (' + tb.max + '). Corrige y vuelve a cargar.', 'err'); return; }
     if(!rep.valid.length){ toast('No hay registros válidos para grabar.', 'err'); return; }
-    rep.valid.forEach(function(values){ D.data.unshift({ id: uid(), tabla: c.tabla, origen: 'Masivo', tipo: 'Creación', estado: 'Elaboración', fecha: today(), values: values }); });
+    var needsAppr = getTableNeedsApproval(c.tabla);
+    rep.valid.forEach(function(values){
+      D.data.unshift({
+        id: uid(),
+        tabla: c.tabla,
+        origen: 'Masivo',
+        tipo: 'Creación',
+        estado: 'Elaboración',
+        fecha: today(),
+        hora: nowTime(),
+        needsApproval: needsAppr,
+        values: values
+      });
+    });
     toast('RN-DT-004 · Se cargaron <b>' + rep.valid.length + '</b> registros (origen Masivo) en estado Elaboración.', 'ok');
     D.carga = null; renderList(); window.go('tra002-list');
   }
 
   /* ---------- EVENTS ---------- */
   document.addEventListener('change', function(e){
-    if (e.target && (e.target.id === 'd2c-file' || e.target.id === 'd2c-top-file')) {
-      if (e.target.files && e.target.files[0]) {
-        readFile(e.target.files[0]);
+    var target = e.target;
+    if (!target) return;
+
+    if (target.id === 'd2f-tabla') {
+      var newVal = target.value;
+      syncForm();
+      if (D.draft) {
+        D.draft.tabla = newVal;
+        D.draft.needsApproval = getTableNeedsApproval(newVal);
+        D.draft.values = {};
+      }
+      renderForm();
+      return;
+    }
+
+    if (target.id === 'd2c-tabla') {
+      var newVal = target.value;
+      if (D.carga) {
+        D.carga.tabla = newVal;
+        D.carga.needsApproval = getTableNeedsApproval(newVal);
+        D.carga.file = '';
+        D.carga.rows = null;
+        D.carga.report = null;
+      }
+      renderCarga();
+      return;
+    }
+
+    if (target.id === 'd2c-file' || target.id === 'd2c-top-file') {
+      if (target.files && target.files[0]) {
+        readFile(target.files[0]);
       }
     }
   });
@@ -893,90 +1514,90 @@
   document.addEventListener('click', function(e){
     var selectTrigger = e.target.closest('.figma-select-trigger');
     if (selectTrigger) {
-      if (!e._figmaSelectHandled) {
+      var wrapper = selectTrigger.closest('.figma-select-wrapper');
+      var hiddenInp = wrapper ? wrapper.querySelector('input[type="hidden"]') : null;
+      var isTra002 = selectTrigger.closest('#tra002-form, #tra002-carga') || (hiddenInp && (hiddenInp.id.indexOf('d2f-') === 0 || hiddenInp.id.indexOf('d2c-') === 0));
+
+      if (isTra002 && wrapper) {
         e._figmaSelectHandled = true;
-        var wrapper = selectTrigger.closest('.figma-select-wrapper');
         var fField = selectTrigger.closest('.figma-field');
-        if (wrapper) {
-          var isOpen = wrapper.classList.contains('is-open');
-          document.querySelectorAll('.figma-select-wrapper.is-open').forEach(function(w){
-            w.classList.remove('is-open');
-            var ff = w.closest('.figma-field');
-            if (ff) ff.classList.remove('is-open');
-          });
-          if (!isOpen) {
-            wrapper.classList.add('is-open');
-            if (fField) fField.classList.add('is-open');
-          }
-        }
-      }
-      return;
-    }
-
-    var selectItem = e.target.closest('.figma-select-item');
-    if (selectItem) {
-      if (!e._figmaSelectItemHandled) {
-        e._figmaSelectItemHandled = true;
-        var wrapper = selectItem.closest('.figma-select-wrapper');
-        if (wrapper) {
-          var hiddenInp = wrapper.querySelector('input[type="hidden"]');
-          var valSpan = wrapper.querySelector('.figma-select-val');
-          var newVal = selectItem.getAttribute('data-val');
-          var fField = wrapper.closest('.figma-field');
-
-          if (hiddenInp) hiddenInp.value = newVal;
-          if (valSpan) {
-            valSpan.textContent = selectItem.querySelector('span') ? selectItem.querySelector('span').textContent : newVal;
-            valSpan.classList.remove('is-placeholder');
-          }
-
-          wrapper.querySelectorAll('.figma-select-item').forEach(function(it){ it.classList.remove('is-selected'); });
-          selectItem.classList.add('is-selected');
-
-          wrapper.classList.remove('is-open');
-          if (fField) fField.classList.remove('is-open');
-
-          if (fField) {
-            if (newVal) {
-              fField.classList.add('has-value');
-              fField.classList.remove('is-error');
-            } else {
-              fField.classList.remove('has-value');
-            }
-          }
-
-          if (hiddenInp && hiddenInp.id === 'd2f-tabla') {
-            syncForm();
-            if (D.draft) {
-              D.draft.tabla = newVal;
-              D.draft.values = {};
-            }
-            renderForm();
-          }
-
-          if (hiddenInp && hiddenInp.id === 'd2c-tabla') {
-            if (D.carga) {
-              D.carga.tabla = newVal;
-              D.carga.file = '';
-              D.carga.rows = null;
-              D.carga.report = null;
-            }
-            renderCarga();
-          }
-        }
-      }
-      return;
-    }
-
-    if (!e.target.closest('.figma-select-wrapper')) {
-      if (!e._figmaOutsideHandled) {
-        e._figmaOutsideHandled = true;
+        var isOpen = wrapper.classList.contains('is-open');
         document.querySelectorAll('.figma-select-wrapper.is-open').forEach(function(w){
           w.classList.remove('is-open');
           var ff = w.closest('.figma-field');
           if (ff) ff.classList.remove('is-open');
         });
+        if (!isOpen) {
+          wrapper.classList.add('is-open');
+          if (fField) fField.classList.add('is-open');
+        }
+        return;
       }
+    }
+
+    var selectItem = e.target.closest('.figma-select-item');
+    if (selectItem) {
+      var wrapper = selectItem.closest('.figma-select-wrapper');
+      var hiddenInp = wrapper ? wrapper.querySelector('input[type="hidden"]') : null;
+      var isTra002 = selectItem.closest('#tra002-form, #tra002-carga') || (hiddenInp && (hiddenInp.id.indexOf('d2f-') === 0 || hiddenInp.id.indexOf('d2c-') === 0));
+
+      if (isTra002 && wrapper) {
+        e._figmaSelectItemHandled = true;
+        var valSpan = wrapper.querySelector('.figma-select-val');
+        var newVal = selectItem.getAttribute('data-val');
+        var fField = wrapper.closest('.figma-field');
+
+        if (hiddenInp) hiddenInp.value = newVal;
+        if (valSpan) {
+          valSpan.textContent = selectItem.querySelector('span') ? selectItem.querySelector('span').textContent : newVal;
+          valSpan.classList.remove('is-placeholder');
+        }
+
+        wrapper.querySelectorAll('.figma-select-item').forEach(function(it){ it.classList.remove('is-selected'); });
+        selectItem.classList.add('is-selected');
+
+        wrapper.classList.remove('is-open');
+        if (fField) fField.classList.remove('is-open');
+
+        if (fField) {
+          if (newVal) {
+            fField.classList.add('has-value');
+            fField.classList.remove('is-error');
+          } else {
+            fField.classList.remove('has-value');
+          }
+        }
+
+        if (hiddenInp && hiddenInp.id === 'd2f-tabla') {
+          syncForm();
+          if (D.draft) {
+            D.draft.tabla = newVal;
+            D.draft.needsApproval = getTableNeedsApproval(newVal);
+            D.draft.values = {};
+          }
+          renderForm();
+        }
+
+        if (hiddenInp && hiddenInp.id === 'd2c-tabla') {
+          if (D.carga) {
+            D.carga.tabla = newVal;
+            D.carga.needsApproval = getTableNeedsApproval(newVal);
+            D.carga.file = '';
+            D.carga.rows = null;
+            D.carga.report = null;
+          }
+          renderCarga();
+        }
+        return;
+      }
+    }
+
+    if (!e.target.closest('.figma-select-wrapper')) {
+      document.querySelectorAll('#tra002-form .figma-select-wrapper.is-open, #tra002-carga .figma-select-wrapper.is-open').forEach(function(w){
+        w.classList.remove('is-open');
+        var ff = w.closest('.figma-field');
+        if (ff) ff.classList.remove('is-open');
+      });
     }
 
     var el = e.target.closest('[data-d2],[data-d2f],[data-d2c]'); if(!el) return;
@@ -989,14 +1610,26 @@
         openCarga();
       }
       else if(a === 'edit') openEdit(id);
-      else if(a === 'validate') doValidate(id);
-      else if(a === 'approve') doApprove(id);
+      else if(a === 'view') openView(id);
       else if(a === 'delete') doDelete(id);
       return;
     }
     if(el.dataset.d2f){
       if(el.dataset.d2f === 'cancel'){ window.go('tra002-list'); }
       else if(el.dataset.d2f === 'save') saveManual();
+      else if(el.dataset.d2f === 'validate'){
+        if(el.disabled || el.classList.contains('disabled')) return;
+        if(D.draft) openValidateModal(D.draft.id);
+      }
+      else if(el.dataset.d2f === 'approve'){
+        if(D.draft) openDirectApproveModal(D.draft.id);
+      }
+      else if(el.dataset.d2f === 'observe'){
+        if(D.draft) openDirectObserveModal(D.draft.id);
+      }
+      else if(el.dataset.d2f === 'reject'){
+        if(D.draft) openDirectRejectModal(D.draft.id);
+      }
       return;
     }
     if(el.dataset.d2c){
@@ -1045,6 +1678,13 @@
         }
       }
     }
+  });
+
+  window.addEventListener('siit:rolechange', function(e){
+    D.currentRole = getCurrentRole();
+    var curr = document.querySelector('.screen.on');
+    if(curr && curr.id === 'tra002-list') renderList();
+    else if(curr && curr.id === 'tra002-form'){ renderForm(); updateStepButtons(); }
   });
 
   window.__onShow = window.__onShow || {};
