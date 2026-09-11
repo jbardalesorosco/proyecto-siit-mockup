@@ -306,7 +306,9 @@
             name: key,
             label: rawName,
             req: f.required !== false,
+            min: (f.min != null && f.min !== '') ? parseInt(f.min, 10) : 0,
             max: maxLen,
+            allowDuplicates: f.allowDuplicates !== false,
             type: f.type || 'Texto'
           };
         });
@@ -877,7 +879,7 @@
 
     if(btnApp) btnApp.style.display = (showApproverActions || canCreatorApprove) ? 'inline-flex' : 'none';
     if(btnObs) btnObs.style.display = showApproverActions ? 'inline-flex' : 'none';
-    if(btnRej) btnRej.style.display = showApproverActions ? 'inline-flex' : 'none';
+    if(btnRej) btnRej.style.display = 'none';
   }
 
   function syncForm(){
@@ -1224,6 +1226,7 @@
     }
     D.carga = {
       tabla: selectedTable,
+      descripcion: '',
       file: '',
       rows: null,
       report: null,
@@ -1235,7 +1238,7 @@
   function renderCarga(){
     var mount = document.getElementById('tra002-carga-mount'); if(!mount) return;
     var tnames = getTNAMES();
-    if(!D.carga) D.carga = { tabla: '', file: '', rows: null, report: null, needsApproval: false };
+    if(!D.carga) D.carga = { tabla: '', descripcion: '', file: '', rows: null, report: null, needsApproval: false };
     var c = D.carga;
     if(c.tabla && tnames.indexOf(c.tabla) === -1){
       c.tabla = '';
@@ -1295,24 +1298,39 @@
       helperText: 'La tabla maestra es obligatoria.'
     });
 
+    var descField = buildFigmaFieldHtml({
+      id: 'd2c-desc',
+      label: 'Descripción de la carga',
+      value: c.descripcion || '',
+      placeholder: 'Ingresa la descripción de la carga masiva',
+      required: true,
+      maxlength: 200,
+      helperText: 'La descripción de la carga es obligatoria.'
+    });
+
     mount.innerHTML =
       '<div class="card" style="margin-bottom:20px;">' +
         '<div class="chead" style="margin-bottom:18px;">' +
           '<h3 style="font-size:13px;font-weight:700;color:#06396E;text-transform:uppercase;letter-spacing:0.5px;margin:0;">CARGAR DATOS DE FORMA MASIVA</h3>' +
         '</div>' +
-        '<div class="fgrid g2" style="gap:16px 20px;margin-bottom:18px;align-items:flex-start;">' +
+        '<div class="fgrid g2" style="gap:18px 24px;margin-bottom:18px;align-items:flex-start;">' +
           '<div>' +
             tablaField +
-            '<div style="margin-top:10px;display:flex;align-items:center;gap:8px;">' +
+          '</div>' +
+          '<div>' +
+            descField +
+          '</div>' +
+          '<div>' +
+            '<div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;">' +
               '<input type="checkbox" id="d2c-needs-approval" ' + (c.needsApproval ? 'checked' : '') + ' disabled style="width:16px;height:16px;accent-color:#06396E;cursor:not-allowed;">' +
               '<label for="d2c-needs-approval" style="font-size:13px;color:#475569;cursor:not-allowed;">' +
                 'Esta estructura necesita la aprobación de un aprobador <span style="font-size:11.5px;color:#64748B;font-style:italic;">(Heredado de la estructura)</span>' +
               '</label>' +
             '</div>' +
-            '<button class="btn gho" data-d2c="tpl" style="display:inline-flex;align-items:center;gap:8px;padding:8px 14px;font-size:13px;margin-top:14px;"><svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5M12 15V3"/></svg> Descargar plantilla</button>' +
+            '<button class="btn gho" data-d2c="tpl" style="display:inline-flex;align-items:center;gap:8px;padding:8px 14px;font-size:13px;"><svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5M12 15V3"/></svg> Descargar plantilla</button>' +
           '</div>' +
           '<div>' +
-            '<div style="margin-top: -17px;width:100%;">' +
+            '<div style="width:100%;">' +
               '<div style="font-size:12px;font-weight:600;color:#475569;margin-bottom:6px;display:block;">Seleccionar archivo <span class="req" style="color:#D51317;">*</span></div>' +
               '<div id="d2c-file-drag-zone" data-extend="active" data-helper-text="true" data-mode="Forms" style="width: 100%; display: flex; flex-direction: column; gap: 4px;">' +
                 '<div style="display: flex; align-items: center; width: 100%; height: 40px;">' +
@@ -1339,6 +1357,32 @@
     if(chkCarga){
       chkCarga.checked = !!c.needsApproval;
     }
+
+    var descInp = document.getElementById('d2c-desc');
+    var wrapDesc = document.getElementById('wrap-d2c-desc');
+    if(descInp){
+      descInp.addEventListener('input', function(){
+        if(D.carga) D.carga.descripcion = descInp.value;
+        if(wrapDesc){
+          if(descInp.value.trim().length > 0){
+            wrapDesc.classList.add('has-value');
+            wrapDesc.classList.remove('is-error');
+          } else {
+            wrapDesc.classList.remove('has-value');
+          }
+        }
+      });
+      descInp.addEventListener('blur', function(){
+        if(D.carga) D.carga.descripcion = descInp.value;
+        if(wrapDesc){
+          if(!descInp.value.trim().length){
+            wrapDesc.classList.add('is-error');
+          } else {
+            wrapDesc.classList.remove('is-error');
+          }
+        }
+      });
+    }
   }
 
   function downloadTemplate(){
@@ -1360,7 +1404,10 @@
   }
 
   function readFile(file){
-    var c = D.carga; c.file = file.name; c.report = null;
+    var c = D.carga;
+    var descInp = document.getElementById('d2c-desc');
+    if(descInp && c) c.descripcion = descInp.value;
+    c.file = file.name; c.report = null;
     var r = new FileReader();
     r.onload = function(ev){
       var rows = [];
@@ -1417,7 +1464,21 @@
 
   function doValidateCarga(userTriggered){
     var c = D.carga;
-    if(!c || !c.file || !c.rows){
+    var descInp = document.getElementById('d2c-desc');
+    if(descInp && c) c.descripcion = descInp.value.trim();
+
+    if(!c || !c.tabla){
+      if(userTriggered) toast('Seleccione una tabla maestra antes de realizar la validación.', 'err');
+      return;
+    }
+    if(!c.descripcion){
+      var wrapDesc = document.getElementById('wrap-d2c-desc');
+      if(wrapDesc) wrapDesc.classList.add('is-error');
+      if(userTriggered) toast('La descripción de la carga es obligatoria.', 'err');
+      if(descInp) descInp.focus();
+      return;
+    }
+    if(!c.file || !c.rows){
       if(userTriggered) toast('Seleccione un archivo antes de realizar la validación.', 'err');
       return;
     }
@@ -1434,7 +1495,18 @@
   }
 
   function grabarCarga(){
-    var c = D.carga, tb = getTableConfig(c.tabla), rep = c.report; if(!rep) return;
+    var c = D.carga;
+    var descInp = document.getElementById('d2c-desc');
+    if(descInp && c) c.descripcion = descInp.value.trim();
+
+    if(!c || !c.descripcion){
+      var wrapDesc = document.getElementById('wrap-d2c-desc');
+      if(wrapDesc) wrapDesc.classList.add('is-error');
+      toast('La descripción de la carga es obligatoria.', 'err');
+      if(descInp) descInp.focus();
+      return;
+    }
+    var tb = getTableConfig(c.tabla), rep = c.report; if(!rep) return;
     var errRows = rep.errors.reduce(function(s, e){ if(s.indexOf(e.fila) < 0) s.push(e.fila); return s; }, []).length;
     if(errRows > tb.max){ toast('RN-DT-003 · El archivo excede el máximo de errores permitidos (' + tb.max + '). Corrige y vuelve a cargar.', 'err'); return; }
     if(!rep.valid.length){ toast('No hay registros válidos para grabar.', 'err'); return; }
@@ -1443,6 +1515,7 @@
       D.data.unshift({
         id: uid(),
         tabla: c.tabla,
+        descripcionCarga: c.descripcion,
         origen: 'Masivo',
         tipo: 'Creación',
         estado: 'Elaboración',
@@ -1474,6 +1547,8 @@
     }
 
     if (target.id === 'd2c-tabla') {
+      var descInp = document.getElementById('d2c-desc');
+      if (descInp && D.carga) D.carga.descripcion = descInp.value;
       var newVal = target.value;
       if (D.carga) {
         D.carga.tabla = newVal;
@@ -1580,6 +1655,8 @@
 
         if (hiddenInp && hiddenInp.id === 'd2c-tabla') {
           if (D.carga) {
+            var descInp = document.getElementById('d2c-desc');
+            if (descInp) D.carga.descripcion = descInp.value;
             D.carga.tabla = newVal;
             D.carga.needsApproval = getTableNeedsApproval(newVal);
             D.carga.file = '';

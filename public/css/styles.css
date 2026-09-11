@@ -113,6 +113,12 @@ button { font-family: inherit; }
   transform: translateX(100%);
   transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
+#t001-drawer-body {
+  padding: 16px 24px !important;
+}
+#t001-drawer-footer {
+  padding: 12px 16px !important;
+}
 
 .btn-back-header {
   width: 40px;
@@ -967,6 +973,38 @@ td.lnk a { color: var(--sys-color-text-neutral-medium, #29292A); font-weight: 40
 td .sub { display: none !important; }
 .chk { width: 16px; height: 16px; accent-color: #06396E; }
 .num { font-variant-numeric: tabular-nums; }
+
+/* Horizontal scroll for wide subtables (e.g. Campos in TRA001) */
+.tw-scrollable {
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+  width: 100% !important;
+  -webkit-overflow-scrolling: touch;
+}
+.tw-scrollable table {
+  min-width: 1150px;
+  width: 100%;
+}
+.tw-scrollable th,
+.tw-scrollable td,
+.tw-scrollable .figma-cell-td > div {
+  white-space: nowrap !important;
+}
+.tw-scrollable::-webkit-scrollbar {
+  height: 6px;
+  width: 6px;
+}
+.tw-scrollable::-webkit-scrollbar-track {
+  background: #F8FAFC;
+  border-radius: 4px;
+}
+.tw-scrollable::-webkit-scrollbar-thumb {
+  background: #CBD5E1;
+  border-radius: 4px;
+}
+.tw-scrollable::-webkit-scrollbar-thumb:hover {
+  background: #94A3B8;
+}
 
 .badge {
   display: inline-flex !important;

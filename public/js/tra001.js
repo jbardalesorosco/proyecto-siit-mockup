@@ -34,7 +34,23 @@
   function clone(o){ return JSON.parse(JSON.stringify(o)); }
 
   function newGroup(o){ o = o || {}; return { id: uid(), name: o.name || '', desc: o.desc || '', locked: !!o.locked }; }
-  function newField(o){ o = o || {}; return { id: uid(), name: o.name || '', type: o.type || 'Texto', min: (o.min == null ? '' : o.min), max: (o.max == null ? '' : o.max), required: !!o.required, group: o.group || 'Grupo General', sensitive: !!o.sensitive, active: o.active !== false }; }
+  function newField(o){
+    o = o || {};
+    var isCode = o.name && (o.name.toLowerCase().indexOf('código') !== -1 || o.name.toLowerCase().indexOf('ubigeo') !== -1 || o.name.toLowerCase().indexOf('iso') !== -1);
+    var allowDup = o.allowDuplicates !== undefined ? !!o.allowDuplicates : !isCode;
+    return {
+      id: uid(),
+      name: o.name || '',
+      type: o.type || 'Texto',
+      min: (o.min != null && o.min !== '' ? parseInt(o.min, 10) : 1),
+      max: (o.max != null && o.max !== '' ? parseInt(o.max, 10) : 100),
+      required: !!o.required,
+      allowDuplicates: allowDup,
+      group: o.group || 'Grupo General',
+      sensitive: !!o.sensitive,
+      active: o.active !== false
+    };
+  }
 
   function seed(){
     S.structures = [
@@ -516,7 +532,7 @@
 
     Array.prototype.forEach.call(aprBtns, function(b){ b.style.display = (showApproverActions || canCreatorApprove) ? 'inline-flex' : 'none'; });
     Array.prototype.forEach.call(obsBtns, function(b){ b.style.display = showApproverActions ? 'inline-flex' : 'none'; });
-    Array.prototype.forEach.call(rejBtns, function(b){ b.style.display = showApproverActions ? 'inline-flex' : 'none'; });
+    Array.prototype.forEach.call(rejBtns, function(b){ b.style.display = 'none'; });
   }
 
   function syncForm(){
@@ -776,11 +792,12 @@
           '</div>' +
           addGroupBtn +
         '</div>' +
-        '<div class="tw" style="border:1px solid rgba(32,32,32,0.12);border-radius:4px;overflow:hidden;"><table class="subtable" style="min-width:100%;"><thead><tr><th style="width:60px">ORDEN</th><th>NOMBRE DE LA AGRUPACIÓN</th><th>DESCRIPCIÓN</th><th style="text-align:right">ACCIONES</th></tr></thead><tbody>' + grows + '</tbody></table></div>';
+        '<div class="tw" style="border:1px solid rgba(32,32,32,0.12);border-radius:4px;overflow-x:auto;overflow-y:hidden;width:100%;-webkit-overflow-scrolling:touch;"><table class="subtable" style="min-width:100%;"><thead><tr><th style="width:60px">ORDEN</th><th>NOMBRE DE LA AGRUPACIÓN</th><th>DESCRIPCIÓN</th><th style="text-align:right">ACCIONES</th></tr></thead><tbody>' + grows + '</tbody></table></div>';
     } else if(S.tab === 3){
       var frows = d.fields.map(function(f, i){
         var nameCell = isReadOnly ? '<span style="color:#29292A;font-weight:500;">' + esc(f.name || '(sin nombre)') + '</span>' : '<a data-fact="editf" data-fid="' + f.id + '" style="color:#29292A;text-decoration:none;cursor:pointer;">' + esc(f.name || '(sin nombre)') + '</a>';
         var actsCell = isReadOnly ? '<div class="acts"><span style="color:var(--ink3)">' + LOCK + '</span></div>' : '<div class="acts"><a title="Editar" data-fact="editf" data-fid="' + f.id + '">' + PENCIL + '</a><a class="dn" title="Quitar" data-fact="delf" data-fid="' + f.id + '">' + TRASH + '</a></div>';
+        var dupTag = f.allowDuplicates !== false ? buildTag('Sí', 'b-ok') : buildTag('No', 'b-off');
         return '<tr>' +
           buildTableCell(String(i + 1), { num: true }) +
           buildTableCell(nameCell) +
@@ -788,12 +805,13 @@
           buildTableCell(f.min === '' ? '—' : f.min, { num: true }) +
           buildTableCell(f.max === '' ? '—' : f.max, { num: true }) +
           buildTableCell(f.required ? buildTag('Sí', 'b-ok') : buildTag('No', 'b-off')) +
+          buildTableCell(dupTag) +
           buildTableCell(esc(f.group)) +
           buildTableCell(f.sensitive ? buildTag('Sí', 'b-warn') : buildTag('No', 'b-off')) +
           buildTableCell(f.active ? buildTag('Activo', 'b-ok') : buildTag('Inactivo', 'b-off')) +
           buildTableCell(actsCell, { align: 'right' }) +
         '</tr>';
-      }).join('') || '<tr><td colspan="10" style="padding:0;border:0;"><div style="padding:16px;text-align:center;color:#64748B;">' + (isReadOnly ? 'No se registraron campos en esta estructura.' : 'Aún no hay campos. Use el botón "+" para agregar campos.') + '</div></td></tr>';
+      }).join('') || '<tr><td colspan="11" style="padding:0;border:0;"><div style="padding:16px;text-align:center;color:#64748B;">' + (isReadOnly ? 'No se registraron campos en esta estructura.' : 'Aún no hay campos. Use el botón "+" para agregar campos.') + '</div></td></tr>';
 
       var addFieldBtn = !isReadOnly ?
         '<div style="height:32px;border-radius:6px;justify-content:center;align-items:center;display:flex;">' +
@@ -816,7 +834,7 @@
           '</div>' +
           addFieldBtn +
         '</div>' +
-        '<div class="tw" style="border:1px solid rgba(32,32,32,0.12);border-radius:4px;overflow:hidden;"><table class="subtable" style="min-width:100%;"><thead><tr><th style="width:56px">ORDEN</th><th>NOMBRE DEL CAMPO</th><th>TIPO DE DATO</th><th>LONG. MÍN.</th><th>LONG. MÁX.</th><th>OBLIGATORIO</th><th>AGRUPACIÓN</th><th>DATO SENSIBLE</th><th>ESTADO</th><th style="text-align:right">ACCIONES</th></tr></thead><tbody>' + frows + '</tbody></table></div>';
+        '<div class="tw tw-scrollable" id="tra001-campos-tw" style="border:1px solid rgba(32,32,32,0.12);border-radius:4px;overflow-x:auto;overflow-y:hidden;width:100%;-webkit-overflow-scrolling:touch;"><table class="subtable" style="min-width:1150px;width:100%;border-collapse:collapse;"><thead><tr><th style="width:56px;min-width:56px;">ORDEN</th><th style="min-width:160px;">NOMBRE DEL CAMPO</th><th style="min-width:110px;">TIPO DE DATO</th><th style="min-width:85px;">LONG. MÍN.</th><th style="min-width:85px;">LONG. MÁX.</th><th style="min-width:105px;">OBLIGATORIO</th><th style="min-width:150px;">PERMITE DUPLICADOS</th><th style="min-width:130px;">AGRUPACIÓN</th><th style="min-width:115px;">DATO SENSIBLE</th><th style="min-width:95px;">ESTADO</th><th style="min-width:80px;text-align:right;">ACCIONES</th></tr></thead><tbody>' + frows + '</tbody></table></div>';
     }
 
     var mainCard = '<div class="card" style="padding:0;overflow:hidden;margin-bottom:20px;background:white;border:1px solid rgba(32,32,32,0.12);border-radius:8px;">' +
@@ -970,18 +988,21 @@
     var parentFields = S.draft.fields.filter(function(x){ return !f || x.id !== f.id; }).map(function(x){ return x.name; });
     parentFields.unshift('---');
 
+    var isDupChecked = f ? (f.allowDuplicates !== undefined ? !!f.allowDuplicates : true) : true;
+
     var html = '<div style="display:flex;flex-direction:column;gap:18px;">' +
       buildFigmaFieldHtml({ id: 'm-fname', label: 'Nombre del campo', value: f ? f.name : '', placeholder: 'Nombre del atributo', required: true, helperText: 'El nombre del campo es obligatorio.' }) +
       buildCustomSelectHtml({ id: 'm-ftype', label: 'Tipo de dato', options: TYPES, selectedValue: f ? f.type : '', placeholder: 'Seleccionar...', required: true, helperText: 'El tipo de dato es obligatorio.' }) +
       buildCustomSelectHtml({ id: 'm-fgroup', label: 'Agrupación', options: gnames, selectedValue: f ? f.group : (gnames[0] || ''), placeholder: 'Seleccionar...', required: true, helperText: 'La agrupación es obligatoria.' }) +
       '<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">' +
-        buildFigmaFieldHtml({ id: 'm-fmin', label: 'Long. mínima', value: f && f.min !== '' ? f.min : '', placeholder: '0', required: false }) +
-        buildFigmaFieldHtml({ id: 'm-fmax', label: 'Long. máxima', value: f && f.max !== '' ? f.max : '', placeholder: '255', required: false }) +
+        buildFigmaFieldHtml({ id: 'm-fmin', label: 'Long. mínima', value: (f && f.min != null && f.min !== '') ? String(f.min) : '', placeholder: '1', required: true, helperText: 'La longitud mínima es obligatoria.' }) +
+        buildFigmaFieldHtml({ id: 'm-fmax', label: 'Long. máxima', value: (f && f.max != null && f.max !== '') ? String(f.max) : '', placeholder: '100', required: true, helperText: 'La longitud máxima es obligatoria.' }) +
       '</div>' +
       buildCustomSelectHtml({ id: 'm-fparent', label: 'Depende de (campo padre)', options: parentFields, selectedValue: f ? (f.parent || '---') : '---', placeholder: 'Seleccionar...', required: false }) +
       buildFigmaFieldHtml({ id: 'm-fex', label: 'Ejemplo', value: f ? (f.example || '') : '', placeholder: 'Ej. Lima', required: false }) +
       '<div style="display:flex;flex-direction:column;gap:12px;padding:14px 16px;background:#F8FAFC;border-radius:8px;border:1px solid #E2E8F0;">' +
         '<label style="display:flex;align-items:center;gap:10px;font-size:13.5px;font-family:Inter,sans-serif;font-weight:500;color:#334155;cursor:pointer;"><input class="chk" type="checkbox" id="m-freq"' + (f && f.required ? ' checked' : '') + ' style="width:16px;height:16px;cursor:pointer;"> Obligatorio</label>' +
+        '<label style="display:flex;align-items:center;gap:10px;font-size:13.5px;font-family:Inter,sans-serif;font-weight:500;color:#334155;cursor:pointer;"><input class="chk" type="checkbox" id="m-fdup"' + (isDupChecked ? ' checked' : '') + ' style="width:16px;height:16px;cursor:pointer;"> Permite duplicados <span style="font-size:12px;color:#64748B;font-weight:400;">(Desmarcar si el campo es único / llave)</span></label>' +
         '<label style="display:flex;align-items:center;gap:10px;font-size:13.5px;font-family:Inter,sans-serif;font-weight:500;color:#334155;cursor:pointer;"><input class="chk" type="checkbox" id="m-fsens"' + (f && f.sensitive ? ' checked' : '') + ' style="width:16px;height:16px;cursor:pointer;"> Dato sensible (encriptado)</label>' +
         '<label style="display:flex;align-items:center;gap:10px;font-size:13.5px;font-family:Inter,sans-serif;font-weight:500;color:#334155;cursor:pointer;"><input class="chk" type="checkbox" id="m-fact"' + (!f || f.active ? ' checked' : '') + ' style="width:16px;height:16px;cursor:pointer;"> Activo</label>' +
       '</div>' +
@@ -997,38 +1018,79 @@
         var name = val('m-fname').trim();
         var type = val('m-ftype').trim();
         var group = val('m-fgroup').trim();
+        var minStr = val('m-fmin').trim();
+        var maxStr = val('m-fmax').trim();
 
         var wName = document.getElementById('wrap-m-fname');
         var wType = document.getElementById('wrap-m-ftype');
         var wGroup = document.getElementById('wrap-m-fgroup');
+        var wMin = document.getElementById('wrap-m-fmin');
+        var wMax = document.getElementById('wrap-m-fmax');
 
         var isValid = true;
         if(!name){
           if(wName) wName.classList.add('is-error');
           isValid = false;
+        } else if(wName){
+          wName.classList.remove('is-error');
         }
         if(!type){
           if(wType) wType.classList.add('is-error');
           isValid = false;
+        } else if(wType){
+          wType.classList.remove('is-error');
         }
         if(!group){
           if(wGroup) wGroup.classList.add('is-error');
           isValid = false;
+        } else if(wGroup){
+          wGroup.classList.remove('is-error');
         }
-        if(!isValid) return false;
+        if(minStr === '' || isNaN(minStr) || parseInt(minStr, 10) < 0){
+          if(wMin) wMin.classList.add('is-error');
+          isValid = false;
+        } else if(wMin){
+          wMin.classList.remove('is-error');
+        }
+        if(maxStr === '' || isNaN(maxStr) || parseInt(maxStr, 10) <= 0){
+          if(wMax) wMax.classList.add('is-error');
+          isValid = false;
+        } else if(wMax){
+          wMax.classList.remove('is-error');
+        }
+
+        if(minStr !== '' && maxStr !== '' && !isNaN(minStr) && !isNaN(maxStr)){
+          if(parseInt(minStr, 10) > parseInt(maxStr, 10)){
+            toast('La longitud mínima no puede ser mayor que la longitud máxima.', 'warn');
+            if(wMin) wMin.classList.add('is-error');
+            if(wMax) wMax.classList.add('is-error');
+            return false;
+          }
+        }
+
+        if(!isValid){
+          toast('Complete los campos obligatorios del atributo (Nombre, Tipo, Agrupación, Long. mínima y Long. máxima).', 'warn');
+          return false;
+        }
+
         var rec = {
           name: name,
-          type: val('m-ftype'),
-          group: val('m-fgroup'),
-          min: val('m-fmin'),
-          max: val('m-fmax'),
+          type: type,
+          group: group,
+          min: parseInt(minStr, 10),
+          max: parseInt(maxStr, 10),
           parent: val('m-fparent'),
           example: val('m-fex'),
           required: chk('m-freq'),
+          allowDuplicates: chk('m-fdup'),
           sensitive: chk('m-fsens'),
           active: chk('m-fact')
         };
-        if(f){ for(var k in rec) f[k] = rec[k]; } else { S.draft.fields.push(newField(rec)); }
+        if(f){
+          for(var k in rec) f[k] = rec[k];
+        } else {
+          S.draft.fields.push(newField(rec));
+        }
         renderForm();
         return true;
       }
@@ -1060,7 +1122,7 @@
 
     if(S.mode === 'edit'){
       var orig = find(S.origId);
-      if(orig && orig.state === 'Observado'){
+      if(orig){
         orig.name = d.name;
         orig.ref = d.ref;
         orig.desc = d.desc;
@@ -1070,24 +1132,24 @@
         orig.sustentoFile = d.sustentoFile;
         orig.groups = clone(d.groups);
         orig.fields = clone(d.fields);
-        orig.state = 'Elaboración';
         orig.date = today();
-        toast('Estructura <b>' + orig.code + '</b> actualizada y devuelta a Elaboración. Ahora puede validarla.', 'ok');
+        if(orig.state === 'Observado'){
+          orig.state = 'Elaboración';
+          orig.obsMotivo = '';
+          orig.obsDate = '';
+          toast('Estructura <b>' + orig.code + '</b> actualizada y devuelta a Elaboración. Ahora puede validarla.', 'ok');
+        } else {
+          toast('Cambios guardados correctamente en la estructura <b>' + orig.code + '</b>.', 'ok');
+        }
         d = orig;
-      } else {
-        S.seq++;
-        var modRec = clone(d);
-        modRec.id = uid();
-        modRec.code = code(S.seq);
-        modRec.type = 'Modificación';
-        modRec.state = 'Elaboración';
-        modRec.date = today();
-        S.structures.unshift(modRec);
-        toast('Solicitud de modificación de <b>' + (orig ? orig.code : d.code) + '</b> registrada como <b>' + modRec.code + '</b> en estado Elaboración.', 'ok');
-        d = modRec;
       }
     } else {
-      S.seq++; d.code = code(S.seq); d.type = 'Creación'; d.state = 'Elaboración'; S.structures.unshift(d);
+      S.seq++;
+      d.code = code(S.seq);
+      d.type = 'Creación';
+      d.state = 'Elaboración';
+      d.date = today();
+      S.structures.unshift(d);
       toast('Estructura <b>' + d.code + '</b> guardada correctamente. Ahora puede validarla haciendo clic en "Validar".', 'ok');
     }
     renderList(); return d;
@@ -1485,6 +1547,10 @@
     var saveBtn = e.target.closest('#btn-save-tra001, [data-fbtn="save"]');
     if (saveBtn) {
       e.preventDefault();
+      if (saveBtn.dataset.busy === '1') return;
+      saveBtn.dataset.busy = '1';
+      setTimeout(function(){ saveBtn.dataset.busy = '0'; }, 400);
+
       syncForm();
       if (!isStep1Valid()) {
         toast('Completa los campos obligatorios de Datos generales' + (S.draft && S.draft.needsApproval ? ' (Nombre, Referencia y Archivo de sustento).' : ' (Nombre y Referencia).'), 'warn');
