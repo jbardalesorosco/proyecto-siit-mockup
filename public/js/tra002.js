@@ -31,7 +31,7 @@
     '</div>';
   }
 
-  var D = { data: [], draft: null, mode: 'create', origId: null, carga: null, currentRole: 'Creador', draftSaved: false };
+  var D = { data: [], draft: null, activeBatch: null, mode: 'create', origId: null, carga: null, currentRole: 'Creador', draftSaved: false };
 
   function uid(){ return 'd' + Math.random().toString(36).slice(2,9); }
   function today(){ var d = new Date(); function p(x){ return String(x).padStart(2,'0'); } return p(d.getDate()) + '/' + p(d.getMonth()+1) + '/' + d.getFullYear(); }
@@ -182,7 +182,6 @@
       'Observado': 'b-warn',
       'Validado': 'b-info',
       'Aprobado': 'b-ok',
-      'Rechazado': 'b-err',
       'Eliminado': 'b-off'
     };
     return '<span class="badge ' + (m[st] || 'b-off') + '">' + st + '</span>';
@@ -370,6 +369,40 @@
       },
       {
         id: uid(),
+        tabla: 'Ubigeo — Distritos',
+        origen: 'Masivo',
+        tipo: 'Creación',
+        estado: 'Elaboración',
+        fecha: today(),
+        hora: '10:45',
+        needsApproval: true,
+        archivo: 'distritos_censales_2026.xlsx',
+        descripcion: 'Incorporación masiva de nuevos distritos censales de Lima y Callao',
+        records: [
+          { ubigeo: '150143', departamento: 'Lima', provincia: 'Lima', distrito: 'Santa Rosa' },
+          { ubigeo: '150142', departamento: 'Lima', provincia: 'Lima', distrito: 'Villa El Salvador' },
+          { ubigeo: '150141', departamento: 'Lima', provincia: 'Lima', distrito: 'Villa María del Triunfo' },
+          { ubigeo: '070101', departamento: 'Callao', provincia: 'Callao', distrito: 'Callao' },
+          { ubigeo: '070102', departamento: 'Callao', provincia: 'Callao', distrito: 'Bellavista' },
+          { ubigeo: '070103', departamento: 'Callao', provincia: 'Callao', distrito: 'Carmen de la Legua Reynoso' },
+          { ubigeo: '070104', departamento: 'Callao', provincia: 'Callao', distrito: 'La Perla' },
+          { ubigeo: '070105', departamento: 'Callao', provincia: 'Callao', distrito: 'La Punta' },
+          { ubigeo: '070106', departamento: 'Callao', provincia: 'Callao', distrito: 'Ventanilla' },
+          { ubigeo: '070107', departamento: 'Callao', provincia: 'Callao', distrito: 'Mi Perú' },
+          { ubigeo: '150101', departamento: 'Lima', provincia: 'Lima', distrito: 'Lima' },
+          { ubigeo: '150102', departamento: 'Lima', provincia: 'Lima', distrito: 'Ancón' },
+          { ubigeo: '150103', departamento: 'Lima', provincia: 'Lima', distrito: 'Ate' },
+          { ubigeo: '150104', departamento: 'Lima', provincia: 'Lima', distrito: 'Barranco' },
+          { ubigeo: '150105', departamento: 'Lima', provincia: 'Lima', distrito: 'Breña' }
+        ],
+        obsMotivo: '',
+        obsDate: '',
+        rechazoMotivo: '',
+        rechazoDate: '',
+        values: { ubigeo: '150143', departamento: 'Lima', provincia: 'Lima', distrito: 'Santa Rosa' }
+      },
+      {
+        id: uid(),
         tabla: 'Actividad económica — CIIU',
         origen: 'Masivo',
         tipo: 'Modificación',
@@ -377,6 +410,24 @@
         fecha: '09/08/2026',
         hora: '11:15',
         needsApproval: true,
+        archivo: 'ciiu_actividades_rev4.xlsx',
+        descripcion: 'Actualización y homologación de actividades económicas CIIU Rev. 4',
+        records: [
+          { codigo: '4711', descripcion: 'Venta al por menor en comercios no especializados con alimentos' },
+          { codigo: '4719', descripcion: 'Venta al por menor de otros productos en comercios no especializados' },
+          { codigo: '4721', descripcion: 'Venta al por menor de alimentos en comercios especializados' },
+          { codigo: '4722', descripcion: 'Venta al por menor de bebidas en comercios especializados' },
+          { codigo: '4730', descripcion: 'Venta al por menor de combustibles para vehículos automotores' },
+          { codigo: '4741', descripcion: 'Venta al por menor de computadoras y equipo periférico' },
+          { codigo: '4742', descripcion: 'Venta al por menor de equipo de audio y video' },
+          { codigo: '4751', descripcion: 'Venta al por menor de productos textiles en comercios especializados' },
+          { codigo: '4752', descripcion: 'Venta al por menor de artículos de ferretería y vidrio' },
+          { codigo: '4753', descripcion: 'Venta al por menor de tapices, alfombras y recubrimientos' },
+          { codigo: '4759', descripcion: 'Venta al por menor de aparatos eléctricos de uso doméstico' },
+          { codigo: '4761', descripcion: 'Venta al por menor de libros y artículos de papelería' },
+          { codigo: '4771', descripcion: 'Venta al por menor de prendas de vestir y calzado' },
+          { codigo: '4772', descripcion: 'Venta al por menor de productos farmacéuticos y cosméticos' }
+        ],
         obsMotivo: '',
         obsDate: '',
         rechazoMotivo: '',
@@ -398,21 +449,7 @@
         rechazoDate: '',
         values: { codigo: 'USD', descripcion: 'Dólar Estadounidense', simbolo: '$' }
       },
-      {
-        id: uid(),
-        tabla: 'Ubigeo — Distritos',
-        origen: 'Masivo',
-        tipo: 'Creación',
-        estado: 'Rechazado',
-        fecha: '07/08/2026',
-        hora: '16:00',
-        needsApproval: true,
-        obsMotivo: '',
-        obsDate: '',
-        rechazoMotivo: 'El código de ubigeo propuesto colisiona con el catálogo oficial de RENIEC/INEI vigente.',
-        rechazoDate: '07/08/2026',
-        values: { ubigeo: '150199', departamento: 'Lima', provincia: 'Lima', distrito: 'Distrito No Homologado' }
-      },
+
       {
         id: uid(),
         tabla: 'Ubigeo — Distritos',
@@ -422,6 +459,13 @@
         fecha: '20/07/2026',
         hora: '10:15',
         needsApproval: true,
+        archivo: 'catalogo_distritos_aprobados.xlsx',
+        descripcion: 'Homologación de distritos del cono sur de Lima Metropolitana',
+        records: [
+          { ubigeo: '150132', departamento: 'Lima', provincia: 'Lima', distrito: 'San Juan de Miraflores' },
+          { ubigeo: '150133', departamento: 'Lima', provincia: 'Lima', distrito: 'San Luis' },
+          { ubigeo: '150134', departamento: 'Lima', provincia: 'Lima', distrito: 'San Martín de Porres' }
+        ],
         obsMotivo: '',
         obsDate: '',
         rechazoMotivo: '',
@@ -486,9 +530,17 @@
     var tnames = getTNAMES();
     var rows = D.data.map(function(r){
       var elim = r.estado === 'Eliminado';
+      var isMasivo = r.origen === 'Masivo';
       var a = '<div class="acts">';
       if (!elim) {
-        if (D.currentRole === 'Creador') {
+        if (isMasivo) {
+          if (D.currentRole === 'Creador' && (r.estado === 'Elaboración' || r.estado === 'Observado')) {
+            a += '<a title="Ver lote masivo" data-d2="batch" data-d2id="' + r.id + '" style="color:#504C4A;cursor:pointer;">' + PENCIL + '</a>';
+            a += '<a title="Eliminar carga masiva" data-d2="delete-batch" data-d2id="' + r.id + '" style="color:#504C4A;cursor:pointer;">' + TRASH + '</a>';
+          } else {
+            a += '<a title="Ver carga masiva" data-d2="batch" data-d2id="' + r.id + '" style="color:#504C4A;cursor:pointer;">' + EYE + '</a>';
+          }
+        } else if (D.currentRole === 'Creador') {
           if (r.estado === 'Elaboración' || r.estado === 'Observado') {
             a += '<a title="' + (r.estado === 'Observado' ? 'Editar observaciones' : 'Editar') + '" data-d2="edit" data-d2id="' + r.id + '" style="color:#504C4A;cursor:pointer;">' + PENCIL + '</a>';
             a += '<a title="Eliminar" data-d2="delete" data-d2id="' + r.id + '" style="color:#504C4A;cursor:pointer;">' + TRASH + '</a>';
@@ -504,9 +556,11 @@
       }
       a += '</div>';
 
-      var reg = regOf(r.tabla, r.values);
+      var count = (r.records && r.records.length) || 1;
+      var descText = r.descripcion || r.descripcionCarga || ('Carga masiva · ' + r.tabla);
+      var reg = isMasivo ? (descText + ' (' + count + ' ' + (count === 1 ? 'registro' : 'registros') + ')') : regOf(r.tabla, r.values);
       var k = (reg + ' ' + r.tabla + ' ' + r.origen + ' ' + r.estado).toLowerCase();
-      var clickAct = (D.currentRole === 'Creador' && (r.estado === 'Elaboración' || r.estado === 'Observado')) ? 'edit' : 'view';
+      var clickAct = isMasivo ? 'batch' : ((D.currentRole === 'Creador' && (r.estado === 'Elaboración' || r.estado === 'Observado')) ? 'edit' : 'view');
 
       return '<tr data-k="' + esc(k) + '" data-st="' + r.estado + '" data-tb="' + esc(r.tabla) + '"' + (elim ? ' style="opacity:.5"' : '') + '>' +
         buildTableCell('<a data-d2="' + clickAct + '" data-d2id="' + r.id + '" style="color:#29292A;text-decoration:none;cursor:pointer;font-weight:400;">' + esc(reg) + '</a>') +
@@ -630,6 +684,10 @@
   function openEdit(id){
     D.currentRole = getCurrentRole();
     var r = find(id); if(!r) return;
+    if(r.origen === 'Masivo'){
+      openBatchDetail(id);
+      return;
+    }
     if(r.estado === 'Eliminado'){
       toast('Un registro Eliminado es irreversible: no puede editarse.', 'err');
       return;
@@ -654,6 +712,10 @@
   function openView(id){
     D.currentRole = getCurrentRole();
     var r = find(id); if(!r) return;
+    if(r.origen === 'Masivo'){
+      openBatchDetail(id);
+      return;
+    }
     D.mode = 'view';
     D.origId = id;
     D.draft = JSON.parse(JSON.stringify(r));
@@ -686,7 +748,7 @@
     var fields = config.fields;
 
     var isRoleAprobador = D.currentRole.toLowerCase() === 'aprobador';
-    var isReadOnly = D.mode === 'view' || d.estado === 'Rechazado' || (d.estado === 'Validado' && !isRoleAprobador) || d.estado === 'Aprobado';
+    var isReadOnly = D.mode === 'view' || (d.estado === 'Validado' && !isRoleAprobador) || d.estado === 'Aprobado';
 
     var tablaField = buildCustomSelectHtml({
       id: 'd2f-tabla',
@@ -722,47 +784,48 @@
       }).join('');
     }
 
-    // Banners para Observado y Rechazado
+    // Banners para Observado
     var bannerHtml = '';
     if(d.estado === 'Observado' && (d.obsMotivo || d.motivoObservacion)){
-      bannerHtml = '<div style="margin-bottom:16px;padding:12px 16px;background:#FEF3C7;border-left:4px solid #D97706;border-radius:6px;color:#92400E;font-size:13.5px;line-height:20px;display:flex;align-items:flex-start;gap:10px;">' +
-        '<svg viewBox="0 0 24 24" style="width:20px;height:20px;stroke:#D97706;fill:none;stroke-width:2;flex-shrink:0;margin-top:1px;"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>' +
-        '<div><strong>Observación:</strong> ' + esc(d.obsMotivo || d.motivoObservacion) + '</div>' +
-      '</div>';
-    } else if(d.estado === 'Rechazado' && (d.rechazoMotivo || d.motivoRechazo)){
-      bannerHtml = '<div style="margin-bottom:16px;padding:12px 16px;background:#FEE2E2;border-left:4px solid #DC2626;border-radius:6px;color:#991B1B;font-size:13.5px;line-height:20px;display:flex;align-items:flex-start;gap:10px;">' +
-        '<svg viewBox="0 0 24 24" style="width:20px;height:20px;stroke:#DC2626;fill:none;stroke-width:2;flex-shrink:0;margin-top:1px;"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>' +
-        '<div><strong>Motivo del rechazo:</strong> ' + esc(d.rechazoMotivo || d.motivoRechazo) + '</div>' +
+      var obsDesc = esc(d.obsMotivo || d.motivoObservacion);
+      bannerHtml = '<div class="status-banner-obs" data-borde="false" data-close="false" data-show-actions="false" data-show-title="true" data-type="Warning" style="width:100%;box-sizing:border-box;padding-left:16px;padding-right:16px;padding-top:12px;padding-bottom:12px;position:relative;border-radius:8px;background:var(--sys-color-bg-feedback-light-warning, #F7ECD5);justify-content:flex-start;align-items:center;gap:12px;display:flex;margin-bottom:20px;">' +
+        '<div data-style="Outline" style="width:20px;height:20px;min-width:20px;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;flex-shrink:0;">' +
+          '<svg viewBox="0 0 24 24" style="width:20px;height:20px;stroke:var(--sys-color-text-feedback-warning, #4D3800);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>' +
+        '</div>' +
+        '<div style="flex:1 1 0;min-width:0;overflow:hidden;flex-direction:column;justify-content:flex-start;align-items:flex-start;gap:2px;display:inline-flex;">' +
+          '<div style="align-self:stretch;color:var(--sys-color-text-feedback-warning, #4D3800);font-size:14px;font-family:Inter,sans-serif;font-weight:600;line-height:20px;word-wrap:break-word;">Registro Observado' + (d.obsDate ? ' &nbsp;·&nbsp; Fecha de observación: ' + esc(d.obsDate) : '') + '</div>' +
+          '<div style="color:var(--sys-color-text-feedback-warning, #4D3800);font-size:14px;font-family:Inter,sans-serif;font-weight:500;line-height:20px;word-wrap:break-word;">Motivo de observación: ' + obsDesc + '</div>' +
+        '</div>' +
       '</div>';
     }
 
     // 1. Header 2-Cards Readonly Layout (Patrón estándar Figma SIIT)
     var headerCard = '<div data-info-solicitud="true" class="tra001-two-cards-wrap" style="width:100%;border-radius:8px;justify-content:flex-start;align-items:stretch;gap:12px;display:flex;margin-bottom:20px;">' +
-      // Card 1: Izquierda (Intendencia & Fecha)
+      // Card 1: Izquierda (Intendencia / Fecha & Tabla Maestra)
       '<div style="flex:1 1 0;min-width:0;align-self:stretch;padding:8px 16px;background:white;border:1px solid rgba(32,32,32,0.12);border-radius:8px;flex-direction:column;justify-content:center;align-items:flex-start;display:inline-flex;">' +
-        // Row 1: INTENDENCIA
+        // Row 1: INTENDENCIA / FECHA
         '<div data-content="Text" data-layout="Inline" style="align-self:stretch;flex-direction:column;justify-content:flex-start;align-items:flex-start;display:flex;">' +
           '<div style="align-self:stretch;min-height:36px;padding:6px 0;border-radius:8px;justify-content:flex-start;align-items:center;gap:8px;display:inline-flex;">' +
-            '<div style="width:140px;max-width:180px;min-width:80px;min-height:24px;flex-direction:column;justify-content:center;align-items:flex-start;display:inline-flex;">' +
+            '<div style="width:160px;max-width:200px;min-width:140px;min-height:24px;flex-direction:column;justify-content:center;align-items:flex-start;display:inline-flex;">' +
               '<div style="min-height:16px;padding:0 4px;border-radius:8px;justify-content:center;align-items:center;display:inline-flex;">' +
-                '<div style="color:#6F6F71;font-size:12px;font-family:Inter,sans-serif;font-weight:500;letter-spacing:0.5px;">INTENDENCIA</div>' +
+                '<div style="color:#6F6F71;font-size:12px;font-family:Inter,sans-serif;font-weight:500;letter-spacing:0.5px;">INTENDENCIA / FECHA</div>' +
               '</div>' +
             '</div>' +
             '<div style="flex:1 1 0;overflow:hidden;justify-content:flex-start;align-items:center;display:flex;">' +
-              '<div style="color:#353537;font-size:14px;font-family:Inter,sans-serif;font-weight:700;text-transform:uppercase;line-height:20px;letter-spacing:0.5px;">ILM LIMA METROPOLITANA</div>' +
+              '<div style="color:#353537;font-size:14px;font-family:Inter,sans-serif;font-weight:700;line-height:20px;">ILM LIMA METROPOLITANA &nbsp;·&nbsp; ' + esc(d.fecha) + (d.hora ? ' &nbsp;' + esc(d.hora) : '') + '</div>' +
             '</div>' +
           '</div>' +
         '</div>' +
-        // Row 2: FECHA
+        // Row 2: TABLA MAESTRA
         '<div data-content="Text" data-layout="Inline" style="align-self:stretch;flex-direction:column;justify-content:flex-start;align-items:flex-start;display:flex;">' +
           '<div style="align-self:stretch;min-height:36px;padding:6px 0;border-radius:8px;justify-content:flex-start;align-items:center;gap:8px;display:inline-flex;">' +
-            '<div style="width:140px;max-width:180px;min-width:80px;min-height:24px;flex-direction:column;justify-content:center;align-items:flex-start;display:inline-flex;">' +
+            '<div style="width:160px;max-width:200px;min-width:140px;min-height:24px;flex-direction:column;justify-content:center;align-items:flex-start;display:inline-flex;">' +
               '<div style="min-height:16px;padding:0 4px;border-radius:8px;justify-content:center;align-items:center;display:inline-flex;">' +
-                '<div style="color:#6F6F71;font-size:12px;font-family:Inter,sans-serif;font-weight:500;letter-spacing:0.5px;">FECHA</div>' +
+                '<div style="color:#6F6F71;font-size:12px;font-family:Inter,sans-serif;font-weight:500;letter-spacing:0.5px;">TABLA MAESTRA</div>' +
               '</div>' +
             '</div>' +
             '<div style="flex:1 1 0;overflow:hidden;justify-content:flex-start;align-items:center;display:flex;">' +
-              '<div style="color:#353537;font-size:14px;font-family:Inter,sans-serif;font-weight:700;line-height:20px;">' + esc(d.fecha) + ' &nbsp; ' + esc(d.hora || '09:30') + '</div>' +
+              '<div style="color:#353537;font-size:14px;font-family:Inter,sans-serif;font-weight:700;line-height:20px;">' + (d.tabla ? esc(d.tabla) : '—') + '</div>' +
             '</div>' +
           '</div>' +
         '</div>' +
@@ -773,20 +836,20 @@
         // Row 1: ORIGEN
         '<div data-content="Text" data-layout="Inline" style="align-self:stretch;flex-direction:column;justify-content:flex-start;align-items:flex-start;display:flex;">' +
           '<div style="align-self:stretch;min-height:36px;padding:6px 0;border-radius:8px;justify-content:flex-start;align-items:center;gap:8px;display:inline-flex;">' +
-            '<div style="width:100px;min-height:24px;flex-direction:column;justify-content:center;align-items:flex-start;display:inline-flex;">' +
+            '<div style="width:140px;min-height:24px;flex-direction:column;justify-content:center;align-items:flex-start;display:inline-flex;">' +
               '<div style="min-height:16px;padding:0 4px;border-radius:8px;justify-content:center;align-items:center;display:inline-flex;">' +
                 '<div style="color:#6F6F71;font-size:12px;font-family:Inter,sans-serif;font-weight:500;letter-spacing:0.5px;">ORIGEN</div>' +
               '</div>' +
             '</div>' +
             '<div style="flex:1 1 0;overflow:hidden;justify-content:flex-start;align-items:center;display:flex;">' +
-              orgBadge(d.origen) +
+              orgBadge(d.origen || 'Individual') +
             '</div>' +
           '</div>' +
         '</div>' +
         // Row 2: ESTADO
         '<div data-content="Text" data-layout="Inline" style="align-self:stretch;flex-direction:column;justify-content:flex-start;align-items:flex-start;display:flex;">' +
           '<div style="align-self:stretch;min-height:36px;padding:6px 0;border-radius:8px;justify-content:flex-start;align-items:center;gap:8px;display:inline-flex;">' +
-            '<div style="width:100px;min-height:24px;flex-direction:column;justify-content:center;align-items:flex-start;display:inline-flex;">' +
+            '<div style="width:140px;min-height:24px;flex-direction:column;justify-content:center;align-items:flex-start;display:inline-flex;">' +
               '<div style="min-height:16px;padding:0 4px;border-radius:8px;justify-content:center;align-items:center;display:inline-flex;">' +
                 '<div style="color:#6F6F71;font-size:12px;font-family:Inter,sans-serif;font-weight:500;letter-spacing:0.5px;">ESTADO</div>' +
               '</div>' +
@@ -799,36 +862,85 @@
       '</div>' +
     '</div>';
 
-    // 2. Card Principal del Formulario (Abajo)
-    var formCard = '<div class="card" style="padding:0;margin-bottom:20px;background:white;border:1px solid rgba(32,32,32,0.12);border-radius:8px;">' +
-      // Header de Sección
-      '<div style="width:100%;min-height:52px;padding:16px 24px 12px;border-bottom:1px solid rgba(32,32,32,0.12);display:flex;justify-content:flex-start;align-items:center;box-sizing:border-box;">' +
-        '<div style="color:var(--sys-color-text-neutral-high, #252220);font-size:16px;font-family:Inter,sans-serif;font-weight:600;line-height:24px;">' +
-          (D.mode === 'view' ? 'Detalle del registro de datos' : (D.mode === 'edit' ? 'Datos del registro a editar' : 'Datos del registro')) +
+    // 2. Card Principal (Abajo)
+    var formCard = '';
+    if (isReadOnly) {
+      // Vista Read-only sin inputs ni textboxes
+      var roRows = '';
+      if(fields && fields.length > 0){
+        roRows = fields.map(function(f, idx){
+          var displayLabel = f.label || (f.name.charAt(0).toUpperCase() + f.name.slice(1));
+          var val = (d.values && (d.values[f.name] !== undefined ? d.values[f.name] : d.values[displayLabel])) || '—';
+          return '<tr style="border-bottom:1px solid rgba(32,32,32,0.08);">' +
+            '<td style="padding:12px 16px;color:#64748B;font-size:13px;width:56px;text-align:center;">' + (idx + 1) + '</td>' +
+            '<td style="padding:12px 16px;color:#252220;font-weight:600;font-size:13.5px;width:260px;">' + esc(displayLabel) + '</td>' +
+            '<td style="padding:12px 16px;color:#353537;font-size:13.5px;font-family:Inter,sans-serif;">' + esc(val) + '</td>' +
+          '</tr>';
+        }).join('');
+      } else {
+        roRows = '<tr><td colspan="3" style="padding:24px;text-align:center;color:#6C6865;">No hay campos registrados para esta tabla maestra.</td></tr>';
+      }
+
+      formCard = '<div class="card" style="padding:0;margin-bottom:20px;background:white;border:1px solid rgba(32,32,32,0.12);border-radius:8px;">' +
+        '<div style="width:100%;min-height:52px;padding:16px 24px 12px;border-bottom:1px solid rgba(32,32,32,0.12);display:flex;justify-content:flex-start;align-items:center;box-sizing:border-box;">' +
+          '<div style="color:var(--sys-color-text-neutral-high, #252220);font-size:16px;font-family:Inter,sans-serif;font-weight:600;line-height:24px;">Detalle del registro de datos</div>' +
         '</div>' +
-      '</div>' +
-      // Contenido del Formulario
-      '<div style="padding:24px;display:flex;flex-direction:column;gap:24px;">' +
-        // Sección Tabla Maestra
-        '<div>' +
-          '<div style="font-size:13px;font-weight:700;color:#06396E;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:14px;font-family:Inter,sans-serif;">TABLA MAESTRA</div>' +
-          '<div class="fgrid g1" style="max-width:540px;">' +
-            tablaField +
-            '<div style="margin-top:10px;display:flex;align-items:center;gap:8px;">' +
-              '<input type="checkbox" id="d2f-needs-approval" ' + (d.needsApproval ? 'checked' : '') + ' disabled style="width:16px;height:16px;accent-color:#06396E;cursor:not-allowed;">' +
-              '<label for="d2f-needs-approval" style="font-size:13px;color:#475569;cursor:not-allowed;">' +
-                'Esta estructura necesita la aprobación de un aprobador <span style="font-size:11.5px;color:#64748B;font-style:italic;">(Heredado de la estructura)</span>' +
-              '</label>' +
-            '</div>' +
+        '<div style="padding:24px;">' +
+          '<div style="border:1px solid rgba(32,32,32,0.12);border-radius:6px;overflow:hidden;background:white;margin-bottom:16px;">' +
+            '<table style="width:100%;border-collapse:collapse;text-align:left;">' +
+              '<thead>' +
+                '<tr style="background:#F8FAFC;border-bottom:1px solid rgba(32,32,32,0.12);color:#475569;font-weight:600;font-size:12px;letter-spacing:0.5px;text-transform:uppercase;">' +
+                  '<th style="padding:10px 16px;width:56px;text-align:center;">#</th>' +
+                  '<th style="padding:10px 16px;width:260px;">Campo</th>' +
+                  '<th style="padding:10px 16px;">Valor Registrado</th>' +
+                '</tr>' +
+              '</thead>' +
+              '<tbody>' + roRows + '</tbody>' +
+            '</table>' +
+          '</div>' +
+          (d.needsApproval
+            ? '<div style="display:flex;align-items:center;gap:8px;padding:10px 14px;background:#F0F7FF;border-radius:6px;border:1px solid #BAE6FD;">' +
+                '<svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:#0284C7;fill:none;stroke-width:2;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>' +
+                '<span style="font-size:12.5px;color:#0369A1;font-weight:500;">Esta estructura requiere revisión y aprobación del rol <b>Aprobador</b>.</span>' +
+              '</div>'
+            : '<div style="display:flex;align-items:center;gap:8px;padding:10px 14px;background:#F8FAFC;border-radius:6px;border:1px solid #E2E8F0;">' +
+                '<svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:#64748B;fill:none;stroke-width:2;"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 14 14"/></svg>' +
+                '<span style="font-size:12.5px;color:#475569;font-weight:500;">Esta estructura <b>no</b> requiere aprobador externo. Puede ser aprobada directamente por el rol <b>Creador</b>.</span>' +
+              '</div>') +
+        '</div>' +
+      '</div>';
+    } else {
+      // Formulario editable para Elaboración / Observado
+      formCard = '<div class="card" style="padding:0;margin-bottom:20px;background:white;border:1px solid rgba(32,32,32,0.12);border-radius:8px;">' +
+        // Header de Sección
+        '<div style="width:100%;min-height:52px;padding:16px 24px 12px;border-bottom:1px solid rgba(32,32,32,0.12);display:flex;justify-content:flex-start;align-items:center;box-sizing:border-box;">' +
+          '<div style="color:var(--sys-color-text-neutral-high, #252220);font-size:16px;font-family:Inter,sans-serif;font-weight:600;line-height:24px;">' +
+            (D.mode === 'edit' ? 'Datos del registro a editar' : 'Datos del registro') +
           '</div>' +
         '</div>' +
-        // Sección Valores de los Campos
-        '<div>' +
-          '<div style="font-size:13px;font-weight:700;color:#06396E;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:14px;font-family:Inter,sans-serif;">VALORES DE LOS CAMPOS</div>' +
-          '<div class="fgrid g2" style="gap:16px 20px;">' + fInputs + '</div>' +
+        // Contenido del Formulario
+        '<div style="padding:24px;display:flex;flex-direction:column;gap:24px;">' +
+          // Sección Tabla Maestra
+          '<div>' +
+            '<div style="font-size:13px;font-weight:700;color:#06396E;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:14px;font-family:Inter,sans-serif;">TABLA MAESTRA</div>' +
+            '<div class="fgrid g1" style="max-width:540px;">' +
+              tablaField +
+              '<div style="margin-top:10px;display:flex;align-items:center;gap:8px;">' +
+                '<input type="checkbox" id="d2f-needs-approval" ' + (d.needsApproval ? 'checked' : '') + ' disabled style="width:16px;height:16px;accent-color:#06396E;cursor:not-allowed;">' +
+                '<label for="d2f-needs-approval" style="font-size:13px;color:#475569;cursor:not-allowed;">' +
+                  'Esta estructura necesita la aprobación de un aprobador <span style="font-size:11.5px;color:#64748B;font-style:italic;">(Heredado de la estructura)</span>' +
+                '</label>' +
+              '</div>' +
+            '</div>' +
+          '</div>' +
+          // Sección Valores de los Campos
+          '<div>' +
+            '<div style="font-size:13px;font-weight:700;color:#06396E;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:14px;font-family:Inter,sans-serif;">VALORES DE LOS CAMPOS</div>' +
+            '<div class="fgrid g2" style="gap:16px 20px;">' + fInputs + '</div>' +
+          '</div>' +
         '</div>' +
-      '</div>' +
-    '</div>';
+      '</div>';
+    }
 
     mount.innerHTML = bannerHtml + headerCard + formCard;
 
@@ -846,7 +958,7 @@
     var d = D.draft;
     var isRoleAprobador = D.currentRole.toLowerCase() === 'aprobador';
     var isRoleCreador = D.currentRole.toLowerCase() === 'creador';
-    var isReadOnly = D.mode === 'view' || d.estado === 'Rechazado' || (d.estado === 'Validado' && !isRoleAprobador) || d.estado === 'Aprobado';
+    var isReadOnly = D.mode === 'view' || d.estado === 'Validado' || d.estado === 'Aprobado';
 
     var btnSave = document.getElementById('btn-save-tra002');
     if(btnSave){
@@ -1009,12 +1121,11 @@
       renderList();
       if(sendsToApprover){
         toast('RN-DT-009 · Registro de <b>' + esc(r.tabla) + '</b> validado y remitido al Aprobador.', 'ok');
-        window.go('tra002-list');
       } else {
         toast('RN-DT-009 · Registro <b>Validado</b>. Ahora puedes proceder a <b>Aprobarlo</b>.', 'ok');
-        renderForm();
-        updateStepButtons();
       }
+      renderForm();
+      updateStepButtons();
       return true;
     }, 'Validar');
   }
@@ -1138,51 +1249,6 @@
     if(sBtn) sBtn.style.background = '#06396E';
   }
 
-  function openDirectRejectModal(id){
-    var r = find(id);
-    if(!r) return;
-    if(r.estado !== 'Validado'){
-      toast('Solo pueden evaluarse registros en estado Validado.', 'err');
-      return;
-    }
-
-    var html = '<div style="display:flex;flex-direction:column;gap:14px;">' +
-      '<div style="display:flex;flex-direction:column;gap:6px;">' +
-        '<label style="font-size:14px;font-weight:600;color:#1E293B;font-family:Inter,sans-serif;">Motivo del rechazo <span style="color:#D51317;">*</span></label>' +
-        '<textarea id="eval-rej-motivo" rows="4" placeholder="Detalle el sustento técnico o normativo del rechazo definitivo..." style="width:100%;padding:10px 12px;border-radius:8px;border:1px solid #CBD5E1;font-size:13.5px;font-family:Inter,sans-serif;outline:none;resize:vertical;box-sizing:border-box;"></textarea>' +
-        '<div id="eval-rej-error" style="display:none;font-size:12px;color:#DC2626;font-weight:500;">Debe ingresar el motivo del rechazo para continuar.</div>' +
-      '</div>' +
-      buildFigmaInfoMessage('¿Qué implica rechazar el registro?', 'Permite rechazar de manera definitiva el registro propuesto. El registro quedará archivado únicamente con fines de auditoría e histórico.') +
-    '</div>';
-
-    openDrawer({
-      width: '400px',
-      title: 'Rechazar registro de ' + esc(r.tabla),
-      subtitle: esc(regOf(r.tabla, r.values)),
-      bodyHtml: html,
-      saveText: 'Rechazar registro',
-      onSave: function(){
-        var elMotivo = document.getElementById('eval-rej-motivo');
-        var motivo = elMotivo ? elMotivo.value.trim() : '';
-        if(!motivo){
-          var errEl = document.getElementById('eval-rej-error');
-          if(errEl) errEl.style.display = 'block';
-          return false;
-        }
-        r.estado = 'Rechazado';
-        r.rechazoMotivo = motivo;
-        r.rechazoDate = today();
-        if(D.draft && D.draft.id === r.id){ D.draft.estado = 'Rechazado'; D.draft.rechazoMotivo = motivo; D.draft.rechazoDate = today(); }
-        renderList();
-        toast('Registro de <b>' + esc(r.tabla) + '</b> rechazado definitivamente.', 'err');
-        if (window.go) window.go('tra002-list');
-        return true;
-      }
-    });
-
-    var sBtn = document.getElementById('t001-drawer-save');
-    if(sBtn) sBtn.style.background = '#06396E';
-  }
 
   function doDelete(id){
     var r = find(id); if(!r) return;
@@ -1213,6 +1279,44 @@
   }
 
   /* ---------- CARGA MASIVA ---------- */
+  function updateCargaButtons(){
+    var c = D.carga;
+    var rep = c ? c.report : null;
+    var isClean = !!(c && c.tabla && c.descripcion && c.file && rep && rep.errors && rep.errors.length === 0 && rep.valid && rep.valid.length > 0);
+    var topSaveBtn = document.getElementById('d2c-btn-guardar');
+    if (topSaveBtn) {
+      topSaveBtn.disabled = !isClean;
+      if (isClean) {
+        topSaveBtn.classList.remove('disabled');
+        topSaveBtn.style.opacity = '1';
+        topSaveBtn.style.cursor = 'pointer';
+        topSaveBtn.title = 'Guardar datos masivos';
+      } else {
+        topSaveBtn.classList.add('disabled');
+        topSaveBtn.style.opacity = '0.5';
+        topSaveBtn.style.cursor = 'not-allowed';
+        topSaveBtn.title = 'Complete y valide el archivo sin observaciones antes de guardar.';
+      }
+    }
+
+    var topValBtn = document.getElementById('d2c-btn-validar-lote');
+    if (topValBtn) {
+      var canValidate = !!(D.cargaSaved && D.cargaSavedBatchId);
+      topValBtn.disabled = !canValidate;
+      if (canValidate) {
+        topValBtn.classList.remove('disabled');
+        topValBtn.style.opacity = '1';
+        topValBtn.style.cursor = 'pointer';
+        topValBtn.title = 'Validar carga masiva';
+      } else {
+        topValBtn.classList.add('disabled');
+        topValBtn.style.opacity = '0.4';
+        topValBtn.style.cursor = 'not-allowed';
+        topValBtn.title = 'Debe guardar la carga masiva antes de validar.';
+      }
+    }
+  }
+
   function openCarga(){
     var tnames = getTNAMES();
     var checkedInp = document.querySelectorAll('#tra002-list-mount tbody .chk:checked');
@@ -1232,7 +1336,10 @@
       report: null,
       needsApproval: getTableNeedsApproval(selectedTable)
     };
+    D.cargaSaved = false;
+    D.cargaSavedBatchId = null;
     window.go('tra002-carga');
+    renderCarga();
   }
 
   function renderCarga(){
@@ -1247,20 +1354,7 @@
     var tb = c.tabla ? getTableConfig(c.tabla) : { max: 10, fields: [] }, rep = c.report;
     var repHtml = '';
 
-    var isClean = !!(rep && rep.errors && rep.errors.length === 0 && rep.valid && rep.valid.length > 0);
-    var topSaveBtn = document.getElementById('d2c-btn-guardar');
-    if (topSaveBtn) {
-      topSaveBtn.disabled = !isClean;
-      if (isClean) {
-        topSaveBtn.classList.remove('disabled');
-        topSaveBtn.style.opacity = '1';
-        topSaveBtn.style.cursor = 'pointer';
-      } else {
-        topSaveBtn.classList.add('disabled');
-        topSaveBtn.style.opacity = '0.5';
-        topSaveBtn.style.cursor = 'not-allowed';
-      }
-    }
+    updateCargaButtons();
 
     if(rep){
       var errRows = rep.errors.reduce(function(s,e){ if(s.indexOf(e.fila)<0) s.push(e.fila); return s; },[]).length;
@@ -1271,20 +1365,31 @@
           '<div class="f"><label>Registros observados</label><input value="' + errRows + '" readonly style="background:#F8FAFC;"></div>' +
         '</div>' +
         (rep.errors.length ? 
-          '<div style="margin-bottom:12px;font-weight:600;font-size:13px;color:#991B1B;">Se encontraron ' + rep.errors.length + ' observación(es) en ' + errRows + ' registro(s). Puedes editar los valores directamente en la columna "VALOR" para corregirlos:</div>' +
-          '<div class="tw" style="border:1px solid rgba(32,32,32,0.12);border-radius:4px;overflow:hidden;"><table style="min-width:100%;"><thead><tr><th style="width:70px">FILA</th><th style="width:180px">CAMPO</th><th>VALOR</th><th>OBSERVACIÓN</th></tr></thead><tbody>' +
-          rep.errors.map(function(e, idx){
-            return '<tr>' +
-              '<td class="num" style="font-weight:600;">' + e.fila + '</td>' +
-              '<td><span class="badge b-info" style="font-size:11px;">' + esc(e.campo) + '</span></td>' +
-              '<td><input class="d2c-obs-edit" data-err-idx="' + idx + '" value="' + esc(e.valor || '') + '" style="width:100%;height:32px;padding:4px 10px;border:1px solid #CBD5E1;border-radius:6px;font-size:13px;outline:none;"></td>' +
-              '<td style="color:#991B1B;font-size:12.5px;">' + esc(e.obs) + '</td>' +
-            '</tr>';
-          }).join('') +
-          '</tbody></table></div>'
-          : '<p style="font-size:13.5px;color:#004C37;font-weight:600;margin-top:12px;display:flex;align-items:center;gap:8px;background:#D7F5E8;padding:12px 16px;border-radius:8px;">' +
+          '<div class="carga-alert-banner" data-borde="false" data-type="Warning" style="width:100%;box-sizing:border-box;padding:12px 16px;border-radius:8px;background:var(--sys-color-bg-feedback-light-warning, #F7ECD5);display:flex;justify-content:space-between;align-items:center;gap:16px;margin-top:14px;">' +
+            '<div style="display:flex;align-items:center;gap:12px;flex:1 1 0;min-width:0;">' +
+              '<div style="width:20px;height:20px;min-width:20px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">' +
+                '<svg viewBox="0 0 24 24" style="width:20px;height:20px;stroke:var(--sys-color-text-feedback-warning, #4D3800);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;">' +
+                  '<path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>' +
+                  '<line x1="12" y1="9" x2="12" y2="13"/>' +
+                  '<line x1="12" y1="17" x2="12.01" y2="17"/>' +
+                '</svg>' +
+              '</div>' +
+              '<div style="color:var(--sys-color-text-feedback-warning, #4D3800);font-size:14px;font-family:Inter,sans-serif;font-weight:500;line-height:20px;">' +
+                'Se encontraron <b>' + rep.errors.length + ' observación(es)</b> en <b>' + errRows + ' registro(s)</b>. Puedes descargar el reporte de los valores para corregirlos.' +
+              '</div>' +
+            '</div>' +
+            '<button type="button" data-d2c="download-report" style="background:transparent;border:none;padding:4px 8px;display:inline-flex;align-items:center;gap:6px;cursor:pointer;color:#06396E;font-size:14px;font-family:Inter,sans-serif;font-weight:700;text-decoration:none;white-space:nowrap;border-radius:6px;" title="Descargar archivo con observaciones">' +
+              '<span>Reporte</span>' +
+              '<svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;">' +
+                '<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>' +
+                '<polyline points="7 10 12 15 17 10"/>' +
+                '<line x1="12" y1="15" x2="12" y2="3"/>' +
+              '</svg>' +
+            '</button>' +
+          '</div>'
+          : '<p style="font-size:13.5px;color:#004C37;font-weight:600;margin-top:14px;display:flex;align-items:center;gap:8px;background:#D7F5E8;padding:12px 16px;border-radius:8px;">' +
               '<svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke:#004C37;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;"><circle cx="12" cy="12" r="10"/><polyline points="9 12 11 14 15 10"/></svg>' +
-              'El archivo no tiene observaciones. Ya puedes grabar la carga.' +
+              'El archivo no tiene observaciones. Ya puedes guardar la carga.' +
             '</p>');
     }
 
@@ -1371,6 +1476,7 @@
             wrapDesc.classList.remove('has-value');
           }
         }
+        updateCargaButtons();
       });
       descInp.addEventListener('blur', function(){
         if(D.carga) D.carga.descripcion = descInp.value;
@@ -1383,6 +1489,7 @@
         }
       });
     }
+    updateCargaButtons();
   }
 
   function downloadTemplate(){
@@ -1397,9 +1504,87 @@
       toast('Plantilla de <b>' + esc(c.tabla) + '</b> descargada (.xlsx).', 'ok');
     } else {
       var csv = headers.join(',') + '\n' + ejemplo.join(',');
-      var blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      var blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
       var a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = fname + '.csv'; a.click();
       toast('Plantilla de <b>' + esc(c.tabla) + '</b> descargada (.csv).', 'info');
+    }
+  }
+
+  function downloadAnnotatedErrorReport(){
+    var c = D.carga;
+    if(!c || !c.rows || !c.rows.length){
+      toast('No hay archivo cargado para generar el reporte.', 'err');
+      return;
+    }
+    var rows = c.rows;
+    var rawHeader = rows[0] ? rows[0].map(function(h){ return String(h == null ? '' : h).trim(); }) : [];
+
+    var header = [];
+    var obsColIdx = -1;
+    for(var h = 0; h < rawHeader.length; h++){
+      var hNorm = rawHeader[h].toUpperCase();
+      if(hNorm === 'OBSERVACION' || hNorm === 'OBSERVACIÓN' || hNorm === 'OBSERVACIONES'){
+        if(obsColIdx === -1){
+          obsColIdx = header.length;
+          header.push('OBSERVACIÓN');
+        }
+      } else {
+        header.push(rawHeader[h]);
+      }
+    }
+    if(obsColIdx === -1){
+      obsColIdx = header.length;
+      header.push('OBSERVACIÓN');
+    }
+
+    var obsByFila = {};
+    if(c.report && c.report.errors){
+      c.report.errors.forEach(function(err){
+        if(!obsByFila[err.fila]) obsByFila[err.fila] = [];
+        var msg = (err.campo && err.campo !== 'Columnas fuera de plantilla' && err.campo !== 'archivo' ? '[' + err.campo + ']: ' : '') + err.obs;
+        obsByFila[err.fila].push(msg);
+      });
+    }
+
+    var body = rows.slice(1).filter(function(rw){ return rw.join('').trim().length; });
+    var exportRows = [header];
+    body.forEach(function(rw, i){
+      var fila = i + 2;
+      var rowCopy = rw.slice();
+      var obsText = (obsByFila[fila] && obsByFila[fila].length) ? obsByFila[fila].join(' | ') : '';
+      if(obsColIdx < rowCopy.length){
+        rowCopy[obsColIdx] = obsText;
+      } else {
+        while(rowCopy.length < obsColIdx){
+          rowCopy.push('');
+        }
+        rowCopy.push(obsText);
+      }
+      exportRows.push(rowCopy);
+    });
+
+    var origName = (c.file || (c.tabla ? c.tabla : 'carga')).replace(/\.[^/.]+$/, '');
+    var fname = origName + '_observaciones';
+
+    if(typeof XLSX !== 'undefined'){
+      var ws = XLSX.utils.aoa_to_sheet(exportRows);
+      var wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, 'Observaciones');
+      XLSX.writeFile(wb, fname + '.xlsx');
+      toast('Reporte con observaciones descargado (<b>' + esc(fname) + '.xlsx</b>). Corrige los datos y vuelve a subir el archivo.', 'ok');
+    } else {
+      var csvContent = exportRows.map(function(r){
+        return r.map(function(cell){
+          var s = String(cell == null ? '' : cell);
+          if(s.indexOf(',') >= 0 || s.indexOf('"') >= 0 || s.indexOf('\n') >= 0){
+            return '"' + s.replace(/"/g, '""') + '"';
+          }
+          return s;
+        }).join(',');
+      }).join('\n');
+      var blob = new Blob(['\uFEFF' + csvContent], { type: 'text/csv;charset=utf-8;' });
+      var a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = fname + '.csv'; a.click();
+      toast('Reporte con observaciones descargado (.csv). Corrige los datos y vuelve a subir el archivo.', 'ok');
     }
   }
 
@@ -1408,6 +1593,8 @@
     var descInp = document.getElementById('d2c-desc');
     if(descInp && c) c.descripcion = descInp.value;
     c.file = file.name; c.report = null;
+    D.cargaSaved = false;
+    D.cargaSavedBatchId = null;
     var r = new FileReader();
     r.onload = function(ev){
       var rows = [];
@@ -1444,13 +1631,20 @@
         else if(v && f.max && v.length > f.max){ errors.push({ fila: fila, campo: f.name, valor: v, obs: 'Excede la longitud máxima (' + f.max + ').', rIdx: i + 1, cIdx: idx[f.name] }); rowErr = true; }
       });
       if(rw.length > tb.fields.length){
-        var extraCols = rw.slice(tb.fields.length).filter(function(x){ return String(x == null ? '' : x).trim().length > 0; });
+        var extraCols = rw.slice(tb.fields.length).filter(function(x, colOffset){
+          var actualColIdx = tb.fields.length + colOffset;
+          var colH = header[actualColIdx] ? String(header[actualColIdx]).trim().toUpperCase() : '';
+          if(colH === 'OBSERVACION' || colH === 'OBSERVACIÓN' || colH === 'OBSERVACIONES'){
+            return false;
+          }
+          return String(x == null ? '' : x).trim().length > 0;
+        });
         if(extraCols.length > 0){
           errors.push({
             fila: fila,
             campo: 'Columnas fuera de plantilla',
             valor: extraCols.join(', '),
-            obs: 'Se detectaron ' + extraCols.length + ' valor(es) adicional(es) en la fila. Elimina el texto sobrante en la casilla para corregirlo.',
+            obs: 'Se detectaron ' + extraCols.length + ' valor(es) adicional(es) en la fila. Elimina las columnas sobrantes para corregirlo.',
             rIdx: i + 1,
             cIdx: tb.fields.length
           });
@@ -1511,22 +1705,481 @@
     if(errRows > tb.max){ toast('RN-DT-003 · El archivo excede el máximo de errores permitidos (' + tb.max + '). Corrige y vuelve a cargar.', 'err'); return; }
     if(!rep.valid.length){ toast('No hay registros válidos para grabar.', 'err'); return; }
     var needsAppr = getTableNeedsApproval(c.tabla);
-    rep.valid.forEach(function(values){
-      D.data.unshift({
-        id: uid(),
+    var fileName = (c.file && c.file.name) ? c.file.name : (typeof c.file === 'string' && c.file ? c.file : 'datos_carga.xlsx');
+    if(D.cargaSavedBatchId){
+      var existing = find(D.cargaSavedBatchId);
+      if(existing){
+        existing.tabla = c.tabla;
+        existing.descripcion = c.descripcion;
+        existing.archivo = fileName;
+        existing.fecha = today();
+        existing.hora = nowTime();
+        existing.needsApproval = needsAppr;
+        existing.records = JSON.parse(JSON.stringify(rep.valid));
+        existing.values = rep.valid[0] || {};
+      }
+    } else {
+      var newId = uid();
+      var newBatch = {
+        id: newId,
         tabla: c.tabla,
-        descripcionCarga: c.descripcion,
+        descripcion: c.descripcion,
+        archivo: fileName,
         origen: 'Masivo',
         tipo: 'Creación',
         estado: 'Elaboración',
         fecha: today(),
         hora: nowTime(),
         needsApproval: needsAppr,
-        values: values
+        records: JSON.parse(JSON.stringify(rep.valid)),
+        values: rep.valid[0] || {},
+        obsMotivo: '',
+        obsDate: '',
+        rechazoMotivo: '',
+        rechazoDate: ''
+      };
+      D.data.unshift(newBatch);
+      D.cargaSavedBatchId = newId;
+    }
+
+    D.cargaSaved = true;
+    renderList();
+    updateCargaButtons();
+    toast('Carga masiva guardada en estado <b>Elaboración</b> con <b>' + rep.valid.length + '</b> registros. Ya puedes <b>Validar</b> la carga.', 'ok');
+  }
+
+  function openBatchDetail(id){
+    var r = find(id);
+    if(!r) return;
+    D.activeBatch = r;
+    D.batchPage = 1;
+    D.batchPageSize = 10;
+    window.go('tra002-carga-detail');
+    renderBatchDetail();
+  }
+
+  function renderBatchDetail(){
+    var mount = document.getElementById('tra002-carga-detail-mount');
+    var actMount = document.getElementById('tra002-carga-detail-actions');
+    if(!mount || !D.activeBatch) return;
+    var r = D.activeBatch;
+    D.currentRole = getCurrentRole();
+    var isRoleAprobador = D.currentRole === 'Aprobador';
+    var records = r.records || (r.values ? [r.values] : []);
+    var tbCfg = getTableConfig(r.tabla);
+
+    // 1. Acciones dinámicas de cabecera
+    var actHtml = '';
+    if(!isRoleAprobador){
+      if(r.estado === 'Elaboración' || r.estado === 'Observado'){
+        actHtml += '<button type="button" class="btn pri" data-bact="validate" style="height: 40px; padding: 8px 16px; background: #06396E; border-radius: 8px; color: white; font-weight: 600; display: inline-flex; align-items: center; gap: 8px; cursor: pointer; border: none;">' +
+          CHECK +
+          '<span>Validar</span>' +
+        '</button>';
+      } else if(r.estado === 'Validado' && !r.needsApproval){
+        actHtml += '<button type="button" class="btn pri" data-bact="approve" style="height: 40px; padding: 8px 16px; background: #06396E; border-radius: 8px; color: white; font-weight: 600; display: inline-flex; align-items: center; gap: 8px; cursor: pointer; border: none;">' +
+          ICON_FILE_CHECK +
+          '<span>Aprobar</span>' +
+        '</button>';
+      }
+    } else {
+      if(r.estado === 'Validado'){
+        actHtml += '<button type="button" class="btn-neutral-action" data-bact="observe" style="height: 40px; padding: 8px 16px; display: inline-flex; align-items: center; gap: 8px; cursor: pointer; border-radius: 8px; outline: 1px solid rgba(32,32,32,0.56); background: white; color: #504C4A; font-weight: 600;">' +
+          ICON_FILE_SEARCH +
+          '<span>Observar</span>' +
+        '</button>';
+        actHtml += '<button type="button" class="btn pri" data-bact="approve" style="height: 40px; padding: 8px 16px; background: #06396E; border-radius: 8px; color: white; font-weight: 600; display: inline-flex; align-items: center; gap: 8px; cursor: pointer; border: none;">' +
+          ICON_FILE_CHECK +
+          '<span>Aprobar</span>' +
+        '</button>';
+      }
+    }
+    if(actMount) actMount.innerHTML = actHtml;
+
+    // 2. Banners contextuales de Observación
+    var bannerHtml = '';
+    if(r.estado === 'Observado' && (r.obsMotivo || r.motivoObservacion)){
+      var obsDesc = esc(r.obsMotivo || r.motivoObservacion);
+      bannerHtml = '<div class="status-banner-obs" data-borde="false" data-close="false" data-show-actions="false" data-show-title="true" data-type="Warning" style="width:100%;box-sizing:border-box;padding-left:16px;padding-right:16px;padding-top:12px;padding-bottom:12px;position:relative;border-radius:8px;background:var(--sys-color-bg-feedback-light-warning, #F7ECD5);justify-content:flex-start;align-items:center;gap:12px;display:flex;margin-bottom:20px;">' +
+        '<div data-style="Outline" style="width:20px;height:20px;min-width:20px;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;flex-shrink:0;">' +
+          '<svg viewBox="0 0 24 24" style="width:20px;height:20px;stroke:var(--sys-color-text-feedback-warning, #4D3800);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>' +
+        '</div>' +
+        '<div style="flex:1 1 0;min-width:0;overflow:hidden;flex-direction:column;justify-content:flex-start;align-items:flex-start;gap:2px;display:inline-flex;">' +
+          '<div style="align-self:stretch;color:var(--sys-color-text-feedback-warning, #4D3800);font-size:14px;font-family:Inter,sans-serif;font-weight:600;line-height:20px;word-wrap:break-word;">Lote Observado por el Aprobador' + (r.obsDate ? ' &nbsp;·&nbsp; Fecha: ' + esc(r.obsDate) : '') + '</div>' +
+          '<div style="color:var(--sys-color-text-feedback-warning, #4D3800);font-size:14px;font-family:Inter,sans-serif;font-weight:500;line-height:20px;word-wrap:break-word;">Motivo de observación: ' + obsDesc + '</div>' +
+        '</div>' +
+      '</div>';
+    }
+
+    // 3. Tarjetas Superiores Readonly (Patrón Estándar Figma SIIT)
+    var cardsTopHtml = '<div data-info-solicitud="true" class="tra001-two-cards-wrap" style="width:100%;border-radius:8px;justify-content:flex-start;align-items:stretch;gap:12px;display:flex;margin-bottom:20px;">' +
+      // Card 1: Izquierda (Intendencia / Fecha & Tabla Maestra)
+      '<div style="flex:1 1 0;min-width:0;align-self:stretch;padding:8px 16px;background:white;border:1px solid rgba(32,32,32,0.12);border-radius:8px;flex-direction:column;justify-content:center;align-items:flex-start;display:inline-flex;">' +
+        // Row 1: INTENDENCIA / FECHA
+        '<div data-content="Text" data-layout="Inline" style="align-self:stretch;flex-direction:column;justify-content:flex-start;align-items:flex-start;display:flex;">' +
+          '<div style="align-self:stretch;min-height:36px;padding:6px 0;border-radius:8px;justify-content:flex-start;align-items:center;gap:8px;display:inline-flex;">' +
+            '<div style="width:160px;max-width:200px;min-width:140px;min-height:24px;flex-direction:column;justify-content:center;align-items:flex-start;display:inline-flex;">' +
+              '<div style="min-height:16px;padding:0 4px;border-radius:8px;justify-content:center;align-items:center;display:inline-flex;">' +
+                '<div style="color:#6F6F71;font-size:12px;font-family:Inter,sans-serif;font-weight:500;letter-spacing:0.5px;">INTENDENCIA / FECHA</div>' +
+              '</div>' +
+            '</div>' +
+            '<div style="flex:1 1 0;overflow:hidden;justify-content:flex-start;align-items:center;display:flex;">' +
+              '<div style="color:#353537;font-size:14px;font-family:Inter,sans-serif;font-weight:700;line-height:20px;">ILM LIMA METROPOLITANA &nbsp;·&nbsp; ' + esc(r.fecha) + (r.hora ? ' &nbsp;' + esc(r.hora) : '') + '</div>' +
+            '</div>' +
+          '</div>' +
+        '</div>' +
+        // Row 2: TABLA MAESTRA
+        '<div data-content="Text" data-layout="Inline" style="align-self:stretch;flex-direction:column;justify-content:flex-start;align-items:flex-start;display:flex;">' +
+          '<div style="align-self:stretch;min-height:36px;padding:6px 0;border-radius:8px;justify-content:flex-start;align-items:center;gap:8px;display:inline-flex;">' +
+            '<div style="width:160px;max-width:200px;min-width:140px;min-height:24px;flex-direction:column;justify-content:center;align-items:flex-start;display:inline-flex;">' +
+              '<div style="min-height:16px;padding:0 4px;border-radius:8px;justify-content:center;align-items:center;display:inline-flex;">' +
+                '<div style="color:#6F6F71;font-size:12px;font-family:Inter,sans-serif;font-weight:500;letter-spacing:0.5px;">TABLA MAESTRA</div>' +
+              '</div>' +
+            '</div>' +
+            '<div style="flex:1 1 0;overflow:hidden;justify-content:flex-start;align-items:center;display:flex;">' +
+              '<div style="color:#353537;font-size:14px;font-family:Inter,sans-serif;font-weight:700;line-height:20px;">' + esc(r.tabla) + '</div>' +
+            '</div>' +
+          '</div>' +
+        '</div>' +
+      '</div>' +
+
+      // Card 2: Derecha (Origen & Estado del lote)
+      '<div style="width:384px;flex-shrink:0;align-self:stretch;padding:8px 16px;background:white;border:1px solid rgba(32,32,32,0.12);border-radius:8px;flex-direction:column;justify-content:center;align-items:flex-start;display:inline-flex;">' +
+        // Row 1: ORIGEN
+        '<div data-content="Text" data-layout="Inline" style="align-self:stretch;flex-direction:column;justify-content:flex-start;align-items:flex-start;display:flex;">' +
+          '<div style="align-self:stretch;min-height:36px;padding:6px 0;border-radius:8px;justify-content:flex-start;align-items:center;gap:8px;display:inline-flex;">' +
+            '<div style="width:140px;min-height:24px;flex-direction:column;justify-content:center;align-items:flex-start;display:inline-flex;">' +
+              '<div style="min-height:16px;padding:0 4px;border-radius:8px;justify-content:center;align-items:center;display:inline-flex;">' +
+                '<div style="color:#6F6F71;font-size:12px;font-family:Inter,sans-serif;font-weight:500;letter-spacing:0.5px;">ORIGEN</div>' +
+              '</div>' +
+            '</div>' +
+            '<div style="flex:1 1 0;overflow:hidden;justify-content:flex-start;align-items:center;display:flex;">' +
+              orgBadge(r.origen || 'Masivo') +
+            '</div>' +
+          '</div>' +
+        '</div>' +
+        // Row 2: ESTADO DEL LOTE
+        '<div data-content="Text" data-layout="Inline" style="align-self:stretch;flex-direction:column;justify-content:flex-start;align-items:flex-start;display:flex;">' +
+          '<div style="align-self:stretch;min-height:36px;padding:6px 0;border-radius:8px;justify-content:flex-start;align-items:center;gap:8px;display:inline-flex;">' +
+            '<div style="width:140px;min-height:24px;flex-direction:column;justify-content:center;align-items:flex-start;display:inline-flex;">' +
+              '<div style="min-height:16px;padding:0 4px;border-radius:8px;justify-content:center;align-items:center;display:inline-flex;">' +
+                '<div style="color:#6F6F71;font-size:12px;font-family:Inter,sans-serif;font-weight:500;letter-spacing:0.5px;">ESTADO DEL LOTE</div>' +
+              '</div>' +
+            '</div>' +
+            '<div style="flex:1 1 0;overflow:hidden;justify-content:flex-start;align-items:center;display:flex;">' +
+              stBadge(r.estado) +
+            '</div>' +
+          '</div>' +
+        '</div>' +
+      '</div>' +
+    '</div>';
+
+    // 4. Paginación y Tabla dinámica de registros importados
+    var total = records.length;
+    var pageSize = D.batchPageSize || 10;
+    var totalPages = Math.max(1, Math.ceil(total / pageSize));
+    var page = Math.min(Math.max(1, D.batchPage || 1), totalPages);
+    D.batchPage = page;
+    D.batchPageSize = pageSize;
+
+    var startIdx = (page - 1) * pageSize;
+    var endIdx = Math.min(startIdx + pageSize, total);
+    var pageRecords = records.slice(startIdx, endIdx);
+
+    var showingFrom = total === 0 ? 0 : startIdx + 1;
+    var showingText = 'Mostrando ' + showingFrom + '-' + endIdx + ' de ' + total;
+
+    var ths = tbCfg.fields.map(function(f){
+      var display = f.label || (f.name.charAt(0).toUpperCase() + f.name.slice(1));
+      return '<th style="min-width:140px;"><div class="th-cell"><span class="th-title">' + esc(display.toUpperCase()) + '</span></div></th>';
+    }).join('');
+
+    var trs = pageRecords.map(function(item, idx){
+      var absIdx = startIdx + idx + 1;
+      var tds = '<td class="figma-cell-td" style="padding:0;border:0;vertical-align:middle;text-align:center;">' +
+        '<div style="width:100%;height:100%;padding:10px 12px;border-bottom:1px solid rgba(32,32,32,0.12);justify-content:center;align-items:center;display:inline-flex;color:#6C6865;font-size:13px;font-weight:500;">' +
+          absIdx +
+        '</div>' +
+      '</td>';
+      tbCfg.fields.forEach(function(f){
+        var val = item[f.name] !== undefined ? item[f.name] : (item[f.label] !== undefined ? item[f.label] : '');
+        tds += buildTableCell(esc(val));
       });
+      return '<tr>' + tds + '</tr>';
+    }).join('');
+
+    // Page buttons
+    var pageBtns = '';
+    for(var p = 1; p <= totalPages; p++){
+      if(p === page){
+        pageBtns += '<div style="height: 30px; min-width: 30px; padding: 0 8px; background: #06396E; border-radius: 4px; justify-content: center; align-items: center; display: flex; color: white; font-size: 12px; font-family: Inter; font-weight: 600; cursor: pointer;">' + p + '</div>';
+      } else {
+        pageBtns += '<button type="button" data-bpage="' + p + '" style="height: 30px; min-width: 30px; padding: 0 8px; background: transparent; border: 0; border-radius: 4px; justify-content: center; align-items: center; display: flex; color: #504C4A; font-size: 12px; font-family: Inter; font-weight: 500; cursor: pointer;">' + p + '</button>';
+      }
+    }
+
+    var gotoOpts = '';
+    for(var g = 1; g <= totalPages; g++){
+      gotoOpts += '<option value="' + g + '"' + (g === page ? ' selected' : '') + '>' + g + '</option>';
+    }
+
+    var paginatorHtml = '<div data-edge-buttons="true" data-report="true" data-rows-per-page="true" style="width: 100%; padding-top: 16px; background: white; border-top: 1px rgba(32, 32, 32, 0.12) solid; justify-content: space-between; align-items: center; gap: 16px; display: flex; flex-wrap: wrap;">' +
+      '<div style="justify-content: flex-start; align-items: center; gap: 24px; display: flex">' +
+        '<div style="color: #504C4A; font-size: 12px; font-family: Inter; font-weight: 500; line-height: 16px;">' + showingText + '</div>' +
+        '<div style="justify-content: flex-start; align-items: center; gap: 8px; display: flex">' +
+          '<div style="color: #504C4A; font-size: 12px; font-family: Inter; font-weight: 500; line-height: 16px;">Filas por página:</div>' +
+          '<div style="width: 75px; position: relative;">' +
+            '<select id="batch-page-size" style="width: 100%; height: 32px; padding: 4px 28px 4px 12px; background: white; border-radius: 8px; border: 1px rgba(32, 32, 32, 0.56) solid; font-size: 13px; font-family: Inter; font-weight: 500; color: #353537; outline: none; appearance: none; -webkit-appearance: none; cursor: pointer; background-image: url(&quot;data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'16\' height=\'16\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'%23504C4A\' stroke-width=\'2\' stroke-linecap=\'round\' stroke-linejoin=\'round\'%3E%3Cpolyline points=\'6 9 12 15 18 9\'%3E%3C/polyline%3E%3C/svg%3E&quot;); background-repeat: no-repeat; background-position: right 8px center; background-size: 14px 14px;">' +
+              '<option value="10"' + (pageSize === 10 ? ' selected' : '') + '>10</option>' +
+              '<option value="25"' + (pageSize === 25 ? ' selected' : '') + '>25</option>' +
+              '<option value="50"' + (pageSize === 50 ? ' selected' : '') + '>50</option>' +
+              '<option value="100"' + (pageSize === 100 ? ' selected' : '') + '>100</option>' +
+            '</select>' +
+          '</div>' +
+        '</div>' +
+      '</div>' +
+      '<div style="justify-content: flex-end; align-items: center; gap: 16px; display: flex; flex-wrap: wrap;">' +
+        '<div style="justify-content: center; align-items: center; gap: 4px; display: flex">' +
+          '<button type="button" data-bpage="1" title="Primera página" ' + (page <= 1 ? 'disabled style="opacity:0.4;cursor:not-allowed;' : 'style="cursor:pointer;') + 'width: 32px; height: 32px; background: transparent; border: 0; border-radius: 8px; justify-content: center; align-items: center; display: flex; color: #504C4A;">' +
+            '<svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2"><polyline points="11 17 6 12 11 7"/><polyline points="18 17 13 12 18 7"/></svg>' +
+          '</button>' +
+          '<button type="button" data-bpage="' + (page - 1) + '" title="Página anterior" ' + (page <= 1 ? 'disabled style="opacity:0.4;cursor:not-allowed;' : 'style="cursor:pointer;') + 'width: 32px; height: 32px; background: transparent; border: 0; border-radius: 8px; justify-content: center; align-items: center; display: flex; color: #504C4A;">' +
+            '<svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2"><polyline points="15 18 9 12 15 6"/></svg>' +
+          '</button>' +
+          '<div style="justify-content: flex-start; align-items: center; gap: 4px; display: flex">' +
+            pageBtns +
+          '</div>' +
+          '<button type="button" data-bpage="' + (page + 1) + '" title="Página siguiente" ' + (page >= totalPages ? 'disabled style="opacity:0.4;cursor:not-allowed;' : 'style="cursor:pointer;') + 'width: 32px; height: 32px; background: transparent; border: 0; border-radius: 8px; justify-content: center; align-items: center; display: flex; color: #504C4A;">' +
+            '<svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2"><polyline points="9 18 15 12 9 6"/></svg>' +
+          '</button>' +
+          '<button type="button" data-bpage="' + totalPages + '" title="Última página" ' + (page >= totalPages ? 'disabled style="opacity:0.4;cursor:not-allowed;' : 'style="cursor:pointer;') + 'width: 32px; height: 32px; background: transparent; border: 0; border-radius: 8px; justify-content: center; align-items: center; display: flex; color: #504C4A;">' +
+            '<svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2"><polyline points="13 17 18 12 13 7"/><polyline points="6 17 11 12 6 7"/></svg>' +
+          '</button>' +
+        '</div>' +
+        '<div style="justify-content: flex-end; align-items: center; gap: 8px; display: flex">' +
+          '<div style="color: #504C4A; font-size: 12px; font-family: Inter; font-weight: 500; line-height: 16px;">Ir a</div>' +
+          '<div style="width: 75px; position: relative;">' +
+            '<select id="batch-page-goto" style="width: 100%; height: 32px; padding: 4px 28px 4px 12px; background: white; border-radius: 8px; border: 1px rgba(32, 32, 32, 0.56) solid; font-size: 13px; font-family: Inter; font-weight: 500; color: #353537; outline: none; appearance: none; -webkit-appearance: none; cursor: pointer; background-image: url(&quot;data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'16\' height=\'16\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'%23504C4A\' stroke-width=\'2\' stroke-linecap=\'round\' stroke-linejoin=\'round\'%3E%3Cpolyline points=\'6 9 12 15 18 9\'%3E%3C/polyline%3E%3C/svg%3E&quot;); background-repeat: no-repeat; background-position: right 8px center; background-size: 14px 14px;">' +
+              gotoOpts +
+            '</select>' +
+          '</div>' +
+        '</div>' +
+      '</div>' +
+    '</div>';
+
+    var tableCardHtml = '<div class="card" style="padding:0;border:1px solid rgba(32,32,32,0.12);border-radius:8px;background:white;margin-bottom:20px;">' +
+      '<div style="padding-top:16px;padding-bottom:12px;padding-left:24px;padding-right:24px;border-bottom:1px solid rgba(32,32,32,0.12);flex-direction:column;justify-content:flex-start;align-items:flex-start;gap:4px;display:flex;">' +
+        '<div data-actions="false" data-collapse="false" data-description="false" data-helps-icons="false" data-level="Section" data-progress="false" data-requiered="false" data-requiredlegend="false" style="align-self:stretch;justify-content:flex-start;align-items:center;gap:8px;display:inline-flex;">' +
+          '<div style="flex:1 1 0;flex-direction:column;justify-content:center;align-items:flex-start;gap:4px;display:inline-flex;">' +
+            '<div style="align-self:stretch;height:24px;justify-content:flex-start;align-items:center;gap:8px;display:inline-flex;">' +
+              '<div style="color:var(--sys-color-text-neutral-high, #252220);font-size:16px;font-family:Inter,sans-serif;font-weight:600;line-height:24px;word-wrap:break-word;">Registros cargados de la tabla maestra</div>' +
+            '</div>' +
+          '</div>' +
+        '</div>' +
+      '</div>' +
+      '<div style="padding:24px 24px 20px;">' +
+        '<div class="tw tw-scrollable" style="border:1px solid rgba(32,32,32,0.12);border-radius:4px;overflow-x:auto;overflow-y:hidden;width:100%;-webkit-overflow-scrolling:touch;margin-bottom:16px;">' +
+          '<table style="min-width:100%;border-collapse:collapse;">' +
+            '<thead>' +
+              '<tr>' +
+                '<th style="width:56px;min-width:56px;text-align:center;"><div class="th-cell" style="justify-content:center;"><span class="th-title">#</span></div></th>' +
+                ths +
+              '</tr>' +
+            '</thead>' +
+            '<tbody>' +
+              (trs || '<tr><td colspan="' + (tbCfg.fields.length + 1) + '" style="padding:24px;text-align:center;color:#6C6865;">No se encontraron registros en este lote.</td></tr>') +
+            '</tbody>' +
+          '</table>' +
+        '</div>' +
+        paginatorHtml +
+      '</div>' +
+    '</div>';
+
+    mount.innerHTML = bannerHtml + cardsTopHtml + tableCardHtml;
+  }
+
+  function openBatchValidate(id){
+    var r = find(id);
+    if(!r) return;
+    if(r.estado !== 'Elaboración' && r.estado !== 'Observado'){
+      toast('Solo se puede validar una carga en estado Elaboración u Observado.', 'err');
+      return;
+    }
+    var sendsToApprover = !!r.needsApproval;
+    var count = (r.records && r.records.length) || 0;
+    var html = '<div style="display:flex;flex-direction:column;gap:14px;padding:4px 0;">' +
+      '<div style="display:flex;align-items:center;gap:12px;">' +
+        '<div style="width:40px;height:40px;padding:8px;background:#D7F5E8;border-radius:4px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">' +
+          CHECK +
+        '</div>' +
+        '<div style="color:#252220;font-size:18px;font-family:Inter,sans-serif;font-weight:600;line-height:24px;">¿Validar la carga masiva de ' + esc(r.tabla) + '?</div>' +
+      '</div>' +
+      '<div style="color:#252220;font-size:14px;font-family:Inter,sans-serif;font-weight:400;line-height:20px;">' +
+        (sendsToApprover
+          ? 'El lote de ' + count + ' registros pasará a estado <b>Validado</b> y se remitirá a la bandeja del <b>Aprobador</b> para su revisión técnica y dictamen.'
+          : 'El lote de ' + count + ' registros pasará a estado <b>Validado</b>. Al no requerir aprobador externo, podrás proceder inmediatamente con su <b>Aprobación</b>.') +
+      '</div>' +
+      buildFigmaInfoMessage('¿Qué implica validar la carga masiva?', 'Permite certificar que los datos importados han sido verificados técnicamente y están expeditos para su dictamen de aprobación formal.') +
+    '</div>';
+
+    modal(html, function(){
+      r.estado = 'Validado';
+      r.fecha = today();
+      r.hora = nowTime();
+      renderList();
+      D.activeBatch = r;
+      D.batchPage = 1;
+      D.batchPageSize = 10;
+      window.go('tra002-carga-detail');
+      renderBatchDetail();
+      D.carga = null;
+      D.cargaSaved = false;
+      D.cargaSavedBatchId = null;
+      if(sendsToApprover){
+        toast('Carga masiva de <b>' + esc(r.tabla) + '</b> validada y remitida al Aprobador.', 'ok');
+      } else {
+        toast('Carga masiva <b>Validada</b>. Ahora puedes proceder a <b>Aprobarla</b>.', 'ok');
+      }
+      return true;
+    }, 'Validar');
+  }
+
+  function openBatchApprove(id){
+    var r = find(id);
+    if(!r) return;
+    if(r.estado !== 'Validado'){
+      toast('Solo pueden evaluarse cargas masivas en estado Validado.', 'err');
+      return;
+    }
+    var count = (r.records && r.records.length) || 0;
+    var html = '<div style="display:flex;flex-direction:column;gap:14px;">' +
+      '<div style="display:flex;flex-direction:column;gap:10px;">' +
+        '<div style="font-size:14px;font-weight:600;color:#252220;font-family:Inter,sans-serif;">Modalidad de vigencia:</div>' +
+        '<div style="display:flex;gap:20px;">' +
+          '<label style="display:inline-flex;align-items:center;gap:8px;font-size:14px;font-family:Inter,sans-serif;color:#334155;cursor:pointer;">' +
+            '<input type="radio" name="batch-apr-mode" value="inmediata" checked style="margin-left:0;accent-color:#06396E;" onchange="document.getElementById(\'batch-apr-date-box\').style.display=\'none\';">' +
+            '<span>Vigencia Inmediata</span>' +
+          '</label>' +
+          '<label style="display:inline-flex;align-items:center;gap:8px;font-size:14px;font-family:Inter,sans-serif;color:#334155;cursor:pointer;">' +
+            '<input type="radio" name="batch-apr-mode" value="programada" style="accent-color:#06396E;" onchange="document.getElementById(\'batch-apr-date-box\').style.display=\'block\';">' +
+            '<span>Vigencia Programada</span>' +
+          '</label>' +
+        '</div>' +
+        '<div id="batch-apr-date-box" style="display:none;margin-top:6px;">' +
+          '<label style="font-size:13px;color:#475569;font-weight:500;font-family:Inter,sans-serif;margin-bottom:4px;display:block;">Fecha de inicio de vigencia <span style="color:#D51317;">*</span></label>' +
+          '<input type="date" id="batch-apr-date" value="' + today().split('/').reverse().join('-') + '" style="width:100%;padding:8px 12px;border-radius:6px;border:1px solid #CBD5E1;font-size:13.5px;font-family:Inter,sans-serif;outline:none;background:white;box-sizing:border-box;">' +
+        '</div>' +
+      '</div>' +
+      buildFigmaInfoMessage('¿Qué implica aprobar la carga masiva?', 'Permite dar conformidad formal a los ' + count + ' registros del lote e incorporarlos de forma definitiva al catálogo oficial de Tablas Maestras.') +
+    '</div>';
+
+    openDrawer({
+      width: '420px',
+      title: 'Aprobar carga masiva de ' + esc(r.tabla),
+      subtitle: (r.archivo ? esc(r.archivo) + ' · ' : '') + count + ' registros',
+      bodyHtml: html,
+      saveText: 'Aprobar carga masiva',
+      onSave: function(){
+        var rProg = document.querySelector('input[name="batch-apr-mode"]:checked');
+        var isProg = rProg && rProg.value === 'programada';
+        if(isProg){
+          var dtEl = document.getElementById('batch-apr-date');
+          var dt = dtEl ? dtEl.value : '';
+          if(!dt){ toast('Indique la fecha de vigencia para la aprobación programada.', 'err'); return false; }
+          var parts = dt.split('-');
+          var fmtDate = parts.length === 3 ? parts[2] + '/' + parts[1] + '/' + parts[0] : dt;
+          r.estado = 'Aprobado';
+          r.fechaVigencia = fmtDate;
+          r.fecha = today();
+          renderList();
+          renderBatchDetail();
+          toast('Carga masiva de <b>' + esc(r.tabla) + '</b> aprobada (vigente desde ' + fmtDate + ').', 'ok');
+        } else {
+          r.estado = 'Aprobado';
+          r.fecha = today();
+          renderList();
+          renderBatchDetail();
+          toast('Carga masiva de <b>' + esc(r.tabla) + '</b> aprobada de inmediato con ' + count + ' registros.', 'ok');
+        }
+        return true;
+      }
     });
-    toast('RN-DT-004 · Se cargaron <b>' + rep.valid.length + '</b> registros (origen Masivo) en estado Elaboración.', 'ok');
-    D.carga = null; renderList(); window.go('tra002-list');
+    var sBtn = document.getElementById('t001-drawer-save');
+    if(sBtn) sBtn.style.background = '#06396E';
+  }
+
+  function openBatchObserve(id){
+    var r = find(id);
+    if(!r) return;
+    if(r.estado !== 'Validado'){
+      toast('Solo pueden evaluarse cargas masivas en estado Validado.', 'err');
+      return;
+    }
+    var count = (r.records && r.records.length) || 0;
+    var html = '<div style="display:flex;flex-direction:column;gap:14px;">' +
+      '<div style="display:flex;flex-direction:column;gap:6px;">' +
+        '<label style="font-size:14px;font-weight:600;color:#1E293B;font-family:Inter,sans-serif;">Motivo de la observación <span style="color:#D51317;">*</span></label>' +
+        '<textarea id="batch-obs-motivo" rows="4" placeholder="Detalle las inconsistencias o precisiones requeridas en el lote..." style="width:100%;padding:10px 12px;border-radius:8px;border:1px solid #CBD5E1;font-size:13.5px;font-family:Inter,sans-serif;outline:none;resize:vertical;box-sizing:border-box;"></textarea>' +
+        '<div id="batch-obs-error" style="display:none;font-size:12px;color:#DC2626;font-weight:500;">Debe ingresar el motivo de la observación para continuar.</div>' +
+      '</div>' +
+      buildFigmaInfoMessage('¿Qué implica observar la carga masiva?', 'Devuelve el lote al rol Creador en estado Observado para subsanar los datos observados en los registros importados.') +
+    '</div>';
+
+    openDrawer({
+      width: '420px',
+      title: 'Observar carga masiva de ' + esc(r.tabla),
+      subtitle: (r.archivo ? esc(r.archivo) + ' · ' : '') + count + ' registros',
+      bodyHtml: html,
+      saveText: 'Observar lote',
+      onSave: function(){
+        var elMotivo = document.getElementById('batch-obs-motivo');
+        var motivo = elMotivo ? elMotivo.value.trim() : '';
+        if(!motivo){
+          var errEl = document.getElementById('batch-obs-error');
+          if(errEl) errEl.style.display = 'block';
+          return false;
+        }
+        r.estado = 'Observado';
+        r.obsMotivo = motivo;
+        r.obsDate = today();
+        renderList();
+        renderBatchDetail();
+        toast('Carga masiva de <b>' + esc(r.tabla) + '</b> marcada como Observada.', 'warn');
+        return true;
+      }
+    });
+    var sBtn = document.getElementById('t001-drawer-save');
+    if(sBtn) sBtn.style.background = '#06396E';
+  }
+
+  function doDeleteBatch(id){
+    var r = find(id);
+    if(!r) return;
+    if(r.estado !== 'Elaboración' && r.estado !== 'Observado'){
+      toast('Solo pueden eliminarse cargas masivas en estado Elaboración u Observado.', 'err');
+      return;
+    }
+    var count = (r.records && r.records.length) || 0;
+    var html = '<div style="display:flex;flex-direction:column;gap:12px;padding:4px 0;">' +
+      '<div style="display:flex;align-items:center;gap:12px;">' +
+        '<div style="width:40px;height:40px;padding:8px;background:#FEE2E2;border-radius:4px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">' +
+          '<svg viewBox="0 0 24 24" style="width:20px;height:20px;stroke:#DC2626;fill:none;stroke-width:2;"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>' +
+        '</div>' +
+        '<div style="color:#252220;font-size:18px;font-family:Inter,sans-serif;font-weight:600;line-height:24px;">¿Eliminar esta carga masiva?</div>' +
+      '</div>' +
+      '<div style="color:#504C4A;font-size:14px;font-family:Inter,sans-serif;line-height:20px;">' +
+        'Se eliminará el lote <b>' + esc(r.descripcion || r.tabla) + '</b> con ' + count + ' registros importados. Esta acción no se puede deshacer.' +
+      '</div>' +
+    '</div>';
+
+    modal(html, function(){
+      var idx = D.data.indexOf(r);
+      if(idx >= 0) D.data.splice(idx, 1);
+      renderList();
+      toast('Carga masiva eliminada correctamente.', 'ok');
+      window.go('tra002-list');
+      return true;
+    }, 'Eliminar');
   }
 
   /* ---------- EVENTS ---------- */
@@ -1565,6 +2218,20 @@
       if (target.files && target.files[0]) {
         readFile(target.files[0]);
       }
+      return;
+    }
+
+    if (target.id === 'batch-page-size') {
+      D.batchPageSize = parseInt(target.value, 10) || 10;
+      D.batchPage = 1;
+      renderBatchDetail();
+      return;
+    }
+
+    if (target.id === 'batch-page-goto') {
+      D.batchPage = parseInt(target.value, 10) || 1;
+      renderBatchDetail();
+      return;
     }
   });
 
@@ -1677,8 +2344,17 @@
       });
     }
 
-    var el = e.target.closest('[data-d2],[data-d2f],[data-d2c]'); if(!el) return;
+    var el = e.target.closest('[data-d2],[data-d2f],[data-d2c],[data-bact],[data-bpage]'); if(!el) return;
     e.preventDefault();
+    if(el.getAttribute('data-bpage')){
+      if(el.disabled || el.classList.contains('disabled')) return;
+      var newP = parseInt(el.getAttribute('data-bpage'), 10);
+      if(!isNaN(newP) && D.activeBatch){
+        D.batchPage = newP;
+        renderBatchDetail();
+      }
+      return;
+    }
     if(el.getAttribute('data-d2')){
       var a = el.getAttribute('data-d2'), id = el.getAttribute('data-d2id');
       if(a === 'new') openNew();
@@ -1686,9 +2362,20 @@
         if(el.disabled || el.classList.contains('disabled')) return;
         openCarga();
       }
+      else if(a === 'batch') openBatchDetail(id);
+      else if(a === 'delete-batch') doDeleteBatch(id);
       else if(a === 'edit') openEdit(id);
       else if(a === 'view') openView(id);
       else if(a === 'delete') doDelete(id);
+      return;
+    }
+    if(el.getAttribute('data-bact')){
+      var bAct = el.getAttribute('data-bact');
+      if(D.activeBatch){
+        if(bAct === 'validate') openBatchValidate(D.activeBatch.id);
+        else if(bAct === 'approve') openBatchApprove(D.activeBatch.id);
+        else if(bAct === 'observe') openBatchObserve(D.activeBatch.id);
+      }
       return;
     }
     if(el.dataset.d2f){
@@ -1704,19 +2391,25 @@
       else if(el.dataset.d2f === 'observe'){
         if(D.draft) openDirectObserveModal(D.draft.id);
       }
-      else if(el.dataset.d2f === 'reject'){
-        if(D.draft) openDirectRejectModal(D.draft.id);
-      }
       return;
     }
     if(el.dataset.d2c){
       var b = el.dataset.d2c;
       if(b === 'cancel') window.go('tra002-list');
       else if(b === 'tpl') downloadTemplate();
+      else if(b === 'download-report') downloadAnnotatedErrorReport();
       else if(b === 'validar') doValidateCarga(true);
       else if(b === 'grabar'){
         if(el.disabled || el.classList.contains('disabled')) return;
         grabarCarga();
+      }
+      else if(b === 'validar-lote'){
+        if(el.disabled || el.classList.contains('disabled')) return;
+        if(!D.cargaSaved || !D.cargaSavedBatchId){
+          toast('Debe guardar los datos de la carga masiva antes de validar.', 'err');
+          return;
+        }
+        openBatchValidate(D.cargaSavedBatchId);
       }
       return;
     }
@@ -1741,17 +2434,10 @@
           }
         }
         validateFile();
-        var isClean = !!(c.report && c.report.errors.length === 0);
-        var topSaveBtn = document.getElementById('d2c-btn-guardar');
-        if (topSaveBtn) {
-          topSaveBtn.disabled = !isClean;
-          if (isClean) {
-            topSaveBtn.classList.remove('disabled');
-            topSaveBtn.style.opacity = '1';
-            topSaveBtn.style.cursor = 'pointer';
-            toast('Todos los registros observados han sido corregidos. Ya puedes grabar la carga.', 'ok');
-            renderCarga();
-          }
+        updateCargaButtons();
+        if(c.report && c.report.errors.length === 0){
+          toast('Todos los registros observados han sido corregidos. Ya puedes guardar la carga.', 'ok');
+          renderCarga();
         }
       }
     }
@@ -1762,11 +2448,13 @@
     var curr = document.querySelector('.screen.on');
     if(curr && curr.id === 'tra002-list') renderList();
     else if(curr && curr.id === 'tra002-form'){ renderForm(); updateStepButtons(); }
+    else if(curr && curr.id === 'tra002-carga-detail'){ renderBatchDetail(); }
   });
 
   window.__onShow = window.__onShow || {};
   window.__onShow['tra002-list'] = function(){ renderList(); };
   window.__onShow['tra002-form'] = function(){ renderForm(); };
   window.__onShow['tra002-carga'] = function(){ renderCarga(); };
+  window.__onShow['tra002-carga-detail'] = function(){ renderBatchDetail(); };
   seed();
 })();
