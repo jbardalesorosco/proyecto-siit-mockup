@@ -71,7 +71,7 @@
         ]
       },
       {
-        id: uid(), code: 'TM-0007', name: 'Ubigeo — Distritos', ref: 'UBIGEO_DIST', alcance: 'Nacional', maxErr: 10, desc: 'Distritos y su código de ubicación geográfica.', type: 'Creación', state: 'Rechazado', date: '07/08/2026', needsApproval: true, sustentoFile: 'EXP_UBIGEO_2026.pdf', obsMotivo: '', rechazoMotivo: 'La estructura propuesta colisiona con el catálogo oficial de RENIEC/INEI vigente en la plataforma interoperable del Estado.', rechazoDate: '07/08/2026',
+        id: uid(), code: 'TM-0007', name: 'Ubigeo — Distritos', ref: 'UBIGEO_DIST', alcance: 'Nacional', maxErr: 10, desc: 'Distritos y su código de ubicación geográfica.', type: 'Creación', state: 'Aprobado', date: '07/08/2026', needsApproval: true, sustentoFile: 'EXP_UBIGEO_2026.pdf', obsMotivo: '', rechazoMotivo: '', rechazoDate: '',
         groups: [newGroup({ name: 'Grupo General', locked: true })],
         fields: [
           newField({ name: 'Ubigeo', type: 'Texto', min: 6, max: 6, required: true, group: 'Grupo General' }),
@@ -140,7 +140,7 @@
   }
 
   function stBadge(st){
-    var m = { 'Elaboración': 'b-off', 'Validado': 'b-info', 'Verificado': 'b-info', 'Aprobado': 'b-ok', 'Observado': 'b-warn', 'Rechazado': 'b-danger', 'Eliminado': 'b-off' };
+    var m = { 'Elaboración': 'b-off', 'Validado': 'b-info', 'Verificado': 'b-info', 'Aprobado': 'b-ok', 'Observado': 'b-warn', 'Eliminado': 'b-off' };
     return buildTag(st, m[st] || 'b-off');
   }
 
@@ -236,7 +236,7 @@
             a += '<a title="Editar observaciones" data-act="edit" data-id="' + s.id + '" style="color:#504C4A;cursor:pointer;">' + PENCIL + '</a>';
             a += '<a title="Eliminar" data-act="delete" data-id="' + s.id + '" style="color:#504C4A;cursor:pointer;">' + TRASH + '</a>';
           } else {
-            // Validado, Aprobado, Rechazado
+            // Validado, Aprobado
             a += '<a title="Ver detalle" data-act="view" data-id="' + s.id + '" style="color:#504C4A;cursor:pointer;">' + EYE + '</a>';
           }
         } else {
@@ -487,7 +487,7 @@
     if(!S.draft) return;
     S.currentRole = getCurrentRole();
     var d = S.draft;
-    var isReadOnly = S.mode === 'view' || d.state === 'Rechazado' || (d.state === 'Validado' && S.currentRole === 'Creador') || d.state === 'Aprobado';
+    var isReadOnly = S.mode === 'view' || (d.state === 'Validado' && S.currentRole === 'Creador') || d.state === 'Aprobado';
 
     // Remove field error styling if valid
     var wName = document.getElementById('wrap-dg-name');
@@ -563,7 +563,7 @@
     if(!S.tab) S.tab = 1;
     S.step = S.tab;
 
-    var isReadOnly = S.mode === 'view' || d.state === 'Rechazado' || (d.state === 'Validado' && S.currentRole === 'Creador') || d.state === 'Aprobado';
+    var isReadOnly = S.mode === 'view' || (d.state === 'Validado' && S.currentRole === 'Creador') || d.state === 'Aprobado';
 
     var sub = document.getElementById('tra001-form-sub');
     if(sub){
@@ -573,38 +573,17 @@
     }
     updateWizardUI();
 
-    // 0. Status Banners (Observado / Rechazado)
+    // 0. Status Banners (Observado)
     var statusBanner = '';
     if (d.state === 'Observado') {
-      statusBanner = '<div class="status-banner-obs" style="background:#FFFBEB;border:1px solid #FDE68A;border-left:5px solid #F59E0B;border-radius:8px;padding:14px 18px;margin-bottom:20px;display:flex;align-items:flex-start;gap:14px;box-shadow:0 1px 3px rgba(0,0,0,0.04);">' +
-        '<div style="width:32px;height:32px;border-radius:50%;background:#FEF3C7;color:#D97706;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;">' +
-          '<svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>' +
+      var obsDesc = esc(d.obsMotivo || 'Sin detalle especificado.');
+      statusBanner = '<div class="status-banner-obs" data-borde="false" data-close="false" data-show-actions="false" data-show-title="true" data-type="Warning" style="width:100%;box-sizing:border-box;padding-left:16px;padding-right:16px;padding-top:12px;padding-bottom:12px;position:relative;border-radius:8px;background:var(--sys-color-bg-feedback-light-warning, #F7ECD5);justify-content:flex-start;align-items:center;gap:12px;display:flex;margin-bottom:20px;">' +
+        '<div data-style="Outline" style="width:20px;height:20px;min-width:20px;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;flex-shrink:0;">' +
+          '<svg viewBox="0 0 24 24" style="width:20px;height:20px;stroke:var(--sys-color-text-feedback-warning, #4D3800);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>' +
         '</div>' +
-        '<div style="flex:1;">' +
-          '<div style="display:flex;align-items:center;gap:10px;margin-bottom:4px;flex-wrap:wrap;">' +
-            '<span style="font-size:14px;font-weight:700;color:#92400E;font-family:Inter,sans-serif;">Estructura Observada</span>' +
-            '<span style="font-size:12px;color:#B45309;background:#FEF3C7;padding:2px 8px;border-radius:4px;font-weight:500;">Fecha de observación: ' + esc(d.obsDate || d.date) + '</span>' +
-            '<span style="font-size:12px;color:#4B5563;">(Puede subsanar las observaciones, guardar cambios y volver a validar)</span>' +
-          '</div>' +
-          '<div style="font-size:13.5px;color:#78350F;line-height:20px;font-family:Inter,sans-serif;">' +
-            '<strong>Motivo de observación:</strong> ' + esc(d.obsMotivo || 'Sin detalle especificado.') +
-          '</div>' +
-        '</div>' +
-      '</div>';
-    } else if (d.state === 'Rechazado') {
-      statusBanner = '<div class="status-banner-rej" style="background:#FEF2F2;border:1px solid #FECACA;border-left:5px solid #EF4444;border-radius:8px;padding:14px 18px;margin-bottom:20px;display:flex;align-items:flex-start;gap:14px;box-shadow:0 1px 3px rgba(0,0,0,0.04);">' +
-        '<div style="width:32px;height:32px;border-radius:50%;background:#FEE2E2;color:#DC2626;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;">' +
-          '<svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>' +
-        '</div>' +
-        '<div style="flex:1;">' +
-          '<div style="display:flex;align-items:center;gap:10px;margin-bottom:4px;flex-wrap:wrap;">' +
-            '<span style="font-size:14px;font-weight:700;color:#991B1B;font-family:Inter,sans-serif;">Estructura Rechazada</span>' +
-            '<span style="font-size:12px;color:#B91C1C;background:#FEE2E2;padding:2px 8px;border-radius:4px;font-weight:500;">Fecha de rechazo: ' + esc(d.rechazoDate || d.date) + '</span>' +
-            '<span style="font-size:12px;color:#6B7280;">(Registro cerrado permanentemente · Modo solo consulta)</span>' +
-          '</div>' +
-          '<div style="font-size:13.5px;color:#7F1D1D;line-height:20px;font-family:Inter,sans-serif;">' +
-            '<strong>Motivo del rechazo:</strong> ' + esc(d.rechazoMotivo || 'Sin detalle especificado.') +
-          '</div>' +
+        '<div style="flex:1 1 0;min-width:0;overflow:hidden;flex-direction:column;justify-content:flex-start;align-items:flex-start;gap:2px;display:inline-flex;">' +
+          '<div style="align-self:stretch;color:var(--sys-color-text-feedback-warning, #4D3800);font-size:14px;font-family:Inter,sans-serif;font-weight:600;line-height:20px;word-wrap:break-word;">Estructura Observada' + (d.obsDate ? ' &nbsp;·&nbsp; Fecha de observación: ' + esc(d.obsDate) : '') + '</div>' +
+          '<div style="color:var(--sys-color-text-feedback-warning, #4D3800);font-size:14px;font-family:Inter,sans-serif;font-weight:500;line-height:20px;word-wrap:break-word;">Motivo de observación: ' + obsDesc + '</div>' +
         '</div>' +
       '</div>';
     }
@@ -733,7 +712,7 @@
         '<input type="checkbox" id="dg-needs-approval"' + (d.needsApproval ? ' checked' : '') + (isReadOnly ? ' disabled' : '') + ' style="width:18px;height:18px;margin-top:2px;cursor:' + (isReadOnly ? 'not-allowed' : 'pointer') + ';accent-color:#06396E;">' +
         '<label for="dg-needs-approval" style="cursor:' + (isReadOnly ? 'default' : 'pointer') + ';display:flex;flex-direction:column;gap:2px;">' +
           '<span style="font-size:14px;font-family:Inter,sans-serif;font-weight:600;color:#1E293B;">Esta estructura necesita la aprobación de un aprobador</span>' +
-          '<span style="font-size:12px;font-family:Inter,sans-serif;font-weight:400;color:#64748B;">Al activar esta opción, el registro requerirá la validación y evaluación formal (aprobar, observar o rechazar) por parte del rol Aprobador.</span>' +
+          '<span style="font-size:12px;font-family:Inter,sans-serif;font-weight:400;color:#64748B;">Al activar esta opción, el registro requerirá la validación y evaluación formal (aprobar u observar) por parte del rol Aprobador.</span>' +
         '</label>' +
       '</div>';
 
@@ -1352,51 +1331,6 @@
     if(sBtn) sBtn.style.background = '#06396E';
   }
 
-  function openDirectRejectModal(id){
-    var sVal = find(id);
-    if(!sVal) return;
-    if(sVal.state !== 'Validado'){
-      toast('Solo pueden evaluarse estructuras en estado Validado.', 'err');
-      return;
-    }
-
-    var html = '<div style="display:flex;flex-direction:column;gap:14px;">' +
-      '<div style="display:flex;flex-direction:column;gap:6px;">' +
-        '<label style="font-size:14px;font-weight:600;color:#1E293B;font-family:Inter,sans-serif;">Motivo del rechazo <span style="color:#D51317;">*</span></label>' +
-        '<textarea id="eval-rej-motivo" rows="4" placeholder="Detalle el sustento técnico o normativo del rechazo definitivo..." style="width:100%;padding:10px 12px;border-radius:8px;border:1px solid #CBD5E1;font-size:13.5px;font-family:Inter,sans-serif;outline:none;resize:vertical;box-sizing:border-box;"></textarea>' +
-        '<div id="eval-rej-error" style="display:none;font-size:12px;color:#DC2626;font-weight:500;">Debe ingresar el motivo del rechazo para continuar.</div>' +
-      '</div>' +
-      buildFigmaInfoMessage('¿Qué implica rechazar la estructura?', 'Permite rechazar de manera definitiva la estructura propuesta. El registro quedará archivado únicamente en modo de consulta.') +
-    '</div>';
-
-    openDrawer({
-      width: '400px',
-      title: 'Rechazar estructura ' + esc(sVal.code),
-      subtitle: esc(sVal.name),
-      bodyHtml: html,
-      saveText: 'Rechazar estructura',
-      onSave: function(){
-        var motivo = val('eval-rej-motivo').trim();
-        if(!motivo){
-          var errEl = document.getElementById('eval-rej-error');
-          if(errEl) errEl.style.display = 'block';
-          return false;
-        }
-        sVal.state = 'Rechazado';
-        sVal.rechazoMotivo = motivo;
-        sVal.rechazoDate = today();
-        if(S.draft && S.draft.id === sVal.id){ S.draft.state = 'Rechazado'; S.draft.rechazoMotivo = motivo; S.draft.rechazoDate = today(); }
-        renderList();
-        toast('Estructura <b>' + sVal.code + '</b> rechazada definitivamente.', 'err');
-        if (window.go) window.go('tra001-list');
-        return true;
-      }
-    });
-
-    var sBtn = document.getElementById('t001-drawer-save');
-    if(sBtn) sBtn.style.background = '#06396E';
-  }
-
   function openEvaluateModal(id){
     openDirectApproveModal(id);
   }
@@ -1613,14 +1547,6 @@
       return;
     }
 
-    var rejBtn = e.target.closest('#btn-reject-tra001, #btn-reject-tra001-v2, [data-fbtn="reject"]');
-    if (rejBtn) {
-      e.preventDefault();
-      if (S.draft && S.draft.id) {
-        openDirectRejectModal(S.draft.id);
-      }
-      return;
-    }
 
     var evalBtn = e.target.closest('#btn-evaluate-tra001, #btn-evaluate-tra001-v2, [data-fbtn="evaluate"]');
     if (evalBtn) {

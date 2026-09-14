@@ -941,25 +941,52 @@
             <div data-go="home" style="cursor:pointer;display:flex;align-items:center;"><svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:#504C4A;fill:none;stroke-width:2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg></div>
             <span>›</span><span>Administrador de Maestras</span><span>›</span><a data-go="tra002-list" style="cursor:pointer;text-decoration:none;color:inherit;">Gestor de Datos</a><span>›</span><span style="color:#6C6865">Carga masiva</span>
           </div>
-          <div style="height: 72px; padding: 16px 24px; display: flex; justify-content: space-between; align-items: center;">
-            <div style="font-size: 20px; font-weight: 700; color: #252220;">Gestor de Datos de Tablas Maestras</div>
-            <div style="display: flex; gap: 12px; align-items: center;">
-              <button class="btn gho" data-d2c="cancel" style="height: 42px; padding: 10px 18px; border-radius: 8px; display: inline-flex; align-items: center; gap: 8px;">
-                <svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-                <span>Cancelar</span>
+          <div style="height: 72px; padding: 12px 24px; display: flex; justify-content: space-between; align-items: center; gap: 16px;">
+            <div style="display: flex; align-items: center; gap: 4px;">
+              <button type="button" class="btn-back-header" data-d2c="cancel" data-go="tra002-list" title="Volver al Gestor de Datos" data-hierarchy="Ghost" data-shape="Square" data-size="Medium" data-state="Enabled" data-tone="Neutral" style="width: 40px; height: 40px; background: transparent; border: none; border-radius: 8px; justify-content: center; align-items: center; display: inline-flex; cursor: pointer; color: #504C4A; padding: 0;">
+                <svg viewBox="0 0 24 24" style="width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
               </button>
-              <button class="btn pri" id="d2c-btn-validar" data-d2c="validar" style="height: 42px; padding: 10px 18px; background: #06396E; border-radius: 8px; color: white; font-weight: 600; display: inline-flex; align-items: center; gap: 8px; cursor: pointer;">
-                <svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke:white;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;"><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M12 11h4"/><path d="M12 16h4"/><path d="M8 11h.01"/><path d="M8 16h.01"/></svg>
+              <div style="color: var(--sys-color-text-neutral-high, #252220); font-size: 18px; font-family: Inter, sans-serif; font-weight: 700; line-height: 24px; word-wrap: break-word;">Gestor de Datos de Tablas Maestras</div>
+            </div>
+            <div style="display: flex; gap: 12px; align-items: center;">
+              <button type="button" class="btn-neutral-action" id="d2c-btn-validar" data-d2c="validar" data-hierarchy="Tertiary" data-leading-icon="true" data-loading="false" data-show-label="true" data-size="Medium" data-state="Enabled" data-trailing-icon="false" style="height: 40px; padding: 8px 16px; outline: none; border-radius: 8px; border: 1px solid rgba(32, 32, 32, 0.56); background: white; color: #504C4A; font-weight: 600; display: inline-flex; align-items: center; gap: 8px; cursor: pointer;" title="Validar archivo">
+                <svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
                 <span>Validar archivo</span>
               </button>
               <button type="button" class="btn-neutral-action disabled" id="d2c-btn-guardar" data-d2c="grabar" data-hierarchy="Tertiary" data-leading-icon="true" data-loading="false" data-show-label="true" data-size="Medium" data-state="Disabled" data-trailing-icon="false" disabled style="height: 40px; padding: 8px 16px; outline: none; opacity: 0.5; cursor: not-allowed;" title="Guardar datos masivos">
                 <svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
                 <span>Guardar</span>
               </button>
+              <button type="button" class="btn pri" id="d2c-btn-validar-lote" data-d2c="validar-lote" disabled style="height: 42px; padding: 10px 18px; background: #06396E; border-radius: 8px; color: white; font-weight: 600; display: inline-flex; align-items: center; gap: 8px; opacity: 0.4; cursor: not-allowed; border: none;" title="Debe guardar la carga masiva antes de validar.">
+                <svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke:white;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;"><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M12 11h4"/><path d="M12 16h4"/><path d="M8 11h.01"/><path d="M8 16h.01"/></svg>
+                <span>Validar</span>
+              </button>
             </div>
           </div>
         </div>
         <div id="tra002-carga-mount" style="padding: 0 24px 40px;"></div>
+      </div>
+    </section>
+
+    <!-- ---------------------------------------------------- TRA002 GESTOR DE DATOS - DETALLE DE CARGA MASIVA (FORMULARIO DE LOTE) -->
+    <section class="screen" id="tra002-carga-detail">
+      <div class="page" style="padding: 0; max-width: 100%; width: 100%;">
+        <div style="width: 100%; background: white; border-bottom: 1px rgba(32, 32, 32, 0.12) solid; flex-direction: column; display: flex; margin-bottom: 24px;">
+          <div style="padding: 10px 24px 6px; display: flex; align-items: center; gap: 6px; font-size: 13px; color: #504C4A;">
+            <div data-go="home" style="cursor:pointer;display:flex;align-items:center;"><svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:#504C4A;fill:none;stroke-width:2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg></div>
+            <span>›</span><span>Administrador de Maestras</span><span>›</span><a data-go="tra002-list" style="cursor:pointer;text-decoration:none;color:inherit;">Gestor de Datos</a><span>›</span><span style="color:#6C6865">Carga masiva</span>
+          </div>
+          <div style="height: 72px; padding: 12px 24px; display: flex; justify-content: space-between; align-items: center; gap: 16px;">
+            <div style="display: flex; align-items: center; gap: 4px;">
+              <button type="button" class="btn-back-header" data-go="tra002-list" title="Volver al Gestor de Datos" data-hierarchy="Ghost" data-shape="Square" data-size="Medium" data-state="Enabled" data-tone="Neutral" style="width: 40px; height: 40px; background: transparent; border: none; border-radius: 8px; justify-content: center; align-items: center; display: inline-flex; cursor: pointer; color: #504C4A; padding: 0;">
+                <svg viewBox="0 0 24 24" style="width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+              </button>
+              <div style="color: var(--sys-color-text-neutral-high, #252220); font-size: 18px; font-family: Inter, sans-serif; font-weight: 700; line-height: 24px; word-wrap: break-word;">Gestor de Datos de Tablas Maestras</div>
+            </div>
+            <div id="tra002-carga-detail-actions" style="display: flex; gap: 12px; align-items: center;"></div>
+          </div>
+        </div>
+        <div id="tra002-carga-detail-mount" style="padding: 0 24px 40px;"></div>
       </div>
     </section>
 
@@ -1897,11 +1924,14 @@
   </div><!-- /main -->
 </div><!-- /shell -->
 
+<!-- LIBRERIAS EXTERNAS -->
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+
 <!-- SCRIPTS MODULARES IMPORTS -->
 <script src="js/router.js?v=20260906"></script>
 <script src="js/auth.js?v=20260821"></script>
-<script src="js/tra001.js?v=20260910_5"></script>
-<script src="js/tra002.js?v=20260910_4"></script>
+<script src="js/tra001.js?v=20260911_2"></script>
+<script src="js/tra002.js?v=20260914_4"></script>
 <script src="js/lineagrafica.js?v=20260822_46"></script>
 <script src="js/identity.js?v=20260909_1"></script>
 <script src="js/workflow.js?v=20260821_2"></script>
