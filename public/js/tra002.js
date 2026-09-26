@@ -1365,28 +1365,36 @@
           '<div class="f"><label>Registros observados</label><input value="' + errRows + '" readonly style="background:#F8FAFC;"></div>' +
         '</div>' +
         (rep.errors.length ? 
-          '<div class="carga-alert-banner" data-borde="false" data-type="Warning" style="width:100%;box-sizing:border-box;padding:12px 16px;border-radius:8px;background:var(--sys-color-bg-feedback-light-warning, #F7ECD5);display:flex;justify-content:space-between;align-items:center;gap:16px;margin-top:14px;">' +
-            '<div style="display:flex;align-items:center;gap:12px;flex:1 1 0;min-width:0;">' +
-              '<div style="width:20px;height:20px;min-width:20px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">' +
-                '<svg viewBox="0 0 24 24" style="width:20px;height:20px;stroke:var(--sys-color-text-feedback-warning, #4D3800);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;">' +
-                  '<path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>' +
-                  '<line x1="12" y1="9" x2="12" y2="13"/>' +
-                  '<line x1="12" y1="17" x2="12.01" y2="17"/>' +
+          (function(){
+            var obsCount = rep.errors.length;
+            var totalRead = rep.read;
+            var regText = totalRead === 1 ? '1 registro' : (totalRead + ' registros');
+            var bannerMsg = obsCount === 1 ?
+              ('Se encontró <b>1 observación</b> en la carga de <b>' + regText + '</b>. Puedes descargar el reporte de los valores para corregirla.') :
+              ('Se encontraron <b>' + obsCount + ' observaciones</b> en la carga de <b>' + regText + '</b>. Puedes descargar el reporte de los valores para corregirlas.');
+            return '<div class="carga-alert-banner" data-borde="false" data-type="Warning" style="width:100%;box-sizing:border-box;padding:12px 16px;border-radius:8px;background:var(--sys-color-bg-feedback-light-warning, #F7ECD5);display:flex;justify-content:space-between;align-items:center;gap:16px;margin-top:14px;">' +
+              '<div style="display:flex;align-items:center;gap:12px;flex:1 1 0;min-width:0;">' +
+                '<div style="width:20px;height:20px;min-width:20px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">' +
+                  '<svg viewBox="0 0 24 24" style="width:20px;height:20px;stroke:var(--sys-color-text-feedback-warning, #4D3800);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;">' +
+                    '<path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>' +
+                    '<line x1="12" y1="9" x2="12" y2="13"/>' +
+                    '<line x1="12" y1="17" x2="12.01" y2="17"/>' +
+                  '</svg>' +
+                '</div>' +
+                '<div style="color:var(--sys-color-text-feedback-warning, #4D3800);font-size:14px;font-family:Inter,sans-serif;font-weight:500;line-height:20px;">' +
+                  bannerMsg +
+                '</div>' +
+              '</div>' +
+              '<button type="button" data-d2c="download-report" style="background:transparent;border:none;padding:4px 8px;display:inline-flex;align-items:center;gap:6px;cursor:pointer;color:#06396E;font-size:14px;font-family:Inter,sans-serif;font-weight:700;text-decoration:none;white-space:nowrap;border-radius:6px;" title="Descargar archivo con observaciones">' +
+                '<span>Reporte</span>' +
+                '<svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;">' +
+                  '<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>' +
+                  '<polyline points="7 10 12 15 17 10"/>' +
+                  '<line x1="12" y1="15" x2="12" y2="3"/>' +
                 '</svg>' +
-              '</div>' +
-              '<div style="color:var(--sys-color-text-feedback-warning, #4D3800);font-size:14px;font-family:Inter,sans-serif;font-weight:500;line-height:20px;">' +
-                'Se encontraron <b>' + rep.errors.length + ' observación(es)</b> en <b>' + errRows + ' registro(s)</b>. Puedes descargar el reporte de los valores para corregirlos.' +
-              '</div>' +
-            '</div>' +
-            '<button type="button" data-d2c="download-report" style="background:transparent;border:none;padding:4px 8px;display:inline-flex;align-items:center;gap:6px;cursor:pointer;color:#06396E;font-size:14px;font-family:Inter,sans-serif;font-weight:700;text-decoration:none;white-space:nowrap;border-radius:6px;" title="Descargar archivo con observaciones">' +
-              '<span>Reporte</span>' +
-              '<svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;">' +
-                '<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>' +
-                '<polyline points="7 10 12 15 17 10"/>' +
-                '<line x1="12" y1="15" x2="12" y2="3"/>' +
-              '</svg>' +
-            '</button>' +
-          '</div>'
+              '</button>' +
+            '</div>';
+          })()
           : '<p style="font-size:13.5px;color:#004C37;font-weight:600;margin-top:14px;display:flex;align-items:center;gap:8px;background:#D7F5E8;padding:12px 16px;border-radius:8px;">' +
               '<svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke:#004C37;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;"><circle cx="12" cy="12" r="10"/><polyline points="9 12 11 14 15 10"/></svg>' +
               'El archivo no tiene observaciones. Ya puedes guardar la carga.' +
