@@ -635,19 +635,19 @@
     </div>
     
     <div class="flyout-body">
-      <!-- 1. Gestor de Identidad -->
+      <!-- 1. Gestor de identidad -->
       <div class="flyout-group open">
         <div class="flyout-group-title flyout-toggle">
           <svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg>
-          <span>Gestor de Identidad</span>
+          <span>Gestor de identidad</span>
           <svg class="chevron" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
         </div>
         <div class="flyout-group-items">
           <a class="flyout-item" data-go="usuarios-list">Usuarios</a>
-          <a class="flyout-item" data-go="sucursales-list">Sucursales</a>
+          <a class="flyout-item" data-go="modulos-list">Módulos</a>
+          <a class="flyout-item" data-go="opciones-list">Opciones</a>
           <a class="flyout-item" data-go="roles-list">Roles</a>
           <a class="flyout-item" data-go="perfiles-list">Perfiles</a>
-          <a class="flyout-item" data-go="opciones-list">Opciones</a>
         </div>
       </div>
 
@@ -1558,19 +1558,19 @@
       </div>
     </section>
 
-    <!-- ---------------------------------------------------- GESTOR DE IDENTIDAD - SUCURSALES -->
-    <section class="screen" id="sucursales-list">
+    <!-- ---------------------------------------------------- GESTOR DE IDENTIDAD - MÓDULOS -->
+    <section class="screen" id="modulos-list">
       <div class="page" style="padding: 0; max-width: 100%; width: 100%;">
         <div style="width: 100%; background: white; border-bottom: 1px rgba(32, 32, 32, 0.12) solid; flex-direction: column; display: flex; margin-bottom: 24px;">
           <div style="padding: 10px 24px 6px; display: flex; align-items: center; gap: 6px; font-size: 13px; color: #504C4A;">
             <div data-go="home" style="cursor:pointer;display:flex;align-items:center;"><svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:#504C4A;fill:none;stroke-width:2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg></div>
-            <span>›</span><span>Gestor de Identidad</span><span>›</span><span style="color:#6C6865">Gestor de Sucursales</span>
+            <span>›</span><span>Gestor de identidad</span><span>›</span><span style="color:#6C6865">Gestor de Módulos</span>
           </div>
           <div style="height: 72px; padding: 16px 24px; display: flex; justify-content: space-between; align-items: center;">
-            <div style="font-size: 20px; font-weight: 700; color: #252220;">Gestor de Sucursales e Intendencias Regionales</div>
-            <div style="height: 42px; padding: 10px 18px; background: #06396E; border-radius: 8px; justify-content: center; align-items: center; gap: 8px; display: inline-flex; cursor: pointer;" data-go="sucursales-form">
+            <div style="font-size: 20px; font-weight: 700; color: #252220;">Gestor de Módulos del Sistema</div>
+            <div style="height: 42px; padding: 10px 18px; background: #06396E; border-radius: 8px; justify-content: center; align-items: center; gap: 8px; display: inline-flex; cursor: pointer;" data-go="modulos-form">
               <svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke:white;fill:none;stroke-width:2.2"><path d="M12 5v14M5 12h14"/></svg>
-              <div style="color: white; font-size: 14px; font-family: Inter; font-weight: 600;">Registrar sucursal</div>
+              <div style="color: white; font-size: 14px; font-family: Inter; font-weight: 600;">Registrar módulo</div>
             </div>
           </div>
         </div>
@@ -1628,7 +1628,7 @@
           </div>
           <div style="height: 72px; padding: 16px 24px; display: flex; justify-content: space-between; align-items: center;">
             <div style="font-size: 20px; font-weight: 700; color: #252220;">Gestor de Opciones del Sistema</div>
-            <div style="height: 42px; padding: 10px 18px; background: #06396E; border-radius: 8px; justify-content: center; align-items: center; gap: 8px; display: inline-flex; cursor: pointer;">
+            <div style="height: 42px; padding: 10px 18px; background: #06396E; border-radius: 8px; justify-content: center; align-items: center; gap: 8px; display: inline-flex; cursor: pointer;" data-go="opciones-form">
               <svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke:white;fill:none;stroke-width:2.2"><path d="M12 5v14M5 12h14"/></svg>
               <div style="color: white; font-size: 14px; font-family: Inter; font-weight: 600;">Registrar opción</div>
             </div>
@@ -1638,35 +1638,324 @@
       </div>
     </section>
 
-    <!-- ---------------------------------------------------- GESTOR DE IDENTIDAD - SUCURSALES FORMULARIO -->
-    <section class="screen" id="sucursales-form">
+    <!-- ---------------------------------------------------- GESTOR DE IDENTIDAD - OPCIONES FORMULARIO -->
+    <section class="screen" id="opciones-form">
+      <div class="page" style="padding: 0; max-width: 100%; width: 100%;">
+        <!-- HEADER DEL MÓDULO -->
+        <div style="width: 100%; background: white; border-bottom: 1px rgba(32, 32, 32, 0.12) solid; flex-direction: column; display: flex; margin-bottom: 24px;">
+          <div style="padding: 10px 24px 6px; display: flex; align-items: center; gap: 6px; font-size: 13px; color: #504C4A;">
+            <div data-go="home" style="cursor:pointer;display:flex;align-items:center;"><svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:#504C4A;fill:none;stroke-width:2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg></div>
+            <span>›</span><span>Gestor de Identidades</span><span>›</span><a data-go="opciones-list" style="cursor:pointer;text-decoration:none;color:inherit;">Gestor de Opciones</a><span>›</span><span style="color:#6C6865">Registro</span>
+          </div>
+          <div style="height: 72px; padding: 12px 24px; display: flex; justify-content: space-between; align-items: center;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <button type="button" class="btn-back-header" data-go="opciones-list" title="Volver al Gestor de Opciones">
+                <svg viewBox="0 0 24 24" style="width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+              </button>
+              <div>
+                <div style="font-size: 20px; font-weight: 700; color: #252220; line-height: 24px;">Opciones del sistema</div>
+                <div style="font-size: 11px; font-weight: 600; color: #64748B; letter-spacing: 0.5px; text-transform: uppercase; margin-top: 2px;">CREACIÓN</div>
+              </div>
+            </div>
+            <div style="display: flex; gap: 12px; align-items: center;">
+              <button class="btn gho" data-go="opciones-list" style="height: 42px; padding: 10px 18px; border-radius: 8px; display: inline-flex; align-items: center; gap: 8px;">
+                <svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                <span>Cancelar</span>
+              </button>
+              <button class="btn pri" id="btn-save-opcion" style="height: 42px; padding: 10px 18px; background: #06396E; border-radius: 8px; color: white; font-weight: 600; display: inline-flex; align-items: center; gap: 8px;">
+                <svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke:white;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+                <span>Guardar</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div style="padding: 0 24px 40px; display: flex; flex-direction: column; gap: 24px;">
+          <!-- TARJETA 1: DATOS DE LA OPCIÓN -->
+          <div class="card" style="background:white; border:1px solid rgba(32,32,32,0.12); border-radius:8px; padding:24px;">
+            <h3 class="sec-t" style="font-size: 13px; font-weight: 700; color: #06396E; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 20px;">Datos de la opción</h3>
+            
+            <div style="display:flex; flex-direction:column; gap:20px;">
+              <!-- Fila 1: Opción * y Sistema * -->
+              <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
+                <!-- Opción * -->
+                <div class="figma-field" id="wrap-opc-nombre">
+                  <div class="field-box">
+                    <div class="field-label-notch">
+                      <div class="field-label-wrapper" style="display:inline-flex;align-items:center;gap:2px;">
+                        <span class="field-label">Opción</span>
+                        <span class="field-req">*</span>
+                      </div>
+                    </div>
+                    <input id="opc-nombre" value="" maxlength="100" placeholder="Nombre de la opción" />
+                  </div>
+                  <div class="field-counter-row"><span class="field-counter" id="counter-opc-nombre">0/100</span></div>
+                </div>
+
+                <!-- Sistema * -->
+                <div class="figma-field has-value" id="wrap-opc-sistema">
+                  <div class="field-box">
+                    <div class="field-label-notch">
+                      <div class="field-label-wrapper" style="display:inline-flex;align-items:center;gap:2px;">
+                        <span class="field-label">Sistema</span>
+                        <span class="field-req">*</span>
+                      </div>
+                    </div>
+                    <div class="figma-select-wrapper" id="selwrap-opc-sistema">
+                      <input type="hidden" id="opc-sistema" value="SIIT">
+                      <div class="figma-select-trigger" id="trigger-opc-sistema">
+                        <span class="figma-select-val" id="val-opc-sistema">SIIT</span>
+                        <svg class="figma-select-arrow" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+                      </div>
+                      <div class="figma-select-menu" id="menu-opc-sistema">
+                        <div class="figma-select-item is-selected" data-val="SIIT"><span>SIIT — Sistema Informático de Inspección del Trabajo</span></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Fila 2: Módulo *, Opción padre, Tipo de componente * -->
+              <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:20px;">
+                <!-- Módulo * -->
+                <div class="figma-field" id="wrap-opc-modulo">
+                  <div class="field-box">
+                    <div class="field-label-notch">
+                      <div class="field-label-wrapper" style="display:inline-flex;align-items:center;gap:2px;">
+                        <span class="field-label">Módulo</span>
+                        <span class="field-req">*</span>
+                      </div>
+                    </div>
+                    <div class="figma-select-wrapper" id="selwrap-opc-modulo">
+                      <input type="hidden" id="opc-modulo" value="">
+                      <div class="figma-select-trigger" id="trigger-opc-modulo">
+                        <span class="figma-select-val is-placeholder" id="val-opc-modulo">Seleccionar...</span>
+                        <svg class="figma-select-arrow" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+                      </div>
+                      <div class="figma-select-menu" id="menu-opc-modulo">
+                        <div class="figma-select-item" data-val="Gestor de Identidades"><span>Gestor de Identidades</span></div>
+                        <div class="figma-select-item" data-val="Fiscalización"><span>Fiscalización · PO2</span></div>
+                        <div class="figma-select-item" data-val="Atención al Ciudadano"><span>Atención al Ciudadano · PS1</span></div>
+                        <div class="figma-select-item" data-val="Componentes Transversales"><span>Componentes Transversales · TRA</span></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Opción padre -->
+                <div class="figma-field is-readonly" id="wrap-opc-padre">
+                  <div class="field-box" style="background:#F8FAFC;">
+                    <div class="field-label-notch">
+                      <div class="field-label-wrapper" style="display:inline-flex;align-items:center;gap:2px;">
+                        <span class="field-label">Opción padre</span>
+                      </div>
+                    </div>
+                    <div class="figma-select-wrapper" id="selwrap-opc-padre">
+                      <input type="hidden" id="opc-padre" value="">
+                      <div class="figma-select-trigger" id="trigger-opc-padre">
+                        <span class="figma-select-val is-placeholder" id="val-opc-padre">Seleccionar...</span>
+                        <svg class="figma-select-arrow" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+                      </div>
+                      <div class="figma-select-menu" id="menu-opc-padre">
+                        <div class="figma-select-item" data-val="Gestor de Identidades"><span>Gestor de Identidades</span></div>
+                        <div class="figma-select-item" data-val="Administrador de Maestras"><span>Administrador de Maestras</span></div>
+                      </div>
+                    </div>
+                  </div>
+                  <div style="font-size: 12px; color: #64748B; margin-top: 4px;">Indique la opción padre solo si esta es de segundo nivel o inferior.</div>
+                </div>
+
+                <!-- Tipo de componente * -->
+                <div class="figma-field" id="wrap-opc-tipo">
+                  <div class="field-box">
+                    <div class="field-label-notch">
+                      <div class="field-label-wrapper" style="display:inline-flex;align-items:center;gap:2px;">
+                        <span class="field-label">Tipo de componente</span>
+                        <span class="field-req">*</span>
+                      </div>
+                    </div>
+                    <div class="figma-select-wrapper" id="selwrap-opc-tipo">
+                      <input type="hidden" id="opc-tipo" value="">
+                      <div class="figma-select-trigger" id="trigger-opc-tipo">
+                        <span class="figma-select-val is-placeholder" id="val-opc-tipo">Seleccionar...</span>
+                        <svg class="figma-select-arrow" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+                      </div>
+                      <div class="figma-select-menu" id="menu-opc-tipo">
+                        <div class="figma-select-item" data-val="Pantalla / Vista"><span>Pantalla / Vista</span></div>
+                        <div class="figma-select-item" data-val="Acción / Botón"><span>Acción / Botón</span></div>
+                        <div class="figma-select-item" data-val="Reporte"><span>Reporte</span></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Fila 3: Estado Switch y Visibilidad * -->
+              <div style="display:grid; grid-template-columns:1fr 2fr; gap:20px; align-items:center;">
+                <!-- Estado Switch -->
+                <div class="figma-field" id="wrap-opc-estado">
+                  <div style="display:flex; align-items:center; gap:12px; height: 48px;">
+                    <label class="figma-switch-label" style="position:relative; display:inline-flex; align-items:center; gap:10px; cursor:pointer;">
+                      <input type="checkbox" id="opc-chk-activo" checked style="width:20px; height:20px; accent-color:#06396E; cursor:pointer;" />
+                      <span style="font-size:14px; font-family:Inter,sans-serif; font-weight:600; color:#252220;">Activo</span>
+                    </label>
+                  </div>
+                </div>
+
+                <!-- Visibilidad * -->
+                <div class="figma-field has-value" id="wrap-opc-visibilidad">
+                  <div class="field-box">
+                    <div class="field-label-notch">
+                      <div class="field-label-wrapper" style="display:inline-flex;align-items:center;gap:2px;">
+                        <span class="field-label">Visibilidad</span>
+                        <span class="field-req">*</span>
+                      </div>
+                    </div>
+                    <div class="figma-select-wrapper" id="selwrap-opc-visibilidad">
+                      <input type="hidden" id="opc-visibilidad" value="Visible en el menú">
+                      <div class="figma-select-trigger" id="trigger-opc-visibilidad">
+                        <span class="figma-select-val" id="val-opc-visibilidad">Visible en el menú</span>
+                        <svg class="figma-select-arrow" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+                      </div>
+                      <div class="figma-select-menu" id="menu-opc-visibilidad">
+                        <div class="figma-select-item is-selected" data-val="Visible en el menú"><span>Visible en el menú</span></div>
+                        <div class="figma-select-item" data-val="Oculto en el menú"><span>Oculto en el menú</span></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Fila 4: Ruta / componente -->
+              <div class="figma-field" id="wrap-opc-ruta">
+                <div class="field-box">
+                  <div class="field-label-notch">
+                    <div class="field-label-wrapper" style="display:inline-flex;align-items:center;gap:2px;">
+                      <span class="field-label">Ruta / componente</span>
+                    </div>
+                  </div>
+                  <input id="opc-ruta" value="" maxlength="300" placeholder="Ej. /identidad/usuarios" />
+                </div>
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-top:4px;">
+                  <div style="font-size: 12px; color: #64748B;">Ruta con barra, por ejemplo /identidad/usuarios.</div>
+                  <div class="field-counter-row"><span class="field-counter" id="counter-opc-ruta">0/300</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- TARJETA 2: ACCIONES DE LA OPCIÓN -->
+          <div class="card" style="background:white; border:1px solid rgba(32,32,32,0.12); border-radius:8px; padding:24px;">
+            <h3 class="sec-t" style="font-size: 13px; font-weight: 700; color: #06396E; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">Acciones de la opción</h3>
+            <div style="font-size: 13px; color: #504C4A; margin-bottom: 16px;">Marque las acciones que ofrece esta pantalla.</div>
+
+            <div style="display:flex; align-items:center; gap:24px; flex-wrap:wrap;">
+              <label style="display:inline-flex; align-items:center; gap:8px; font-size:14px; font-family:Inter,sans-serif; color:#252220; cursor:pointer;">
+                <input class="chk" type="checkbox" id="chk-act-guardar" style="width:16px; height:16px; cursor:pointer;" />
+                <span>Guardar registro</span>
+              </label>
+
+              <label style="display:inline-flex; align-items:center; gap:8px; font-size:14px; font-family:Inter,sans-serif; color:#252220; cursor:pointer;">
+                <input class="chk" type="checkbox" id="chk-act-nuevo" style="width:16px; height:16px; cursor:pointer;" />
+                <span>Nuevo registro</span>
+              </label>
+
+              <label style="display:inline-flex; align-items:center; gap:8px; font-size:14px; font-family:Inter,sans-serif; color:#252220; cursor:pointer;">
+                <input class="chk" type="checkbox" id="chk-act-validar" style="width:16px; height:16px; cursor:pointer;" />
+                <span>Validar registro</span>
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ---------------------------------------------------- GESTOR DE IDENTIDAD - MÓDULOS FORMULARIO -->
+    <section class="screen" id="modulos-form">
       <div class="page" style="padding: 0; max-width: 100%; width: 100%;">
         <div style="width: 100%; background: white; border-bottom: 1px rgba(32, 32, 32, 0.12) solid; flex-direction: column; display: flex; margin-bottom: 24px;">
           <div style="padding: 10px 24px 6px; display: flex; align-items: center; gap: 6px; font-size: 13px; color: #504C4A;">
             <div data-go="home" style="cursor:pointer;display:flex;align-items:center;"><svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:#504C4A;fill:none;stroke-width:2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg></div>
-            <span>›</span><span>Gestor de Identidad</span><span>›</span><a data-go="sucursales-list" style="cursor:pointer;text-decoration:none;color:inherit;">Gestor de Sucursales</a><span>›</span><span style="color:#6C6865">Registro</span>
+            <span>›</span><span>Gestor de identidad</span><span>›</span><a data-go="modulos-list" style="cursor:pointer;text-decoration:none;color:inherit;">Gestor de Módulos</a><span>›</span><span style="color:#6C6865">Registro</span>
           </div>
           <div style="height: 72px; padding: 16px 24px; display: flex; justify-content: space-between; align-items: center;">
             <div>
-              <div style="font-size: 20px; font-weight: 700; color: #252220;">Gestor de Sucursales</div>
+              <div style="font-size: 20px; font-weight: 700; color: #252220;">Gestor de Módulos del Sistema</div>
             </div>
             <div style="display: flex; gap: 12px; align-items: center;">
-              <button class="btn gho" data-go="sucursales-list" style="height: 42px; padding: 10px 18px; border-radius: 8px;">Cancelar</button>
-              <button class="btn pri" id="btn-save-sucursal" style="height: 42px; padding: 10px 18px; background: #06396E; border-radius: 8px; color: white; font-weight: 600;">Aceptar</button>
+              <button class="btn gho" data-go="modulos-list" style="height: 42px; padding: 10px 18px; border-radius: 8px; display: inline-flex; align-items: center; gap: 8px;">
+                <svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                <span>Cancelar</span>
+              </button>
+              <button class="btn pri" id="btn-save-modulo" style="height: 42px; padding: 10px 18px; background: #06396E; border-radius: 8px; color: white; font-weight: 600; display: inline-flex; align-items: center; gap: 8px;">
+                <svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke:white;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+                <span>Guardar</span>
+              </button>
             </div>
           </div>
         </div>
 
         <div style="padding: 0 24px 40px;">
-          <div class="card"><h3 class="sec-t" style="font-size: 13px; font-weight: 700; color: #06396E; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 18px;">Información de la sucursal</h3>
-            <div class="fgrid g3">
-              <div class="f"><label>Código de sucursal <span class="req">*</span></label><input id="s-codigo" placeholder="Ej. OZ-1513"><div class="hint">Debe ser único dentro del catálogo.</div></div>
-              <div class="f" style="grid-column:span 2"><label>Nombre de la sucursal <span class="req">*</span></label><input id="s-nombre" placeholder="Ej. Oficina Zonal San Juan de Miraflores"></div>
-              <div class="f"><label>Tipo de sede <span class="req">*</span></label><select id="s-tipo"><option>Sede central</option><option>Intendencia regional</option><option>Oficina zonal</option></select></div>
-              <div class="f"><label>Ámbito territorial <span class="req">*</span></label><select id="s-ambito"><option>Lima / San Juan de Miraflores</option><option>Lima Metropolitana</option><option>Nacional</option></select></div>
-              <div class="f"><label>Sucursal superior</label><select id="s-superior"><option>Intendencia Regional Lima Metropolitana</option><option>Sede Central</option><option>—</option></select></div>
-              <div class="f full"><label>Dirección</label><input id="s-direccion" placeholder="Dirección de la sede"></div>
-              <div class="f full" style="margin-top: 8px;"><div class="chkline" style="display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 500; color: #334155; cursor: pointer;"><input class="chk" type="checkbox" id="s-chk-activo" checked style="width:15px;height:15px;cursor:pointer;"> <span>Sucursal activa</span></div></div>
+          <div class="card" style="background:white; border:1px solid rgba(32,32,32,0.12); border-radius:8px; padding:24px;">
+            <h3 class="sec-t" style="font-size: 13px; font-weight: 700; color: #06396E; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 20px;">Información del módulo</h3>
+            <div class="fgrid g2" style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
+              <!-- Nombre del módulo -->
+              <div class="figma-field" id="wrap-m-nombre">
+                <div class="field-box">
+                  <div class="field-label-notch">
+                    <div class="field-label-wrapper" style="display:inline-flex;align-items:center;gap:2px;">
+                      <span class="field-label">Nombre del módulo</span>
+                      <span class="field-req">*</span>
+                    </div>
+                  </div>
+                  <input id="m-nombre" value="" placeholder="Ej. Fiscalización Laboral" />
+                </div>
+              </div>
+
+              <!-- Sistema -->
+              <div class="figma-field has-value" id="wrap-m-sistema">
+                <div class="field-box">
+                  <div class="field-label-notch">
+                    <div class="field-label-wrapper" style="display:inline-flex;align-items:center;gap:2px;">
+                      <span class="field-label">Sistema</span>
+                      <span class="field-req">*</span>
+                    </div>
+                  </div>
+                  <div class="figma-select-wrapper" id="selwrap-m-sistema">
+                    <input type="hidden" id="m-sistema" value="SIIT">
+                    <div class="figma-select-trigger" id="trigger-m-sistema">
+                      <span class="figma-select-val" id="val-m-sistema">SIIT — Sistema Informático de Inspección del Trabajo</span>
+                      <svg class="figma-select-arrow" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+                    </div>
+                    <div class="figma-select-menu" id="menu-m-sistema">
+                      <div class="figma-select-item is-selected" data-val="SIIT"><span>SIIT — Sistema Informático de Inspección del Trabajo</span></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Estado: Switch Activo -->
+              <div class="figma-field" id="wrap-m-estado" style="grid-column: span 2; padding-top: 4px;">
+                <div style="display:flex; align-items:center; gap:12px;">
+                  <label class="figma-switch-label" style="position:relative; display:inline-flex; align-items:center; gap:10px; cursor:pointer;">
+                    <input type="checkbox" id="m-chk-activo" checked style="width:20px; height:20px; accent-color:#06396E; cursor:pointer;" />
+                    <span style="font-size:14px; font-family:Inter,sans-serif; font-weight:600; color:#252220;">Estado: Activo</span>
+                  </label>
+                </div>
+              </div>
+
+              <!-- Descripción -->
+              <div class="figma-field is-textarea" id="wrap-m-descripcion" style="grid-column: span 2;">
+                <div class="field-box">
+                  <div class="field-label-notch">
+                    <div class="field-label-wrapper" style="display:inline-flex;align-items:center;gap:2px;">
+                      <span class="field-label">Descripción</span>
+                    </div>
+                  </div>
+                  <textarea id="m-descripcion" maxlength="500" placeholder="Describa la función del módulo dentro del sistema..."></textarea>
+                </div>
+                <div class="field-counter-row"><span class="field-counter" id="counter-m-descripcion">0/500</span></div>
+              </div>
             </div>
           </div>
         </div>
@@ -1676,47 +1965,82 @@
     <!-- ---------------------------------------------------- GESTOR DE IDENTIDAD - ROLES FORMULARIO -->
     <section class="screen" id="roles-form">
       <div class="page" style="padding: 0; max-width: 100%; width: 100%;">
+        <!-- HEADER DEL MÓDULO -->
         <div style="width: 100%; background: white; border-bottom: 1px rgba(32, 32, 32, 0.12) solid; flex-direction: column; display: flex; margin-bottom: 24px;">
           <div style="padding: 10px 24px 6px; display: flex; align-items: center; gap: 6px; font-size: 13px; color: #504C4A;">
             <div data-go="home" style="cursor:pointer;display:flex;align-items:center;"><svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:#504C4A;fill:none;stroke-width:2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg></div>
-            <span>›</span><span>Gestor de Identidad</span><span>›</span><a data-go="roles-list" style="cursor:pointer;text-decoration:none;color:inherit;">Gestor de Roles</a><span>›</span><span style="color:#6C6865">Registro</span>
+            <span>›</span><span>Gestor de Identidades</span><span>›</span><a data-go="roles-list" style="cursor:pointer;text-decoration:none;color:inherit;">Gestor de Roles</a><span>›</span><span style="color:#6C6865">Registro</span>
           </div>
-          <div style="height: 72px; padding: 16px 24px; display: flex; justify-content: space-between; align-items: center;">
-            <div>
-              <div style="font-size: 20px; font-weight: 700; color: #252220;">Gestor de Roles</div>
+          <div style="height: 72px; padding: 12px 24px; display: flex; justify-content: space-between; align-items: center;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <button type="button" class="btn-back-header" data-go="roles-list" title="Volver al Gestor de Roles">
+                <svg viewBox="0 0 24 24" style="width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+              </button>
+              <div>
+                <div style="font-size: 20px; font-weight: 700; color: #252220; line-height: 24px;">Gestor de Roles</div>
+                <div style="font-size: 11px; font-weight: 600; color: #64748B; letter-spacing: 0.5px; text-transform: uppercase; margin-top: 2px;">CREACIÓN</div>
+              </div>
             </div>
             <div style="display: flex; gap: 12px; align-items: center;">
-              <button class="btn gho" data-go="roles-list" style="height: 42px; padding: 10px 18px; border-radius: 8px;">Cancelar</button>
-              <button class="btn pri" id="btn-save-rol" style="height: 42px; padding: 10px 18px; background: #06396E; border-radius: 8px; color: white; font-weight: 600;">Aceptar</button>
+              <button class="btn gho" data-go="roles-list" style="height: 42px; padding: 10px 18px; border-radius: 8px; display: inline-flex; align-items: center; gap: 8px;">
+                <svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                <span>Cancelar</span>
+              </button>
+              <button class="btn pri" id="btn-save-rol" style="height: 42px; padding: 10px 18px; background: #06396E; border-radius: 8px; color: white; font-weight: 600; display: inline-flex; align-items: center; gap: 8px;">
+                <svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke:white;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+                <span>Guardar</span>
+              </button>
             </div>
           </div>
         </div>
 
-        <div style="padding: 0 24px 40px;">
-          <div class="card" style="margin-bottom: 24px;"><h3 class="sec-t" style="font-size: 13px; font-weight: 700; color: #06396E; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 18px;">Datos del rol</h3>
-            <div class="fgrid g3">
-              <div class="f"><label>Código</label><input id="r-codigo" value="ROL-004" readonly style="background: #F8FAFC;"></div>
-              <div class="f" style="grid-column:span 2"><label>Nombre del rol <span class="req">*</span></label><input id="r-nombre" placeholder="Ej. Aprobador"></div>
-              <div class="f"><label>Módulo / proceso <span class="req">*</span></label><select id="r-modulo"><option>Transversal (todos los procesos)</option><option>Tablas maestras</option><option>Gestor de Identidad</option><option>PO2 — Fiscalización</option></select></div>
-              <div class="f"><label>Estado</label><select id="r-estado"><option>Activo</option><option>Inactivo</option></select></div>
-              <div class="f full"><label>Descripción</label><textarea id="r-descripcion" placeholder="Describa la función del rol dentro del flujo"></textarea><div class="counter">0/500</div></div>
-            </div>
-          </div>
+        <div style="padding: 0 24px 40px; display: flex; flex-direction: column; gap: 24px;">
+          <!-- TARJETA 1: DATOS DEL ROL -->
+          <div class="card" style="background:white; border:1px solid rgba(32,32,32,0.12); border-radius:8px; padding:24px;">
+            <h3 class="sec-t" style="font-size: 13px; font-weight: 700; color: #06396E; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 20px;">Datos del rol</h3>
+            
+            <div style="display:flex; flex-direction:column; gap:20px;">
+              <!-- Fila 1: Nombre del rol * (70%) y Estado (30%) -->
+              <div style="display:grid; grid-template-columns:7fr 3fr; gap:20px; align-items:start;">
+                <!-- Nombre del rol * -->
+                <div class="figma-field" id="wrap-r-nombre">
+                  <div class="field-box">
+                    <div class="field-label-notch">
+                      <div class="field-label-wrapper" style="display:inline-flex;align-items:center;gap:2px;">
+                        <span class="field-label">Nombre del rol</span>
+                        <span class="field-req">*</span>
+                      </div>
+                    </div>
+                    <input id="r-nombre" value="" maxlength="100" placeholder="Nombre del rol" />
+                  </div>
+                  <div class="field-counter-row"><span class="field-counter" id="counter-r-nombre">0/100</span></div>
+                </div>
 
-          <div class="card"><h3 class="sec-t" style="font-size: 13px; font-weight: 700; color: #06396E; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 18px;">Opciones habilitadas por el rol</h3>
-            <p class="mini" style="font-size: 12.5px; color: #64748B; margin-bottom: 14px;">Marque las opciones (acciones) del sistema que este rol podrá ejecutar.</p>
-            <div class="tw"><table class="subtable">
-              <thead><tr><th style="width:44px"></th><th>OPCIÓN</th><th>MÓDULO</th><th>TIPO</th></tr></thead>
-              <tbody>
-                <tr><td><input class="chk" type="checkbox" checked></td><td>Consultar</td><td>Tablas maestras</td><td><span class="badge b-info">Acción</span></td></tr>
-                <tr><td><input class="chk" type="checkbox" checked></td><td>Crear</td><td>Tablas maestras</td><td><span class="badge b-info">Acción</span></td></tr>
-                <tr><td><input class="chk" type="checkbox" checked></td><td>Modificar</td><td>Tablas maestras</td><td><span class="badge b-info">Acción</span></td></tr>
-                <tr><td><input class="chk" type="checkbox"></td><td>Eliminar</td><td>Tablas maestras</td><td><span class="badge b-info">Acción</span></td></tr>
-                <tr><td><input class="chk" type="checkbox"></td><td>Validar</td><td>Tablas maestras</td><td><span class="badge b-info">Acción</span></td></tr>
-                <tr><td><input class="chk" type="checkbox" checked></td><td>Aprobar</td><td>Tablas maestras</td><td><span class="badge b-info">Acción</span></td></tr>
-                <tr><td><input class="chk" type="checkbox" checked></td><td>Exportar</td><td>Tablas maestras</td><td><span class="badge b-info">Acción</span></td></tr>
-              </tbody>
-            </table></div>
+                <!-- Estado Switch -->
+                <div class="figma-field" id="wrap-r-estado" style="display:flex; flex-direction:column; justify-content:center;">
+                  <div style="font-size: 12px; color: #64748B; margin-bottom: 4px;">Estado</div>
+                  <div style="display:flex; align-items:center; gap:12px; height: 48px;">
+                    <label class="figma-switch-label" style="position:relative; display:inline-flex; align-items:center; gap:10px; cursor:pointer;">
+                      <input type="checkbox" id="r-chk-activo" checked style="width:20px; height:20px; accent-color:#06396E; cursor:pointer;" />
+                      <span style="font-size:14px; font-family:Inter,sans-serif; font-weight:600; color:#252220;">Activo</span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Fila 2: Descripción -->
+              <div class="figma-field is-textarea" id="wrap-r-descripcion">
+                <div class="field-box">
+                  <div class="field-label-notch">
+                    <div class="field-label-wrapper" style="display:inline-flex;align-items:center;gap:2px;">
+                      <span class="field-label">Descripción</span>
+                    </div>
+                  </div>
+                  <textarea id="r-descripcion" maxlength="500" placeholder="Describa la función del rol dentro del sistema..."></textarea>
+                </div>
+                <div class="field-counter-row"><span class="field-counter" id="counter-r-descripcion">0/500</span></div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -1725,49 +2049,179 @@
     <!-- ---------------------------------------------------- GESTOR DE IDENTIDAD - PERFILES FORMULARIO -->
     <section class="screen" id="perfiles-form">
       <div class="page" style="padding: 0; max-width: 100%; width: 100%;">
+        <!-- HEADER DEL MÓDULO -->
         <div style="width: 100%; background: white; border-bottom: 1px rgba(32, 32, 32, 0.12) solid; flex-direction: column; display: flex; margin-bottom: 24px;">
           <div style="padding: 10px 24px 6px; display: flex; align-items: center; gap: 6px; font-size: 13px; color: #504C4A;">
             <div data-go="home" style="cursor:pointer;display:flex;align-items:center;"><svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:#504C4A;fill:none;stroke-width:2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg></div>
-            <span>›</span><span>Gestor de Identidad</span><span>›</span><a data-go="perfiles-list" style="cursor:pointer;text-decoration:none;color:inherit;">Gestor de Perfiles</a><span>›</span><span style="color:#6C6865">Registro</span>
+            <span>›</span><span>Gestor de Identidades</span><span>›</span><a data-go="perfiles-list" style="cursor:pointer;text-decoration:none;color:inherit;">Gestor de Perfiles</a><span>›</span><span style="color:#6C6865">Registro</span>
           </div>
-          <div style="height: 72px; padding: 16px 24px; display: flex; justify-content: space-between; align-items: center;">
-            <div>
-              <div style="font-size: 20px; font-weight: 700; color: #252220;">Gestor de Perfiles Funcionales</div>
+          <div style="height: 72px; padding: 12px 24px; display: flex; justify-content: space-between; align-items: center;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <button type="button" class="btn-back-header" data-go="perfiles-list" title="Volver al Gestor de Perfiles">
+                <svg viewBox="0 0 24 24" style="width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+              </button>
+              <div>
+                <div style="font-size: 20px; font-weight: 700; color: #252220; line-height: 24px;">Gestor de Perfiles</div>
+                <div style="font-size: 11px; font-weight: 600; color: #64748B; letter-spacing: 0.5px; text-transform: uppercase; margin-top: 2px;">CREACIÓN</div>
+              </div>
             </div>
             <div style="display: flex; gap: 12px; align-items: center;">
-              <button class="btn gho" data-go="perfiles-list" style="height: 42px; padding: 10px 18px; border-radius: 8px;">Cancelar</button>
-              <button class="btn pri" id="btn-save-perfil" style="height: 42px; padding: 10px 18px; background: #06396E; border-radius: 8px; color: white; font-weight: 600;">Aceptar</button>
+              <button class="btn gho" data-go="perfiles-list" style="height: 42px; padding: 10px 18px; border-radius: 8px; display: inline-flex; align-items: center; gap: 8px;">
+                <svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                <span>Cancelar</span>
+              </button>
+              <button class="btn pri" id="btn-save-perfil" style="height: 42px; padding: 10px 18px; background: #06396E; border-radius: 8px; color: white; font-weight: 600; display: inline-flex; align-items: center; gap: 8px;">
+                <svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke:white;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+                <span>Guardar</span>
+              </button>
             </div>
           </div>
         </div>
 
         <div style="padding: 0 24px 40px;">
-          <div class="card" style="margin-bottom: 24px;"><h3 class="sec-t" style="font-size: 13px; font-weight: 700; color: #06396E; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 18px;">Datos del perfil</h3>
-            <div class="fgrid g3">
-              <div class="f"><label>Código</label><input id="p-codigo" value="PRF-004" readonly style="background: #F8FAFC;"></div>
-              <div class="f" style="grid-column:span 2"><label>Nombre del perfil <span class="req">*</span></label><input id="p-nombre" placeholder="Ej. Coordinador de Fiscalización"></div>
-              <div class="f"><label>Unidad organizacional / cargo</label><input id="p-cargo" placeholder="Ej. Jefatura de la oficina zonal"></div>
-              <div class="f"><label>Estado</label><select id="p-estado"><option>Activo</option><option>Inactivo</option></select></div>
-              <div class="f full"><label>Descripción</label><textarea id="p-descripcion" placeholder="Describa a qué cargo o unidad corresponde el perfil"></textarea><div class="counter">0/500</div></div>
-            </div>
-          </div>
+          <!-- TARJETA PRINCIPAL CON PESTAÑAS TABS -->
+          <div class="card" style="padding:0;overflow:visible;margin-bottom:20px;background:white;border:1px solid rgba(32,32,32,0.12);border-radius:8px;">
+            <div style="width:100%;display:flex;flex-direction:column;justify-content:flex-start;align-items:flex-start;">
+              <!-- Título de Sección -->
+              <div style="width:100%;min-height:52px;padding-top:16px;padding-bottom:12px;padding-left:24px;padding-right:24px;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;box-sizing:border-box;">
+                <div style="color:var(--sys-color-text-neutral-high, #252220);font-size:16px;font-family:Inter,sans-serif;font-weight:600;line-height:24px;">Datos del perfil funcional</div>
+              </div>
 
-          <div class="card">
-            <div class="chead" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px;">
-              <h3 class="sec-t" style="font-size: 13px; font-weight: 700; color: #06396E; text-transform: uppercase; letter-spacing: 0.5px; margin: 0;">Roles del perfil</h3>
-              <button type="button" class="btn gho" style="border-color: #06396E; color: #06396E; font-weight: 600;">
-                <svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2.2"><path d="M12 5v14M5 12h14"/></svg>
-                <span>Agregar rol</span>
-              </button>
+              <!-- BARRA DE PESTAÑAS (TABS) -->
+              <div style="width:100%;border-bottom:1px solid rgba(32, 32, 32, 0.12);display:flex;justify-content:flex-start;align-items:flex-end;gap:4px;padding-left:0px;padding-right:24px;box-sizing:border-box;flex-wrap:wrap;">
+                <!-- Tab 1: Datos generales -->
+                <button type="button" id="tab-perf-btn-1" class="lg-tab active" data-ptab="1" style="background:transparent;border:0;border-bottom:2px #06396E solid;margin-bottom:-1px;height:44px;box-sizing:border-box;padding:0 24px;cursor:pointer;justify-content:center;align-items:center;gap:8px;display:inline-flex;border-radius:0 !important;">
+                  <div style="color:#06396E;font-size:14px;font-family:Inter,sans-serif;font-weight:600;line-height:20px;">Datos generales</div>
+                </button>
+
+                <!-- Tab 2: Módulos y opciones -->
+                <button type="button" id="tab-perf-btn-2" class="lg-tab" data-ptab="2" style="background:transparent;border:0;border-bottom:2px transparent solid;margin-bottom:-1px;height:44px;box-sizing:border-box;padding:0 24px;cursor:pointer;justify-content:center;align-items:center;gap:8px;display:inline-flex;border-radius:0 !important;">
+                  <div style="color:#504C4A;font-size:14px;font-family:Inter,sans-serif;font-weight:400;line-height:20px;">Módulos y opciones</div>
+                  <span id="tab-perf-badge-mod" style="display:inline-flex;align-items:center;justify-content:center;height:20px;min-width:20px;box-sizing:border-box;background:#06396E;color:white;border-radius:10px;padding:0 6px;font-size:11.5px;font-weight:600;line-height:1;">0</span>
+                </button>
+
+                <!-- Tab 3: Roles del perfil -->
+                <button type="button" id="tab-perf-btn-3" class="lg-tab" data-ptab="3" style="background:transparent;border:0;border-bottom:2px transparent solid;margin-bottom:-1px;height:44px;box-sizing:border-box;padding:0 24px;cursor:pointer;justify-content:center;align-items:center;gap:8px;display:inline-flex;border-radius:0 !important;">
+                  <div style="color:#504C4A;font-size:14px;font-family:Inter,sans-serif;font-weight:400;line-height:20px;">Roles del perfil</div>
+                </button>
+              </div>
             </div>
-            <p class="mini" style="font-size: 12.5px; color: #64748B; margin-bottom: 14px;">Los roles definen las opciones que el usuario podrá ejecutar cuando se le asigne este perfil.</p>
-            <div class="tw"><table class="subtable">
-              <thead><tr><th>ROL</th><th>ÁMBITO DE APLICACIÓN</th><th>OPCIONES HABILITADAS</th><th style="text-align:right">ACCIONES</th></tr></thead>
-              <tbody id="tbody-roles-perfil">
-                <tr><td class="lnk"><a data-go="roles-list">Aprobador</a></td><td>Transversal · Flujo de aprobación</td><td class="num">5 opciones</td><td style="text-align:right"><div class="acts"><a class="dn" title="Quitar"><svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:#D51317;fill:none;stroke-width:2"><path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14"/></svg></a></div></td></tr>
-                <tr><td class="lnk"><a data-go="roles-list">Consultas y Reportes</a></td><td>Transversal · Solo lectura</td><td class="num">2 opciones</td><td style="text-align:right"><div class="acts"><a class="dn" title="Quitar"><svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:#D51317;fill:none;stroke-width:2"><path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14"/></svg></a></div></td></tr>
-              </tbody>
-            </table></div>
+
+            <!-- CUERPO DE PESTAÑAS -->
+            <div style="padding:24px;">
+              <!-- PANEL TAB 1: DATOS GENERALES -->
+              <div id="tab-perf-content-1">
+                <div style="display:flex; flex-direction:column; gap:20px;">
+                  <!-- Fila 1: Nombre del perfil funcional * (70%) y Estado (30%) -->
+                  <div style="display:grid; grid-template-columns:7fr 3fr; gap:20px; align-items:start;">
+                    <!-- Nombre del perfil funcional * -->
+                    <div class="figma-field" id="wrap-p-nombre">
+                      <div class="field-box">
+                        <div class="field-label-notch">
+                          <div class="field-label-wrapper" style="display:inline-flex;align-items:center;gap:2px;">
+                            <span class="field-label">Nombre del perfil funcional</span>
+                            <span class="field-req">*</span>
+                          </div>
+                        </div>
+                        <input id="p-nombre" value="" maxlength="100" placeholder="Nombre del perfil funcional" />
+                      </div>
+                      <div class="field-counter-row"><span class="field-counter" id="counter-p-nombre">0/100</span></div>
+                    </div>
+
+                    <!-- Estado Switch -->
+                    <div class="figma-field" id="wrap-p-estado" style="display:flex; flex-direction:column; justify-content:center;">
+                      <div style="font-size: 12px; color: #64748B; margin-bottom: 4px;">Estado</div>
+                      <div style="display:flex; align-items:center; gap:12px; height: 48px;">
+                        <label class="figma-switch-label" style="position:relative; display:inline-flex; align-items:center; gap:10px; cursor:pointer;">
+                          <input type="checkbox" id="p-chk-activo" checked style="width:20px; height:20px; accent-color:#06396E; cursor:pointer;" />
+                          <span style="font-size:14px; font-family:Inter,sans-serif; font-weight:600; color:#252220;">Activo</span>
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Fila 2: Descripción -->
+                  <div class="figma-field is-textarea" id="wrap-p-descripcion">
+                    <div class="field-box">
+                      <div class="field-label-notch">
+                        <div class="field-label-wrapper" style="display:inline-flex;align-items:center;gap:2px;">
+                          <span class="field-label">Descripción</span>
+                        </div>
+                      </div>
+                      <textarea id="p-descripcion" maxlength="500" placeholder="Describa el objetivo o alcance de este perfil funcional..."></textarea>
+                    </div>
+                    <div class="field-counter-row"><span class="field-counter" id="counter-p-descripcion">0/500</span></div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- PANEL TAB 2: MÓDULOS Y OPCIONES -->
+              <div id="tab-perf-content-2" style="display:none;">
+                <div style="width:100%;justify-content:space-between;align-items:center;display:flex;margin-bottom:16px;">
+                  <div style="color:#504C4A;font-size:13px;font-family:Inter,sans-serif;">Defina a qué pantallas entra quien tenga este perfil.</div>
+                  <button type="button" id="btn-add-mod-opc" class="btn gho" style="height:38px;padding:0 16px;border:1px solid #06396E;background:white;color:#06396E;border-radius:8px;font-weight:600;font-size:13.5px;display:inline-flex;align-items:center;gap:8px;cursor:pointer;">
+                    <svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:#06396E;fill:none;stroke-width:2.5;"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                    <span>Agregar módulo y opción</span>
+                  </button>
+                </div>
+
+                <div class="tw" style="border:1px solid rgba(32,32,32,0.12);border-radius:4px;overflow:hidden;">
+                  <table style="min-width:100%;">
+                    <thead>
+                      <tr>
+                        <th>MÓDULO</th>
+                        <th>OPCIÓN</th>
+                        <th>OPCIÓN PADRE</th>
+                        <th style="text-align:right">ACCIONES</th>
+                      </tr>
+                    </thead>
+                    <tbody id="tbody-mod-opciones-perfil">
+                      <tr id="row-empty-mod-opc">
+                        <td colspan="4" style="text-align:center;padding:40px 16px;color:#6C6865;font-size:13.5px;font-family:Inter,sans-serif;">El perfil aún no tiene módulos ni opciones asignadas.</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              <!-- PANEL TAB 3: ROLES DEL PERFIL -->
+              <div id="tab-perf-content-3" style="display:none;">
+                <div style="width:100%;justify-content:space-between;align-items:center;display:flex;margin-bottom:16px;">
+                  <div style="color:#504C4A;font-size:13px;font-family:Inter,sans-serif;">Asigne los roles que otorgan permisos específicos a este perfil funcional.</div>
+                  <button type="button" class="btn gho" style="border-color:#06396E;color:#06396E;font-weight:600;height:38px;padding:0 16px;border-radius:8px;display:inline-flex;align-items:center;gap:8px;">
+                    <svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2.2"><path d="M12 5v14M5 12h14"/></svg>
+                    <span>Agregar rol</span>
+                  </button>
+                </div>
+
+                <div class="tw" style="border:1px solid rgba(32,32,32,0.12);border-radius:4px;overflow:hidden;">
+                  <table style="min-width:100%;">
+                    <thead>
+                      <tr>
+                        <th>ROL</th>
+                        <th>ÁMBITO DE APLICACIÓN</th>
+                        <th>OPCIONES HABILITADAS</th>
+                        <th style="text-align:right">ACCIONES</th>
+                      </tr>
+                    </thead>
+                    <tbody id="tbody-roles-perfil">
+                      <tr>
+                        <td class="lnk"><a data-go="roles-list" style="color:#06396E;font-weight:600;">Aprobador</a></td>
+                        <td>Transversal · Flujo de aprobación</td>
+                        <td class="num">5 opciones</td>
+                        <td style="text-align:right"><div class="acts"><a class="dn" title="Quitar"><svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:#D51317;fill:none;stroke-width:2"><path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14"/></svg></a></div></td>
+                      </tr>
+                      <tr>
+                        <td class="lnk"><a data-go="roles-list" style="color:#06396E;font-weight:600;">Consultas y Reportes</a></td>
+                        <td>Transversal · Solo lectura</td>
+                        <td class="num">2 opciones</td>
+                        <td style="text-align:right"><div class="acts"><a class="dn" title="Quitar"><svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:#D51317;fill:none;stroke-width:2"><path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14"/></svg></a></div></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>

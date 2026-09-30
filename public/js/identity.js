@@ -1282,11 +1282,156 @@
     var rDesc = document.getElementById('r-descripcion'); if(rDesc) rDesc.value = '';
   }
 
+  var currentPerfilTab = 1;
+  function switchPerfilTab(tabNum) {
+    currentPerfilTab = tabNum;
+    var btn1 = document.getElementById('tab-perf-btn-1');
+    var btn2 = document.getElementById('tab-perf-btn-2');
+    var btn3 = document.getElementById('tab-perf-btn-3');
+    var content1 = document.getElementById('tab-perf-content-1');
+    var content2 = document.getElementById('tab-perf-content-2');
+    var content3 = document.getElementById('tab-perf-content-3');
+
+    if (!btn1 || !btn2 || !btn3 || !content1 || !content2 || !content3) return;
+
+    [btn1, btn2, btn3].forEach(function(btn, idx) {
+      var num = idx + 1;
+      var txt = btn.querySelector('div');
+      if (num === tabNum) {
+        btn.classList.add('active');
+        btn.style.borderBottom = '2px #06396E solid';
+        if (txt) { txt.style.color = '#06396E'; txt.style.fontWeight = '600'; }
+      } else {
+        btn.classList.remove('active');
+        btn.style.borderBottom = '2px transparent solid';
+        if (txt) { txt.style.color = '#504C4A'; txt.style.fontWeight = '400'; }
+      }
+    });
+
+    content1.style.display = tabNum === 1 ? 'block' : 'none';
+    content2.style.display = tabNum === 2 ? 'block' : 'none';
+    content3.style.display = tabNum === 3 ? 'block' : 'none';
+  }
+
+  function updatePerfilModCount() {
+    var tbody = document.getElementById('tbody-mod-opciones-perfil');
+    var badge = document.getElementById('tab-perf-badge-mod');
+    if (!tbody || !badge) return;
+    var validRows = tbody.querySelectorAll('tr:not(#row-empty-mod-opc)');
+    var count = validRows.length;
+    badge.textContent = count;
+    badge.style.background = '#06396E';
+    badge.style.color = 'white';
+
+    var emptyRow = document.getElementById('row-empty-mod-opc');
+    if (count === 0) {
+      if (!emptyRow) {
+        tbody.innerHTML = '<tr id="row-empty-mod-opc"><td colspan="4" style="text-align:center;padding:40px 16px;color:#6C6865;font-size:13.5px;font-family:Inter,sans-serif;">El perfil aún no tiene módulos ni opciones asignadas.</td></tr>';
+      }
+    } else {
+      if (emptyRow) emptyRow.remove();
+    }
+  }
+
+  function openAddModOpcDrawer() {
+    var ov = document.getElementById('t001-drawer');
+    var panel = document.getElementById('t001-drawer-panel');
+    var titleEl = document.getElementById('t001-drawer-title');
+    var subEl = document.getElementById('t001-drawer-sub');
+    var bodyEl = document.getElementById('t001-drawer-body');
+    var saveText = document.getElementById('t001-drawer-savetext');
+
+    if(!ov || !panel) return;
+    panel.style.width = '480px';
+
+    if(titleEl) titleEl.textContent = 'Agregar módulo y opción';
+    if(subEl) subEl.textContent = 'Elija el módulo y, dentro de él, la opción que habilita el perfil.';
+    if(saveText) saveText.textContent = 'Agregar';
+
+    var modHtml = buildCustomSelectHtml({
+      id: 'drw-perf-mod',
+      label: 'Módulo del SIIT',
+      required: true,
+      options: ['Componentes Transversales', 'Fiscalización', 'Atención al Ciudadano', 'Inteligencia Inspectiva', 'Plataforma Core'],
+      placeholder: 'Seleccionar...'
+    });
+
+    var opcHtml = buildCustomSelectHtml({
+      id: 'drw-perf-opc',
+      label: 'Opción',
+      required: true,
+      options: [
+        'Gestor de Estructura de Tablas Maestras',
+        'Gestor de Datos de Tablas Maestras',
+        'Administrador de Línea Gráfica',
+        'Expediente Electrónico',
+        'Diseñador de Flujos (Workflow Engine)'
+      ],
+      placeholder: 'Seleccionar...'
+    });
+
+    var bodyHtml =
+      '<div style="display:flex;flex-direction:column;gap:18px;">' +
+        modHtml +
+        opcHtml +
+      '</div>';
+
+    if(bodyEl) {
+      bodyEl.innerHTML = bodyHtml;
+      syncAllFigmaFields(bodyEl);
+    }
+
+    ov._onSave = function(){
+      var modVal = document.getElementById('drw-perf-mod') ? document.getElementById('drw-perf-mod').value : '';
+      var opcVal = document.getElementById('drw-perf-opc') ? document.getElementById('drw-perf-opc').value : '';
+
+      if (!modVal || !opcVal) {
+        showToast('Por favor seleccione tanto el módulo como la opción.', 'err', 'Campos requeridos');
+        return;
+      }
+
+      var tbody = document.getElementById('tbody-mod-opciones-perfil');
+      if (tbody) {
+        var emptyRow = document.getElementById('row-empty-mod-opc');
+        if (emptyRow) emptyRow.remove();
+
+        var newRow = document.createElement('tr');
+        newRow.innerHTML =
+          '<td>' + esc(modVal) + '</td>' +
+          '<td class="lnk"><a style="color:#06396E;font-weight:600;cursor:pointer;">' + esc(opcVal) + '</a></td>' +
+          '<td>—</td>' +
+          '<td style="text-align:right">' +
+            '<div class="acts">' +
+              '<a class="btn-del-mod-opc" title="Quitar" style="color:#D51317;cursor:pointer;"><svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:#D51317;fill:none;stroke-width:2"><path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14"/></svg></a>' +
+            '</div>' +
+          '</td>';
+        tbody.appendChild(newRow);
+        showToast('Módulo y opción asignados correctamente al perfil.', 'ok', 'Asignación agregada');
+        updatePerfilModCount();
+      }
+
+      closeUserFilterDrawer();
+    };
+
+    ov.style.display = 'flex';
+    requestAnimationFrame(function(){
+      panel.style.transform = 'translateX(0)';
+    });
+  }
+
   function resetPerfilesForm() {
     var pCod = document.getElementById('p-codigo'); if(pCod) pCod.value = 'PRF-00' + (perfilesList.length + 1);
     var pNom = document.getElementById('p-nombre'); if(pNom) pNom.value = '';
     var pCargo = document.getElementById('p-cargo'); if(pCargo) pCargo.value = '';
     var pDesc = document.getElementById('p-descripcion'); if(pDesc) pDesc.value = '';
+    var pAct = document.getElementById('p-chk-activo'); if(pAct) pAct.checked = true;
+
+    var tbody = document.getElementById('tbody-mod-opciones-perfil');
+    if(tbody) tbody.innerHTML = '<tr id="row-empty-mod-opc"><td colspan="4" style="text-align:center;padding:40px 16px;color:#6C6865;font-size:13.5px;font-family:Inter,sans-serif;">El perfil aún no tiene módulos ni opciones asignadas.</td></tr>';
+
+    updatePerfilModCount();
+    switchPerfilTab(1);
+    syncAllFigmaFields(document.getElementById('perfiles-form'));
   }
 
   function loadUserForEdit(u, idx) {
@@ -1369,12 +1514,24 @@
     syncAllFigmaFields(document.getElementById('usuarios-form'));
   };
   window.__onShow['sucursales-list'] = renderSucursales;
+  window.__onShow['modulos-list'] = renderSucursales;
+  window.__onShow['modulos-form'] = function() {
+    syncAllFigmaFields(document.getElementById('modulos-form'));
+  };
   window.__onShow['sucursales-form'] = function() {};
   window.__onShow['roles-list'] = renderRoles;
-  window.__onShow['roles-form'] = function() {};
+  window.__onShow['roles-form'] = function() {
+    syncAllFigmaFields(document.getElementById('roles-form'));
+  };
   window.__onShow['perfiles-list'] = renderPerfiles;
-  window.__onShow['perfiles-form'] = function() {};
+  window.__onShow['perfiles-form'] = function() {
+    switchPerfilTab(1);
+    syncAllFigmaFields(document.getElementById('perfiles-form'));
+  };
   window.__onShow['opciones-list'] = renderOpciones;
+  window.__onShow['opciones-form'] = function() {
+    syncAllFigmaFields(document.getElementById('opciones-form'));
+  };
 
   function showToast(msg, kind, title) {
     var t = document.getElementById('t001-toast');
@@ -1654,6 +1811,35 @@
       return;
     }
 
+    // Perfil Form Tabs switching
+    var pTabBtn = e.target.closest('.lg-tab[data-ptab]');
+    if (pTabBtn) {
+      var ptabNum = parseInt(pTabBtn.getAttribute('data-ptab'), 10);
+      if (!isNaN(ptabNum)) {
+        switchPerfilTab(ptabNum);
+      }
+      return;
+    }
+
+    // Open Add Modulo Opcion Drawer
+    var openAddModOpcBtn = e.target.closest('#btn-add-mod-opc');
+    if (openAddModOpcBtn) {
+      openAddModOpcDrawer();
+      return;
+    }
+
+    // Delete Modulo Opcion row in Perfil form
+    var delModOpcBtn = e.target.closest('.btn-del-mod-opc');
+    if (delModOpcBtn) {
+      var row = delModOpcBtn.closest('tr');
+      if (row) {
+        row.remove();
+        updatePerfilModCount();
+        showToast('Módulo / Opción retirada del perfil.', 'info', 'Registro retirado');
+      }
+      return;
+    }
+
     // Open Asignacion Drawer from '+' button
     var openAsigBtn = e.target.closest('#btn-add-asignacion, #btn-open-asignacion-modal');
     if (openAsigBtn) {
@@ -1841,51 +2027,48 @@
       return;
     }
 
-    // Save Sucursal Button (Aceptar)
-    var saveSucBtn = e.target.closest('#btn-save-sucursal');
-    if (saveSucBtn) {
-      var sCode = document.getElementById('s-codigo') ? document.getElementById('s-codigo').value.trim() : '';
-      var sName = document.getElementById('s-nombre') ? document.getElementById('s-nombre').value.trim() : '';
-      var sTipo = document.getElementById('s-tipo') ? document.getElementById('s-tipo').value : 'Sucursal Zonal';
-      var sAmbito = document.getElementById('s-ambito') ? document.getElementById('s-ambito').value : 'Lima Metropolitana';
-      var sSup = document.getElementById('s-superior') ? document.getElementById('s-superior').value : 'ILM Lima Metropolitana';
-      var sAct = document.getElementById('s-chk-activo') ? document.getElementById('s-chk-activo').checked : true;
+    // Save Modulo Button (Guardar)
+    var saveModBtn = e.target.closest('#btn-save-modulo, #btn-save-sucursal');
+    if (saveModBtn) {
+      var mName = document.getElementById('m-nombre') ? document.getElementById('m-nombre').value.trim() : '';
+      var mSistema = document.getElementById('m-sistema') ? document.getElementById('m-sistema').value : 'SIIT';
+      var mAct = document.getElementById('m-chk-activo') ? document.getElementById('m-chk-activo').checked : true;
+      var mDesc = document.getElementById('m-descripcion') ? document.getElementById('m-descripcion').value.trim() : '';
 
-      var finalCode = sCode || ('SUC-0' + (sucursalesList.length + 1));
-      var finalName = sName || 'Oficina Zonal Chorrillos';
+      var finalCode = 'MOD-0' + (sucursalesList.length + 1);
+      var finalName = mName || 'Fiscalización Laboral';
 
       sucursalesList.unshift({
         codigo: finalCode,
         nombre: finalName,
-        tipo: sTipo,
-        ire: sSup,
-        ubigeo: '150108',
-        estado: sAct ? 'Activo' : 'Inactivo'
+        tipo: mSistema || 'SIIT',
+        ire: mDesc || 'Módulo del SIIT',
+        ubigeo: '150101',
+        estado: mAct ? 'Activo' : 'Inactivo'
       });
 
-      showToast('Sucursal ' + finalName + ' registrada correctamente.', 'ok', 'Sucursal creada');
-      if (window.go) window.go('sucursales-list');
+      showToast('Módulo ' + finalName + ' registrado correctamente.', 'ok', 'Módulo creado');
+      if (window.go) window.go('modulos-list');
       renderSucursales();
       return;
     }
 
-    // Save Rol Button (Aceptar)
+    // Save Rol Button (Guardar)
     var saveRolBtn = e.target.closest('#btn-save-rol');
     if (saveRolBtn) {
-      var rCode = document.getElementById('r-codigo') ? document.getElementById('r-codigo').value.trim() : '';
       var rName = document.getElementById('r-nombre') ? document.getElementById('r-nombre').value.trim() : '';
-      var rMod = document.getElementById('r-modulo') ? document.getElementById('r-modulo').value : 'Transversal';
-      var rEst = document.getElementById('r-estado') ? document.getElementById('r-estado').value : 'Activo';
+      var rAct = document.getElementById('r-chk-activo') ? document.getElementById('r-chk-activo').checked : true;
+      var rDesc = document.getElementById('r-descripcion') ? document.getElementById('r-descripcion').value.trim() : '';
 
-      var finalRCode = rCode || ('ROL-0' + (rolesList.length + 1));
-      var finalRName = rName || 'Validador de Maestras';
+      var finalRCode = 'ROL-0' + (rolesList.length + 1);
+      var finalRName = rName || 'Aprobador';
 
       rolesList.unshift({
         codigo: finalRCode,
         nombre: finalRName,
-        alcance: rMod,
+        alcance: rDesc || 'Permiso de aprobación y firma institucional',
         nivel: 'Nacional / Sucursal',
-        estado: rEst
+        estado: rAct ? 'Activo' : 'Inactivo'
       });
 
       showToast('Rol ' + finalRName + ' registrado correctamente.', 'ok', 'Rol creado');
@@ -1900,9 +2083,10 @@
       var pCode = document.getElementById('p-codigo') ? document.getElementById('p-codigo').value.trim() : '';
       var pName = document.getElementById('p-nombre') ? document.getElementById('p-nombre').value.trim() : '';
       var pCargo = document.getElementById('p-cargo') ? document.getElementById('p-cargo').value.trim() : '';
-      var pEst = document.getElementById('p-estado') ? document.getElementById('p-estado').value : 'Activo';
+      var pAct = document.getElementById('p-chk-activo') ? document.getElementById('p-chk-activo').checked : true;
+      var pEst = pAct ? 'Activo' : 'Inactivo';
 
-      var finalPCode = pCode || ('PER-0' + (perfilesList.length + 1));
+      var finalPCode = pCode || ('PRF-0' + (perfilesList.length + 1));
       var finalPName = pName || 'Analista de Sistemas';
 
       perfilesList.unshift({
@@ -1916,6 +2100,31 @@
       showToast('Perfil ' + finalPName + ' registrado correctamente.', 'ok', 'Perfil creado');
       if (window.go) window.go('perfiles-list');
       renderPerfiles();
+      return;
+    }
+
+    // Save Opcion Button (Guardar)
+    var saveOpcBtn = e.target.closest('#btn-save-opcion');
+    if (saveOpcBtn) {
+      var oName = document.getElementById('opc-nombre') ? document.getElementById('opc-nombre').value.trim() : '';
+      var oRuta = document.getElementById('opc-ruta') ? document.getElementById('opc-ruta').value.trim() : '';
+      var oModulo = document.getElementById('opc-modulo') ? document.getElementById('opc-modulo').value : 'Gestor de Identidades';
+      var oAct = document.getElementById('opc-chk-activo') ? document.getElementById('opc-chk-activo').checked : true;
+
+      var finalCode = 'MNU-0' + (opcionesList.length + 1);
+      var finalName = oName || 'Bandeja de Atenciones';
+
+      opcionesList.unshift({
+        codigo: finalCode,
+        nombre: finalName,
+        ruta: oRuta || '/identidad/opciones',
+        modulo: oModulo || 'Gestor de Identidades',
+        estado: oAct ? 'Activo' : 'Inactivo'
+      });
+
+      showToast('Opción ' + finalName + ' registrada correctamente.', 'ok', 'Opción creada');
+      if (window.go) window.go('opciones-list');
+      renderOpciones();
       return;
     }
 
